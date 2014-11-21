@@ -31,23 +31,52 @@ import gtk
 import gobject
 import logging
 
-class Navegacion(gtk.Notebook):
-    """
-    Esta clase se encarga de encapsular el resto de la funcionalidad.
-    La navegación está sujeta a cambiar.
-    """
+directorio_fuente = os.path.dirname(os.path.realpath(__file__))
+directorio_videos = os.path.join(directorio_fuente, "Video")
+directorio_imagen = os.path.join(directorio_fuente, "Imagen")
 
+class App(gtk.Window):
     def __init__(self):
-        gtk.Notebook.__init__(self)
+        gtk.Window.__init__(self)
 
-        label2 = gtk.Label("Aquí va el lienzo de Pygame")
-        label3 = gtk.Label("Aquí van los Flashcards")
+        notebook = gtk.Notebook()
+        notebook.set_tab_pos(gtk.POS_TOP)
 
-        self.append_page(gtk.Label("2"),label2) # meter sugargame2 aqui
-        self.append_page(gtk.Label("3"),label3) # inventarse algo como anki aqui
+        ### Inicio
 
-        self.set_tab_pos(gtk.POS_LEFT)
+        label = gtk.Label("Inicio")
+        img = gtk.Image()
+        img.set_from_file(directorio_fuente+"/Inicio/Milky_Way_2005.jpg")
+        print directorio_fuente+"/Inicio/Milky_Way_2005.jpg"
+        notebook.append_page(img, label) 
 
+        ### Reproductor de Video
+
+        View = VideoWidget()
+
+        label = gtk.Label("Video")
+        notebook.append_page(View, label)
+
+        label = gtk.Label("Juego")
+        notebook.append_page(gtk.Label("2"), label) 
+
+        label = gtk.Label("Flashcards")
+        notebook.append_page(gtk.Label("3"), label)
+
+        self.add(notebook)
+        self.show_all()
+
+        self.Player = GstPlayer(View)
+
+        self.Player.set_uri('file://' + directorio_videos + '/1.ogv')
+        View.connect('expose-event', self.play)
+        notebook.connect('switch-page', self.stop)
+
+    def play(self, *args):
+        self.Player.play()
+
+    def stop(self, *args):
+        self.Player.stop()
 """
  Tomado de jukeboxactivity.py
  Activity that plays media.
@@ -56,7 +85,6 @@ class Navegacion(gtk.Notebook):
  Copyright (C) 2008-2010 Kushal Das <kushal@fedoraproject.org>
 """
 class GstPlayer(gobject.GObject):
-
     __gsignals__ = {
         'error': (gobject.SIGNAL_RUN_FIRST, None, [str, str]),
         'eos': (gobject.SIGNAL_RUN_FIRST, None, []),
@@ -254,27 +282,10 @@ class VideoWidget(gtk.DrawingArea):
         self.imagesink = sink
         self.imagesink.set_xwindow_id(xid)
 
-
 if __name__ == '__main__':
-    window = gtk.Window()
+    window = App()
+    window.maximize()
     window.connect("destroy", gtk.main_quit)
 
-    notebook = Navegacion()
-
-    View = VideoWidget()
-
-    label1 = gtk.Label("Aquí va el Player de Video")
-
-    notebook.prepend_page(View, label1)
-    window.add(notebook)
-    window.show_all()
-
-    Player = GstPlayer(View)
-
-    directorio_fuente = os.path.dirname(os.path.realpath(__file__))
-    directorio_videos = os.path.join(directorio_fuente, "videos")
-
-    Player.set_uri('file://' + directorio_videos + '/bunny-bonita-2.ogv')
-    Player.play()
 
     gtk.main()
