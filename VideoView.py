@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import gtk
+from VideoPlayer.VideoPlayer import VideoPlayer
 
 from Globales import COLORES
 
@@ -21,11 +22,11 @@ class VideoView(gtk.EventBox):
         tabla.set_border_width(4)
 
         self.titulo = gtk.Label("Título")
-        self.visor = Visor()
+        self.videoplayer = VideoPlayer()
         self.links = gtk.Label("Links")
 
         tabla.attach(self.titulo, 0, 2, 0, 1)
-        tabla.attach(self.visor, 0, 2, 1, 9)
+        tabla.attach(self.videoplayer, 0, 2, 1, 9)
         tabla.attach(self.links, 0, 2, 9, 10)
 
         tabla.attach(gtk.EventBox(), 2, 3, 0, 4)
@@ -40,14 +41,3 @@ class VideoView(gtk.EventBox):
 
     def run(self):
         self.show()
-
-
-class Visor(gtk.DrawingArea):
-
-    def __init__(self):
-
-        gtk.DrawingArea.__init__(self)
-
-        self.modify_bg(gtk.STATE_NORMAL, COLORES["text"])
-
-        self.show_all()

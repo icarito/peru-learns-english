@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   enable-background="new 0 0 55 55"
+   height="50"
+   version="1.1"
+   viewBox="0 0 50 50"
+   width="50"
+   x="0px"
+   xml:space="preserve"
+   y="0px"
+   id="svg2"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="bash.svg"><metadata
+     id="metadata17"><rdf:RDF><cc:Work
+         rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
+     id="defs15">
+	
+		
+	
+</defs><sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1366"
+     inkscape:window-height="712"
+     id="namedview13"
+     showgrid="false"
+     inkscape:zoom="4.2909091"
+     inkscape:cx="27.5"
+     inkscape:cy="27.5"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2" /><path
+     transform="matrix(0.39258026,0,0,0.39258026,-79.377737,-114.8519)"
+     sodipodi:type="arc"
+     style="fill:#ff6600;fill-opacity:1;stroke:#000000;stroke-width:6.4000001;stroke-miterlimit:4;stroke-dasharray:none"
+     id="path2985-61"
+     sodipodi:cx="265.71429"
+     sodipodi:cy="356.64789"
+     sodipodi:rx="58.57143"
+     sodipodi:ry="58.57143"
+     d="m 324.28572,356.64789 a 58.57143,58.57143 0 1 1 -117.14286,0 58.57143,58.57143 0 1 1 117.14286,0 z"
+     inkscape:export-filename="/home/flavio/Documentos/GIT_Software/JAMediaVideoEstudio/Iconos/stop.png"
+     inkscape:export-xdpi="32.785225"
+     inkscape:export-ydpi="32.785225" /><rect
+     style="fill:#000000;fill-opacity:1;stroke:none"
+     id="rect3936"
+     width="26.624849"
+     height="26.624849"
+     x="11.624015"
+     y="11.848634"
+     ry="0.40153047"
+     inkscape:export-xdpi="32.785225"
+     inkscape:export-ydpi="32.785225"
+     inkscape:export-filename="/home/flavio/Documentos/GIT_Software/JAMediaVideoEstudio/Iconos/stop.png" /></svg>
