@@ -61,10 +61,14 @@ class Main(gtk.Window):
         self.show_all()
 
         self.toolbar.connect("activar", self.__switch)
+        self.toolbar.connect("video", self.__play_video)
         self.connect("delete-event", self.__salir)
 
         self.resize(640, 480)
-        gobject.idle_add(self.__switch, False, "Home", True)
+        self.toolbar.buttons[0].set_active(True)
+
+    def __play_video(self, widget, video_path):
+        self.__switch(False, "Topics", True)
 
     def __switch(self, widget, label, activo):
         map(ocultar, self.vbox.get_children()[1:])
