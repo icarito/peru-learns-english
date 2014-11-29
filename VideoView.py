@@ -15,7 +15,24 @@ class VideoView(gtk.EventBox):
         self.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
         self.set_border_width(4)
 
-        self.add(gtk.Label("Videos"))
+        tabla = gtk.Table(rows=10, columns=3, homogeneous=True)
+        tabla.set_property("column-spacing", 5)
+        tabla.set_property("row-spacing", 5)
+        tabla.set_border_width(4)
+
+        self.titulo = gtk.Label("Título")
+        self.visor = Visor()
+        self.links = gtk.Label("Links")
+
+        tabla.attach(self.titulo, 0, 2, 0, 1)
+        tabla.attach(self.visor, 0, 2, 1, 9)
+        tabla.attach(self.links, 0, 2, 9, 10)
+
+        tabla.attach(gtk.EventBox(), 2, 3, 0, 4)
+        tabla.attach(gtk.EventBox(), 2, 3, 4, 6)
+        tabla.attach(gtk.EventBox(), 2, 3, 6, 10)
+
+        self.add(tabla)
         self.show_all()
 
     def stop(self):
@@ -23,3 +40,14 @@ class VideoView(gtk.EventBox):
 
     def run(self):
         self.show()
+
+
+class Visor(gtk.DrawingArea):
+
+    def __init__(self):
+
+        gtk.DrawingArea.__init__(self)
+
+        self.modify_bg(gtk.STATE_NORMAL, COLORES["text"])
+
+        self.show_all()

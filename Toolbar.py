@@ -127,9 +127,7 @@ class MenuBar(gtk.MenuBar):
         self.boton0.set_active(True)
 
     def __emit_accion_menu(self, widget):
-        valor = not widget.get_children()[0].get_active()
-        if valor:
-            widget.get_children()[0].set_active(valor)
-            label = widget.get_children()[0].get_label()
-            video_path = os.path.join(BASE_PATH, "Video", label)
-            self.emit("activar", video_path)
+        widget.get_children()[0].set_active(True)
+        label = widget.get_children()[0].get_label()
+        video_path = os.path.join(BASE_PATH, "Video", label)
+        self.emit("activar", video_path)
