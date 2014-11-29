@@ -54,7 +54,11 @@ class VideoView(gtk.EventBox):
         self.add(tabla)
         self.show_all()
 
+    def load(self, video_path):
+        self.videoplayer.load(video_path)
+
     def stop(self):
+        self.videoplayer.stop()
         self.hide()
 
     def run(self):

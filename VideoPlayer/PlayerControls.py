@@ -25,17 +25,6 @@ import gobject
 
 from Globales import COLORES
 
-
-def sensibilizar(objeto):
-    if not objeto.get_sensitive():
-        objeto.set_sensitive(True)
-
-
-def insensibilizar(objeto):
-    if objeto.get_sensitive():
-        objeto.set_sensitive(False)
-
-
 BASE_PATH = os.path.dirname(__file__)
 
 
@@ -77,12 +66,6 @@ class PlayerControls(gtk.EventBox):
 
     def __emit_accion(self, widget, accion):
         self.emit("accion-controls", accion)
-
-    def activar(self, valor):
-        if valor:
-            map(sensibilizar, [self.play, self.stop])
-        else:
-            map(insensibilizar, [self.play, self.stop])
 
     def set_paused(self):
         self.play.set_paused(self.pix_play)

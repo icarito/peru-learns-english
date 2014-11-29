@@ -22,7 +22,6 @@
 import os
 import gtk
 import sys
-import gobject
 
 from Toolbar import Toolbar
 from Globales import COLORES
@@ -87,6 +86,7 @@ class Main(gtk.Window):
 
     def __play_video(self, widget, video_path):
         self.__switch(False, "Topics", True)
+        self.videoview.load(video_path)
 
     def __switch(self, widget, label, activo):
         map(ocultar, self.vbox.get_children()[1:])
