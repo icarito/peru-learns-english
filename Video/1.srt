@@ -1,72 +1,87 @@
 ﻿1
-00:00:01,350 --> 00:00:04,800
-Copying is not theft.
+00:00:01,220 --> 00:00:04,480
+Bunny Bonita music presents
 
 2
-00:00:06,000 --> 00:00:08,500
-Copying is not theft.
+00:00:04,490 --> 00:00:05,910
+Feelings
 
 3
-00:00:08,750 --> 00:00:11,500
-Stealing a thing leaves one less left
+00:00:06,350 --> 00:00:08,560
+I am happy
 
 4
-00:00:11,800 --> 00:00:14,000
-Copying it makes one thing more;
+00:00:08,600 --> 00:00:10,520
+I feel sad
 
 5
-00:00:14,250 --> 00:00:16,500
-that's what copying's for.
+00:00:10,450 --> 00:00:12,060
+proud
 
 6
-00:00:16,900 --> 00:00:19,000
-Copying is not theft
+00:00:12,050 --> 00:00:13,460
+sick
 
 7
-00:00:19,250 --> 00:00:22,000
-If I copy yours you have it too
+00:00:13,650 --> 00:00:16,430
+I feel afraid
 
 8
-00:00:22,200 --> 00:00:24,750
-One for me and one for you
+00:00:16,430 --> 00:00:18,990
+I am hungry
 
 9
-00:00:24,700 --> 00:00:27,000
-That's what copies can do
+00:00:19,040 --> 00:00:21,090
+surprised
 
 10
-00:00:27,500 --> 00:00:29,700
-If I steal your bicycle
+00:00:21,090 --> 00:00:22,580
+bored
 
 11
-00:00:29,750 --> 00:00:32,000
-you have to take the bus,
+00:00:22,720 --> 00:00:24,400
+I am pretty
 
 12
-00:00:32,250 --> 00:00:34,900
-but if I just copy it
+00:00:24,560 --> 00:00:26,510
+you are handsome
 
 13
-00:00:34,900 --> 00:00:37,100
-there's one for each of us!
+00:00:26,730 --> 00:00:28,510
+tears
 
 14
-00:00:38,000 --> 00:00:40,300
-Making more of a thing,
+00:00:28,560 --> 00:00:31,540
+I feel excited
 
 15
-00:00:40,300 --> 00:00:43,300
-that is what we call "copying"
+00:00:32,180 --> 00:00:35,770
+look at the lights
 
 16
-00:00:43,500 --> 00:00:45,700
-Sharing ideas with everyone
+00:00:35,880 --> 00:00:40,150
+listen to the music
 
 17
-00:00:46,000 --> 00:00:48,000
-That's why copying
+00:00:40,320 --> 00:00:44,160
+come on boys and girls!
 
 18
-00:00:48,000 --> 00:00:50,500
-is FUN
+00:00:44,470 --> 00:00:47,440
+give me some noise
+
+19
+00:00:47,440 --> 00:00:50,020
+this is fun
+
+20
+00:00:50,950 --> 00:00:54,270
+I feel tired
+
+21
+00:00:54,270 --> 00:00:58,570
+I am exhausted
+
+22
+00:00:58,570 --> 00:01:00,570
 
