@@ -20,12 +20,18 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import gtk
+import gobject
+
 from VideoPlayer.VideoPlayer import VideoPlayer
 
 from Globales import COLORES
 
 
 class VideoView(gtk.EventBox):
+
+    __gsignals__ = {
+    "flashcards": (gobject.SIGNAL_RUN_FIRST,
+        gobject.TYPE_NONE, [])}
 
     def __init__(self):
 
@@ -47,12 +53,19 @@ class VideoView(gtk.EventBox):
         tabla.attach(self.videoplayer, 0, 2, 1, 9)
         tabla.attach(self.links, 0, 2, 9, 10)
 
+        flashcards = gtk.Button("FlashCards")
+
         tabla.attach(gtk.EventBox(), 2, 3, 0, 4)
-        tabla.attach(gtk.EventBox(), 2, 3, 4, 6)
+        tabla.attach(flashcards, 2, 3, 4, 6)
         tabla.attach(gtk.EventBox(), 2, 3, 6, 10)
 
         self.add(tabla)
         self.show_all()
+
+        flashcards.connect("clicked", self.__emit_flashcards)
+
+    def __emit_flashcards(self, widget):
+        self.emit("flashcards")
 
     def load(self, video_path):
         self.videoplayer.load(video_path)

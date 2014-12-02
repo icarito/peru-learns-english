@@ -35,8 +35,7 @@ class Toolbar(gtk.EventBox):
 
     __gsignals__ = {
     "activar": (gobject.SIGNAL_RUN_FIRST,
-        gobject.TYPE_NONE, (gobject.TYPE_STRING,
-        gobject.TYPE_BOOLEAN)),
+        gobject.TYPE_NONE, (gobject.TYPE_STRING, )),
     "video": (gobject.SIGNAL_RUN_FIRST,
         gobject.TYPE_NONE, (gobject.TYPE_STRING, ))}
 
@@ -91,7 +90,7 @@ class Toolbar(gtk.EventBox):
             for button in self.buttons:
                 if label != button.get_label_widget().get_text():
                     button.set_active(False)
-            self.emit("activar", label, activo)
+            self.emit("activar", label)
         else:
             for button in self.buttons:
                 if button.get_active():

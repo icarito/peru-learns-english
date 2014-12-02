@@ -79,16 +79,20 @@ class Main(gtk.Window):
 
         self.toolbar.connect("activar", self.__switch)
         self.toolbar.connect("video", self.__play_video)
+        self.videoview.connect("flashcards", self.__play_flashcards)
         self.connect("delete-event", self.__salir)
 
         self.resize(640, 480)
         self.toolbar.buttons[0].set_active(True)
 
+    def __play_flashcards(self, widget):
+        self.__switch(False, "flashcards")
+
     def __play_video(self, widget, video_path):
-        self.__switch(False, "Topics", True)
+        self.__switch(False, "Topics")
         self.videoview.load(video_path)
 
-    def __switch(self, widget, label, activo):
+    def __switch(self, widget, label):
         map(ocultar, self.vbox.get_children()[1:])
         if label == "Home":
             self.homeview.run()
@@ -98,6 +102,8 @@ class Main(gtk.Window):
             self.creditsview.run()
         elif label == "Topics":
             self.videoview.run()
+        elif label == "flashcards":
+            self.flashcards.run()
         return False
 
     def __salir(self, widget=None, senial=None):
