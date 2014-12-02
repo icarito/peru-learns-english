@@ -1,10 +1,11 @@
-"to copy"
-theft
-"to steal"
-"a thing"
-"the bicycle"
-"the bus"
-"the copies"
-"an idea"
-"to share"
-fun
+id,term
+1,"to copy"
+2,theft
+3,"to steal"
+4,"a thing"
+5,"the bicycle"
+6,"the bus"
+7,"the copies"
+8,"an idea"
+9,"to share"
+10,fun
