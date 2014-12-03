@@ -1,27 +1,27 @@
 id,term
-1,"to present"
-2,feelings
-3,happy
-4,sad
-5,proud
-6,sick
-7,afraid
-8,hungry
-9,surprised
-10,bored
-11,pretty
-12,handsome
-13,tears
-14,excited
-15,"to look at"
-16,"the lights"
-17,"to listen"
-18,"the music"
-19,boys
-20,girls
-21,noise
-22,fun
-23,"to give"
-24,tired
-25,exhausted
-26,angry
+to_present,"to present"
+feelings,feelings
+happy,happy
+sad,sad
+proud,proud
+sick,sick
+afraid,afraid
+hungry,hungry
+surprised,surprised
+bored,bored
+pretty,pretty
+handsome,handsome
+tears,tears
+excited,excited
+to_look_at,"to look at"
+the_lights,"the lights"
+to_listen,"to listen"
+the_music,"the music"
+boys,boys
+girls,girls
+noise,noise
+fun,fun
+to_give,"to give"
+tired,tired
+exhausted,exhausted
+angry,angry
