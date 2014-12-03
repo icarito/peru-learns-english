@@ -30,6 +30,8 @@ class FlashCardView(gtk.EventBox):
 
         gtk.EventBox.__init__(self)
 
+        self.topic = False
+
         self.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
         self.set_border_width(4)
 
@@ -39,5 +41,6 @@ class FlashCardView(gtk.EventBox):
     def stop(self):
         self.hide()
 
-    def run(self):
+    def run(self, topic):
+        self.topic = topic
         self.show()

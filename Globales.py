@@ -19,7 +19,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import commands
 import gtk
 from gtk import gdk
 
@@ -28,11 +27,3 @@ COLORES = {
     "toolbar": gdk.color_parse("#778899"),
     "text": gdk.color_parse("#000000"),
     }
-
-
-def describe_archivo(archivo):
-    datos = commands.getoutput('file -ik %s%s%s' % ("\"", archivo, "\""))
-    retorno = ""
-    for dat in datos.split(":")[1:]:
-        retorno += " %s" % (dat)
-    return retorno

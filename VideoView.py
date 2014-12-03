@@ -19,6 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import os
 import gtk
 import gobject
 
@@ -31,7 +32,7 @@ class VideoView(gtk.EventBox):
 
     __gsignals__ = {
     "flashcards": (gobject.SIGNAL_RUN_FIRST,
-        gobject.TYPE_NONE, [])}
+        gobject.TYPE_NONE, (gobject.TYPE_STRING, ))}
 
     def __init__(self):
 
@@ -39,6 +40,8 @@ class VideoView(gtk.EventBox):
 
         self.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
         self.set_border_width(4)
+
+        self.topic = False
 
         tabla = gtk.Table(rows=10, columns=3, homogeneous=True)
         tabla.set_property("column-spacing", 5)
@@ -65,14 +68,15 @@ class VideoView(gtk.EventBox):
         flashcards.connect("clicked", self.__emit_flashcards)
 
     def __emit_flashcards(self, widget):
-        self.emit("flashcards")
+        self.emit("flashcards", self.topic)
 
-    def load(self, video_path):
-        self.videoplayer.load(video_path)
+    def load(self, topic):
+        self.videoplayer.load(os.path.join(topic, "video.ogv"))
 
     def stop(self):
         self.videoplayer.stop()
         self.hide()
 
-    def run(self):
+    def run(self, topic):
+        self.topic = topic
         self.show()

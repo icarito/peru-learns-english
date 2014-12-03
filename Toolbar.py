@@ -23,10 +23,8 @@ import os
 import gtk
 import gobject
 import pango
-import gobject
 
 from Globales import COLORES
-from Globales import describe_archivo
 
 BASE_PATH = os.path.dirname(__file__)
 
@@ -80,8 +78,8 @@ class Toolbar(gtk.EventBox):
 
         self.menubar.connect("activar", self.__emit_accion_menu)
 
-    def __emit_accion_menu(self, widget, video_path):
-        self.emit("video", video_path)
+    def __emit_accion_menu(self, widget, topic):
+        self.emit("video", topic)
 
     def __do_toggled(self, widget):
         label = widget.get_label_widget().get_text()
@@ -125,26 +123,22 @@ class MenuBar(gtk.MenuBar):
         self.append(itemmenu)
 
         self.boton0 = gtk.RadioButton()
-        video_path = os.path.join(BASE_PATH, "Video")
-        for arch in sorted(os.listdir(video_path)):
-            path = os.path.join(video_path, arch)
-            tipo = describe_archivo(path)
-            if 'video' in tipo or 'application/ogg' in tipo:
-                item = gtk.MenuItem()
-                try:
-                    item.get_child().destroy()
-                except:
-                    pass
-                boton = gtk.RadioButton()
-                boton.set_group(self.boton0)
-                boton.set_label(arch)
-                item.add(boton)
-                item.connect("activate", self.__emit_accion_menu)
-                menu.append(item)
+        topics = os.path.join(BASE_PATH, "Topics")
+        for arch in sorted(os.listdir(topics)):
+            item = gtk.MenuItem()
+            try:
+                item.get_child().destroy()
+            except:
+                pass
+            boton = gtk.RadioButton()
+            boton.set_group(self.boton0)
+            boton.set_label(arch)
+            item.add(boton)
+            item.connect("activate", self.__emit_accion_menu)
+            menu.append(item)
         self.boton0.set_active(True)
 
     def __emit_accion_menu(self, widget):
         widget.get_children()[0].set_active(True)
         label = widget.get_children()[0].get_label()
-        video_path = os.path.join(BASE_PATH, "Video", label)
-        self.emit("activar", video_path)
+        self.emit("activar", os.path.join(BASE_PATH, "Topics", label))
