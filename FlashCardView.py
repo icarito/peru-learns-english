@@ -19,10 +19,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import os
 import gtk
 import pango
 
 from Globales import COLORES
+from Globales import get_vocabulario
 
 
 class FlashCardView(gtk.EventBox):
@@ -35,6 +37,7 @@ class FlashCardView(gtk.EventBox):
         self.set_border_width(4)
 
         self.topic = False
+        self.vocabulario = []
 
         tabla = gtk.Table(rows=10, columns=5, homogeneous=True)
         tabla.set_property("column-spacing", 5)
@@ -58,6 +61,8 @@ class FlashCardView(gtk.EventBox):
 
     def run(self, topic):
         self.topic = topic
+        csvfile = os.path.join(topic, "vocabulario.csv")
+        self.vocabulario = get_vocabulario(csvfile)
         self.show()
 
 
