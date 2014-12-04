@@ -65,21 +65,20 @@ class ImagePlayer(gobject.GObject):
         rect = self.ventana.get_allocation()
         self.width = rect.width
         self.height = rect.height
-
-        rot = self.player.get_rotacion()
+        rot = 0
+        if self.player:
+            rot = self.player.get_rotacion()
         if self.src_path:
             self.load(self.src_path)
-
-        self.player.force_rotation(rot)
+        if self.player:
+            self.player.force_rotation(rot)
 
     def load(self, uri):
         self.src_path = uri
-
         if self.player:
             self.player.stop()
             del(self.player)
             self.player = False
-
         self.player = PlayerBin(self.xid, self.width, self.height)
         self.player.load(self.src_path)
 
@@ -167,12 +166,10 @@ class PlayerBin(gobject.GObject):
         self.stop()
         if not uri:
             return
-
         if os.path.exists(uri):
             direccion = "file://" + uri
             self.player.set_property("uri", direccion)
             self.__play()
-
         return False
 
 
@@ -222,17 +219,13 @@ class Video_Out(gst.Pipeline):
         if valor == "Derecha":
             if rot < 3:
                 rot += 1
-
             else:
                 rot = 0
-
         elif valor == "Izquierda":
             if rot > 0:
                 rot -= 1
-
             else:
                 rot = 3
-
         videoflip.set_property('method', rot)
 
     def force_rotation(self, rot):

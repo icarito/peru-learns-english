@@ -101,7 +101,6 @@ class Main(gtk.Window):
             self.creditsview.run()
         elif label == "Topics":
             self.videoview.run(data)
-            self.videoview.load(data)
         elif label == "flashcards":
             self.flashcards.run(data)
         return False
