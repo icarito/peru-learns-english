@@ -29,6 +29,7 @@ COLORES = {
     "window": gdk.color_parse("#ffffff"),
     "toolbar": gdk.color_parse("#778899"),
     "text": gdk.color_parse("#000000"),
+    "rojo": gdk.color_parse("#ff0000"),
     }
 
 

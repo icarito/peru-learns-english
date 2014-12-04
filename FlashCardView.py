@@ -50,10 +50,10 @@ class FlashCardView(gtk.EventBox):
         tabla.set_property("row-spacing", 5)
         tabla.set_border_width(4)
 
-        cabecera = Cabecera()
+        self.cabecera = Cabecera()
         self.flashcard = FlashCard()
 
-        tabla.attach(cabecera, 0, 3, 0, 2)
+        tabla.attach(self.cabecera, 0, 3, 0, 2)
         tabla.attach(self.flashcard, 0, 3, 2, 10)
 
         self.derecha = Derecha()
@@ -66,8 +66,9 @@ class FlashCardView(gtk.EventBox):
         self.derecha.connect("show_answer", self.__show_answer)
 
     def __show_answer(self, widget):
-        decir(50, 170, 0, "en", self.vocabulario[self.index_select][1])
-        # FIXME: Mostrar Respuesta
+        respuesta = self.vocabulario[self.index_select][1]
+        self.derecha.label.set_text(respuesta)
+        gobject.idle_add(decir, 50, 170, 0, "en", respuesta)
 
     def __siguiente(self, widget, respuesta):
         """
@@ -93,8 +94,14 @@ class FlashCardView(gtk.EventBox):
             self.imagenplayer = False
         self.imagenplayer = ImagePlayer(self.flashcard.drawing)
         self.imagenplayer.load(path)
+        self.cabecera.label2.modify_fg(gtk.STATE_NORMAL, COLORES["rojo"])
+        gobject.idle_add(self.__activar)
+        return False
+
+    def __activar(self):
         decir(50, 170, 0, "en", "What is This?")
-        gobject.timeout_add(500, self.derecha.activar)
+        self.derecha.activar()
+        self.cabecera.label2.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
         return False
 
     def stop(self):
@@ -152,12 +159,23 @@ class Cabecera(gtk.EventBox):
         tabla.set_border_width(4)
 
         self.titulo = gtk.Label("Título")
-        label1 = gtk.Label("Keywords")
-        label2 = gtk.Label("What is This?")
+        self.titulo.set_property("justify", gtk.JUSTIFY_CENTER)
+        self.titulo.modify_font(pango.FontDescription("Purisa 12"))
+        self.titulo.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
+
+        self.label1 = gtk.Label("Keywords")
+        self.label1.set_property("justify", gtk.JUSTIFY_CENTER)
+        self.label1.modify_font(pango.FontDescription("Purisa 12"))
+        self.label1.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
+
+        self.label2 = gtk.Label("What is This?")
+        self.label2.set_property("justify", gtk.JUSTIFY_CENTER)
+        self.label2.modify_font(pango.FontDescription("Purisa 12"))
+        self.label2.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
 
         tabla.attach(self.titulo, 0, 2, 0, 1)
-        tabla.attach(label1, 0, 1, 1, 2)
-        tabla.attach(label2, 1, 2, 1, 2)
+        tabla.attach(self.label1, 0, 1, 1, 2)
+        tabla.attach(self.label2, 1, 2, 1, 2)
 
         self.add(tabla)
         self.show_all()
@@ -181,6 +199,12 @@ class Derecha(gtk.EventBox):
         tabla.set_property("column-spacing", 5)
         tabla.set_property("row-spacing", 5)
         tabla.set_border_width(4)
+
+        self.label = gtk.Label("")
+        self.label.set_property("justify", gtk.JUSTIFY_CENTER)
+        self.label.modify_font(pango.FontDescription("Purisa 22"))
+        self.label.modify_fg(gtk.STATE_NORMAL, COLORES["rojo"])
+        tabla.attach(self.label, 0, 3, 0, 1)
 
         button0 = MyButton("Show me the answer",
             pango.FontDescription("Purisa 12"))
@@ -213,12 +237,15 @@ class Derecha(gtk.EventBox):
 
     def __show_answer(self, button):
         self.emit("show_answer")
+        self.label.show()
         self.buttons[1].show()
         self.buttons[2].show()
         self.buttons[3].show()
 
     def run(self):
         self.buttons[0].set_sensitive(False)
+        self.label.set_text("")
+        self.label.hide()
         self.buttons[1].hide()
         self.buttons[2].hide()
         self.buttons[3].hide()
