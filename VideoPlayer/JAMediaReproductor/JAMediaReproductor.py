@@ -161,7 +161,6 @@ class JAMediaReproductor(gobject.GObject):
         if self.actualizador:
             gobject.source_remove(self.actualizador)
             self.actualizador = False
-
         if reset:
             self.actualizador = gobject.timeout_add(500, self.__handle)
 

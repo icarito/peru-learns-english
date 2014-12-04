@@ -25,8 +25,10 @@ import pango
 import gobject
 
 from JAMediaImagenes.ImagePlayer import ImagePlayer
+
 from Globales import COLORES
 from Globales import get_vocabulario
+from Globales import decir
 
 
 class FlashCardView(gtk.EventBox):
@@ -64,9 +66,8 @@ class FlashCardView(gtk.EventBox):
         self.derecha.connect("show_answer", self.__show_answer)
 
     def __show_answer(self, widget):
-        # FIXME: Pronunciar Respuesta
+        decir(50, 170, 0, "en", self.vocabulario[self.index_select][1])
         # FIXME: Mostrar Respuesta
-        pass
 
     def __siguiente(self, widget, respuesta):
         """
@@ -92,7 +93,7 @@ class FlashCardView(gtk.EventBox):
             self.imagenplayer = False
         self.imagenplayer = ImagePlayer(self.flashcard.drawing)
         self.imagenplayer.load(path)
-        # FIXME: Decir "What is This?" + efectos gráficos requeridos
+        decir(50, 170, 0, "en", "What is This?")
         gobject.timeout_add(500, self.derecha.activar)
         return False
 

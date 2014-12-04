@@ -19,6 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import commands
 import csv
 import chardet
 import gtk
@@ -41,3 +42,12 @@ def get_vocabulario(csvfile):
         row = [x.decode(encoding) for x in row]
         item.append(row)
     return item
+
+
+def decir(pitch, speed, word_gap, voice, text):
+    wavpath = "/dev/shm/speak.wav"
+    commands.getoutput('espeak -p%s -s%s -g%s -w%s -v%s \"%s\"' % (
+        pitch, speed, word_gap, wavpath, voice, text))
+    commands.getoutput(
+        'gst-launch-0.10 playbin2 uri=file:///dev/shm/speak.wav')
+    return False
