@@ -22,6 +22,7 @@
 import os
 import gtk
 import pango
+import gobject
 
 from Globales import COLORES
 from Globales import get_vocabulario
@@ -50,8 +51,8 @@ class FlashCardView(gtk.EventBox):
         tabla.attach(cabecera, 0, 3, 0, 2)
         tabla.attach(flashcard, 0, 3, 2, 10)
 
-        derecha = Derecha()
-        tabla.attach(derecha, 3, 5, 2, 10)
+        self.derecha = Derecha()
+        tabla.attach(self.derecha, 3, 5, 2, 10)
 
         self.add(tabla)
         self.show_all()
@@ -60,10 +61,16 @@ class FlashCardView(gtk.EventBox):
         self.hide()
 
     def run(self, topic):
+        self.derecha.run()
         self.topic = topic
         csvfile = os.path.join(topic, "vocabulario.csv")
         self.vocabulario = get_vocabulario(csvfile)
         self.show()
+        gobject.timeout_add(500, self.__load, 1)
+
+    def __load(self, index):
+        print self.vocabulario[index]
+        return False
 
 
 class FlashCard(gtk.EventBox):
@@ -75,7 +82,10 @@ class FlashCard(gtk.EventBox):
         self.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
         self.set_border_width(10)
 
-        self.add(gtk.DrawingArea())
+        self.drawing = gtk.DrawingArea()
+        self.drawing.modify_bg(gtk.STATE_NORMAL, COLORES["text"])
+
+        self.add(self.drawing)
         self.show_all()
 
 
@@ -125,16 +135,24 @@ class Derecha(gtk.EventBox):
             pango.FontDescription("Purisa 8"))
         tabla.attach(button1, 0, 1, 2, 3)
 
-        button1 = MyButton("Just What\nThougth",
+        button2 = MyButton("Just What\nThougth",
             pango.FontDescription("Purisa 8"))
-        tabla.attach(button1, 1, 2, 2, 3)
+        tabla.attach(button2, 1, 2, 2, 3)
 
-        button1 = MyButton("Thew it !",
+        button3 = MyButton("Thew it !",
             pango.FontDescription("Purisa 8"))
-        tabla.attach(button1, 2, 3, 2, 3)
+        tabla.attach(button3, 2, 3, 2, 3)
+
+        self.buttons = [button0, button1, button2, button3]
 
         self.add(tabla)
         self.show_all()
+
+    def run(self):
+        self.buttons[0].set_sensitive(False)
+        self.buttons[1].hide()
+        self.buttons[2].hide()
+        self.buttons[3].hide()
 
 
 class MyButton(gtk.Button):
