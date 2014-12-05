@@ -33,11 +33,45 @@ class GameView(gtk.EventBox):
         self.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
         self.set_border_width(4)
 
-        self.add(gtk.Label("Games"))
+        self.game_widget = DrawingWidget()
+
+        self.add(self.game_widget)
         self.show_all()
 
     def stop(self):
+        self.game_widget.stop()
         self.hide()
 
-    def run(self):
+    def run(self, topic):
         self.show()
+        self.game_widget.load(topic)
+
+
+class DrawingWidget(gtk.DrawingArea):
+
+    def __init__(self):
+
+        gtk.DrawingArea.__init__(self)
+
+        self.modify_bg(gtk.STATE_NORMAL, COLORES["text"])
+
+        self.juego = False
+
+        self.show_all()
+
+    def __run_game(self, _dict):
+        """
+        Comienza a correr el Juego.
+        """
+        xid = self.get_property('window').xid
+        os.putenv('SDL_WINDOWID', str(xid))
+        #self.juego = Juego()
+        #self.juego.run()
+
+    def load(self, topic):
+        # self.__run_game(_dict)
+        pass
+
+    def stop(self):
+        if self.juego:
+            self.juego.stop()

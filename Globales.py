@@ -21,7 +21,6 @@
 
 import commands
 import csv
-import chardet
 import gtk
 from gtk import gdk
 
@@ -29,19 +28,13 @@ COLORES = {
     "window": gdk.color_parse("#ffffff"),
     "toolbar": gdk.color_parse("#778899"),
     "text": gdk.color_parse("#000000"),
+    "rojo": gdk.color_parse("#ff0000"),
     }
 
 
 def get_vocabulario(csvfile):
-    item = []
-    archivo = open(csvfile, 'rb')
-    encoding = chardet.detect(archivo.read())['encoding']
-    archivo.seek(0)
-    reader = csv.reader(archivo, dialect='excel', delimiter=',')
-    for index, row in enumerate(reader):
-        row = [x.decode(encoding) for x in row]
-        item.append(row)
-    return item
+    reader = csv.reader(file(csvfile))
+    return list(reader)
 
 
 def decir(pitch, speed, word_gap, voice, text):
