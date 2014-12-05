@@ -11,10 +11,13 @@ import csv
 
 SIZE = (700, 700)
 TILE = (64, 64)
-font_path = "fonts/SourceCodePro-Regular.ttf"
 
-topic_dir = "../../Topics/Topic_5/"
+game_dir = os.path.abspath(os.path.dirname(__file__))
+def gamedir(archivo):
+    return os.path.join(game_dir, archivo)
 
+font_path = gamedir("fonts/SourceCodePro-Regular.ttf")
+topic_dir = gamedir("../../Topics/Topic_5/")
 
 def obtener_palabra():
     archivo = os.path.join(topic_dir, "vocabulario.csv")
@@ -57,7 +60,7 @@ class Escena(spyral.Scene):
 
         self.layers = ["abajo", "arriba", "primer"]
 
-        img = spyral.Image(filename="images/Peru_Machu_Picchu_Sunrise.jpg")\
+        img = spyral.Image(filename=gamedir("images/Peru_Machu_Picchu_Sunrise.jpg"))\
                                                 .scale(self.scene.size)
 
         n = pygame.Surface.convert_alpha(img._surf)
@@ -91,7 +94,7 @@ class Terraza(spyral.Sprite):
 
         self.anchor = "midbottom"
         self.layer = "abajo"
-        self.image = spyral.Image(filename="images/terraza.png")
+        self.image = spyral.Image(filename=gamedir("images/terraza.png"))
         self.pos = (scene.width / 2, scene.height)
 
     def temblar(self):
@@ -109,7 +112,7 @@ class Tablero(spyral.Sprite):
         self.layer = "abajo"
         self.ganadas = 0
 
-        font_path = "fonts/SourceCodePro-Regular.ttf"
+        font_path = gamedir("fonts/SourceCodePro-Regular.ttf")
         self.font = spyral.Font(font_path, 60, (0, 0, 0))
         self.palabra, self.archivo_img = obtener_palabra()
         self.text = self.palabra
@@ -203,19 +206,19 @@ class Lluvia(spyral.Sprite):
             number = str(i).zfill(2)
             name = "Asteroid-A-10-" + number + ".png"
             self.asteroid_frames.append(spyral.Image(
-                                filename="images/asteroid/" + name))
+                                filename=gamedir("images/asteroid/" + name)))
             if int(i / 3) % 2 == 0:
                 self.target_frames.append(spyral.Image(size=(75, 75)))
             else:
                 self.target_frames.append(spyral.Image(
-                                filename="images/asteroid/" + name))
+                                filename=gamedir("images/asteroid/" + name)))
 
         m = spyral.Animation("image", spyral.easing.Iterate(
                                 self.asteroid_frames, 1), 5, loop=True)
         self.animate(m)
 
         # Boom
-        self.explosion_full = spyral.Image(filename="images/explosion.png")
+        self.explosion_full = spyral.Image(filename=gamedir("images/explosion.png"))
 
         self.explosion_frames = []
         explosion_size = 205
@@ -273,7 +276,7 @@ class Lluvia(spyral.Sprite):
 class Visualizador(spyral.Sprite):
     def __init__(self, scene):
         spyral.Sprite.__init__(self, scene)
-        self.image = spyral.Image("images/golden-border.png")
+        self.image = spyral.Image(gamedir("images/golden-border.png"))
         self.layer = "abajo"
 
         self.font = spyral.Font(font_path, 28, (0, 0, 0))
@@ -349,7 +352,7 @@ class Visualizador(spyral.Sprite):
 class Jugador(spyral.Sprite):
     def __init__(self, scene):
         super(Jugador, self).__init__(scene)
-        self.full_image = spyral.Image(filename="images/user2.png")
+        self.full_image = spyral.Image(filename=gamedir("images/user2.png"))
         self.estado = "nuevo"
         self.y = scene.height - 138
         self.velocidad = 90

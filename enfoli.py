@@ -83,7 +83,7 @@ class Main(gtk.Window):
         self.videoview.connect("game", self.__play_game)
         self.connect("delete-event", self.__salir)
 
-        self.resize(640, 480)
+        self.resize(700, 700)
         self.toolbar.buttons[0].set_active(True)
 
     def __play_game(self, widget, topic):
