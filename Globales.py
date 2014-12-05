@@ -22,6 +22,8 @@
 import commands
 import csv
 import gtk
+import pygame
+
 from gtk import gdk
 
 COLORES = {

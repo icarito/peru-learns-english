@@ -86,6 +86,15 @@ class Main(gtk.Window):
         self.resize(640, 480)
         self.toolbar.buttons[0].set_active(True)
 
+        self.connect('key-press-event', self.__key_press_event)
+        self.connect('key-release-event', self.__key_release_event)
+
+    def __key_press_event(self, widget, event):
+        self.gameview.procesar_key_press_event(event)
+
+    def __key_release_event(self, widget, event):
+        self.gameview.procesar_key_release_event(event)
+
     def __play_game(self, widget, topic):
         self.__switch(False, "game", topic)
 
