@@ -33,6 +33,7 @@ import spyral
 import pygame
 from Games.ug1.runme import Escena
 
+
 class GameView(gtk.EventBox):
 
     def __init__(self):
@@ -42,69 +43,57 @@ class GameView(gtk.EventBox):
         self.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
         self.set_border_width(4)
 
-        self.game_widget = GameBox()
-
-        self.add(self.game_widget)
-        self.show_all()
-
-    def stop(self):
-        self.game_widget.stop()
-        self.hide()
-
-    def run(self, topic):
-        self.show()
-        self.game_widget.load(topic)
-
-
-class GameBox(gtk.VBox):
-    def __init__(self):
-        gtk.VBox.__init__(self)
+        self.game = False
+        self.pump = False
 
         self.pygamecanvas = sugargame2.canvas.PygameCanvas(self)
         self.pygamecanvas.set_flags(gtk.EXPAND)
         self.pygamecanvas.set_flags(gtk.FILL)
 
-        self.connect("visibility-notify-event", self.redraw)
         self.pygamecanvas.set_events(gtk.gdk.BUTTON_PRESS_MASK)
-        self.pygamecanvas.connect("button-press-event", self.pygamecanvas.grab_focus)
+        self.pygamecanvas.connect(
+            "button-press-event", self.pygamecanvas.grab_focus)
 
         self.add(self.pygamecanvas)
-        gobject.timeout_add(300, self.pump)
 
+        self.connect("expose-event", self.__redraw)
         self.show_all()
-        self.pygamecanvas.run_pygame(self.run_game)
 
-    def redraw(self, *args, **kwargs):
-        scene = spyral.director.get_scene()
-        if scene:
-            scene.redraw()
+    def __redraw(self, widget):
+        try:
+            scene = spyral.director.get_scene()
+            if scene:
+                scene.redraw()
+        except:
+            pass
+        self.show_all()
 
-    def pump(self):
-        # Esto es necesario porque sino pygame acumula demasiados eventos.
-        pygame.event.pump()
-
-    def run_game(self):
-        spyral.director.init((700,700), fullscreen=False, max_fps=30)
+    def __run_game(self):
+        rect = self.get_allocation()
+        spyral.director.init((rect.width, rect.height), fullscreen=False, max_fps=30)
         self.game = Escena(self)
         spyral.director.push(self.game)
-        self.start()
-
-    def start(self):
+        if self.pump:
+            gobject.source_remove(self.pump)
+            self.pump = False
+        self.pump = gobject.timeout_add(300, self.__pump)
         spyral.director.run(sugar = True)
 
-    def load(self, topic):
-        scene = spyral.director.get_scene()
-        scene.redraw()
-        self.show()
+    def __pump(self):
+        # FIXME: HACK porque sino pygame acumula demasiados eventos.
+        pygame.event.pump()
+        return True
 
     def stop(self):
-        p = PauseScene()
-        spyral.director.push(p)
+        # FIXME: El juego debe detenerse y eliminarse.
+        if self.pump:
+            gobject.source_remove(self.pump)
+            self.pump = False
+        if self.game:
+            del(self.game)
+            self.game = False
         self.hide()
 
-class PauseScene(spyral.Scene):
-    def __init__(self):
-        spyral.Scene.__init__(self, (700, 700), 20, 20)
-        self.background = spyral.Image(size=(800, 800)).fill((0, 0, 0))
-
-        spyral.event.register("input.keyboard.down.*", spyral.director.pop)
+    def run(self, topic):
+        self.pygamecanvas.run_pygame(self.__run_game)
+        self.show()
