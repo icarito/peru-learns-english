@@ -1,4 +1,6 @@
 #!/bin/env python2
+import sys
+sys.path.insert(1, "../../Lib/")
 
 import gtk
 import gobject
