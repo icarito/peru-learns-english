@@ -56,17 +56,13 @@ class GameView(gtk.EventBox):
 
         self.add(self.pygamecanvas)
 
-        self.connect("expose-event", self.__redraw)
+        self.connect("size-allocate", self.__reescalar)
         self.show_all()
 
-    def __redraw(self, widget):
-        try:
-            scene = spyral.director.get_scene()
-            if scene:
-                scene.redraw()
-        except:
-            pass
-        self.show_all()
+    def __reescalar(self, widget, event):
+        if self.game:
+            rect = self.get_allocation()
+            print "FIXME: El juego debe reescalarse a", rect.width, rect.height
 
     def __run_game(self):
         rect = self.get_allocation()
@@ -82,11 +78,12 @@ class GameView(gtk.EventBox):
 
     def __pump(self):
         # FIXME: HACK porque sino pygame acumula demasiados eventos.
+        # No es mejor hacer pygame.event.clear() ?
         pygame.event.pump()
         return True
 
     def stop(self):
-        # FIXME: El juego debe detenerse y eliminarse.
+        print "FIXME: El juego debe detenerse y eliminarse."
         if self.pump:
             gobject.source_remove(self.pump)
             self.pump = False
