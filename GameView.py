@@ -19,6 +19,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import os
+from signal import SIGTERM
 import sys
 sys.path.insert(1, "Lib/")
 
@@ -38,11 +40,15 @@ class GameView(gtk.EventBox):
         self.set_border_width(4)
 
         self.add(gtk.Label("Juego 1"))
+        self.game = None
         self.show_all()
 
     def stop(self):
+        if self.game:
+            os.kill(self.game, SIGTERM)
         self.hide()
 
     def run(self, topic):
-        subprocess.Popen("python2 Games/ug1/runme.py", shell=True)
+        p = subprocess.Popen("python2 Games/ug1/runme.py", shell=True)
+        self.game = p.pid
         self.show()
