@@ -23,14 +23,14 @@ import sys
 sys.path.insert(1, "Lib/")
 
 import gtk
-import gobject
-import spyral
-import pygame
-import sugargame2
-import sugargame2.canvas
 
 from Globales import COLORES
 
+import gobject
+import sugargame2
+import sugargame2.canvas
+import spyral
+import pygame
 from Games.ug1.runme import Escena
 
 
@@ -49,6 +49,10 @@ class GameView(gtk.EventBox):
         self.pygamecanvas = sugargame2.canvas.PygameCanvas(self)
         self.pygamecanvas.set_flags(gtk.EXPAND)
         self.pygamecanvas.set_flags(gtk.FILL)
+
+        self.pygamecanvas.set_events(gtk.gdk.BUTTON_PRESS_MASK)
+        self.pygamecanvas.connect(
+            "button-press-event", self.pygamecanvas.grab_focus)
 
         self.add(self.pygamecanvas)
 
@@ -92,31 +96,3 @@ class GameView(gtk.EventBox):
         self.pygamecanvas.run_pygame(self.__run_game)
         self.pygamecanvas.grab_focus()
         self.show()
-
-    def procesar_key_press_event(self, event):
-        if self.game:
-            key = gtk.gdk.keyval_name(event.keyval)
-            try:
-                keycode = getattr(pygame, 'K_'+key.lower())
-            except:
-                keycode = getattr(pygame, 'K_'+key.upper())
-            else:
-                print "ERROR: Falta Traducir:", gtk.gdk.keyval_name(event.keyval)
-                return
-            ukey = unichr(gtk.gdk.keyval_to_unicode(event.keyval))
-            evt = pygame.event.Event(pygame.KEYDOWN, key=keycode, unicode=ukey, mod=0)
-            pygame.event.post(evt)
-
-    def procesar_key_release_event(self, event):
-        if self.game:
-            key = gtk.gdk.keyval_name(event.keyval)
-            try:
-                keycode = getattr(pygame, 'K_'+key.lower())
-            except:
-                keycode = getattr(pygame, 'K_'+key.upper())
-            else:
-                print "ERROR: Falta Traducir:", gtk.gdk.keyval_name(event.keyval)
-                return
-            ukey = unichr(gtk.gdk.keyval_to_unicode(event.keyval))
-            evt = pygame.event.Event(pygame.KEYUP, key=keycode, unicode=ukey, mod=0)
-            pygame.event.post(evt)
