@@ -16,7 +16,7 @@ def _init():
         return
     _inited = True
     spyral.event._init()
-    #spyral._style.init()
+    spyral._style.init()
     pygame.display.init()
     pygame.font.init()
 
@@ -27,7 +27,6 @@ def _quit():
     pygame.quit()
     spyral.director._stack = []
     spyral.director._initialized = False
-    raise spyral.exceptions.GameEndException("The game has ended correctly.")
 
 def _get_executing_scene():
     """

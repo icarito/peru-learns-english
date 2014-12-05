@@ -121,7 +121,7 @@ def handle(event_name, event=None, scene=None):
     :type scene: :class:`Scene <spyral.Scene>` or ``None``.
     """
     if scene is None:
-        scene = spyral.director.get_scene()
+        scene = spyral._get_executing_scene()
     scene._handle_event(event_name, event)
 
 def register(event_namespace, handler,

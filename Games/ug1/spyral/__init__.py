@@ -2,7 +2,7 @@
 Spyral, an awesome library for making games.
 """
 
-__version__ = '0.9.7'
+__version__ = '0.9.6'
 __license__ = 'MIT'
 __author__ = 'Robert Deaton'
 
@@ -20,7 +20,7 @@ ALL_BY_MODULE = {
     'spyral.image' : ['Image'],
     'spyral.vector' : ['Vec2D'],
     'spyral.rect' : ['Rect'],
-    'spyral.animation' : ['Animation', 'DelayAnimation'],
+    'spyral.animation' : ['Animation'],
     'spyral.director' : ['quit'],
     'spyral.core' : ['_init', '_quit', '_get_executing_scene'],
     'spyral.font' : ['Font'],
@@ -39,7 +39,7 @@ ALL_BY_MODULE = {
 
 ATTRIBUTE_MODULES = frozenset(['memoize', 'point', 'exceptions', 'easing',
                                'mouse', 'event', '_lib', 'font', 'form',
-                               'director', 'sprite', 'widgets',
+                               'director', 'sprite', '_style', 'widgets',
                                'util', 'keyboard', 'image'])
 
 OBJECT_ORIGINS = {}
