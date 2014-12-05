@@ -80,10 +80,14 @@ class Main(gtk.Window):
         self.toolbar.connect("activar", self.__switch)
         self.toolbar.connect("video", self.__play_video)
         self.videoview.connect("flashcards", self.__play_flashcards)
+        self.videoview.connect("game", self.__play_game)
         self.connect("delete-event", self.__salir)
 
         self.resize(640, 480)
         self.toolbar.buttons[0].set_active(True)
+
+    def __play_game(self, widget, topic):
+        self.__switch(False, "game", topic)
 
     def __play_flashcards(self, widget, topic):
         self.__switch(False, "flashcards", topic)
@@ -103,6 +107,8 @@ class Main(gtk.Window):
             self.videoview.run(data)
         elif label == "flashcards":
             self.flashcards.run(data)
+        elif label == "game":
+            self.gameview.run(data)
         return False
 
     def __salir(self, widget=None, senial=None):

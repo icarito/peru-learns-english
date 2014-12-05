@@ -34,6 +34,8 @@ class VideoView(gtk.EventBox):
 
     __gsignals__ = {
     "flashcards": (gobject.SIGNAL_RUN_FIRST,
+        gobject.TYPE_NONE, (gobject.TYPE_STRING, )),
+    "game": (gobject.SIGNAL_RUN_FIRST,
         gobject.TYPE_NONE, (gobject.TYPE_STRING, ))}
 
     def __init__(self):
@@ -69,12 +71,17 @@ class VideoView(gtk.EventBox):
         self.show_all()
 
         flashcards.connect("clicked", self.__emit_flashcards)
+        self.imagen_juego.connect("button-press-event", self.__emit_game)
+
+    def __emit_game(self, widget, event):
+        self.emit("game", self.topic)
 
     def __emit_flashcards(self, widget):
         self.emit("flashcards", self.topic)
 
     def stop(self):
         self.videoplayer.stop()
+        self.imagen_juego.stop()
         self.hide()
 
     def run(self, topic):
@@ -92,6 +99,10 @@ class DrawingArea(gtk.DrawingArea):
 
         self.modify_bg(gtk.STATE_NORMAL, COLORES["text"])
 
+        self.add_events(
+            gtk.gdk.BUTTON_PRESS_MASK
+        )
+
         self.vocabulario = []
         self.index_select = 1
         self.imagenplayer = False
@@ -99,16 +110,19 @@ class DrawingArea(gtk.DrawingArea):
 
         self.show_all()
 
+    def stop(self):
+        if self.imagenplayer:
+            self.imagenplayer.stop()
+            del(self.imagenplayer)
+            self.imagenplayer = False
+
     def load(self, topic):
+        self.stop()
         csvfile = os.path.join(topic, "vocabulario.csv")
         self.vocabulario = get_vocabulario(csvfile)
         self.index_select = 1
         self.path = os.path.join(topic, "Imagenes",
             "%s.png" % self.vocabulario[self.index_select][0])
-        if self.imagenplayer:
-            self.imagenplayer.stop()
-            del(self.imagenplayer)
-            self.imagenplayer = False
         self.imagenplayer = ImagePlayer(self)
         self.imagenplayer.load(self.path)
         return False
