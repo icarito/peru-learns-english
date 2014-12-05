@@ -11,6 +11,8 @@ from runme import Escena
 class GameWindow(gtk.Window):
     def __init__(self):
         gtk.Window.__init__(self)
+        self.set_default_size(700, 700)
+
         self.pygamecanvas = sugargame2.canvas.PygameCanvas(self)
         self.pygamecanvas.set_flags(gtk.EXPAND)
         self.pygamecanvas.set_flags(gtk.FILL)
