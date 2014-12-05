@@ -70,14 +70,15 @@ class GameView(gtk.EventBox):
 
     def __run_game(self):
         rect = self.get_allocation()
-        spyral.director.init((rect.width, rect.height), fullscreen=False, max_fps=30)
+        spyral.director.init((rect.width, rect.height),
+            fullscreen=False, max_fps=30)
         self.game = Escena(self)
         spyral.director.push(self.game)
         if self.pump:
             gobject.source_remove(self.pump)
             self.pump = False
         self.pump = gobject.timeout_add(300, self.__pump)
-        spyral.director.run(sugar = True)
+        spyral.director.run(sugar=True)
 
     def __pump(self):
         # FIXME: HACK porque sino pygame acumula demasiados eventos.
