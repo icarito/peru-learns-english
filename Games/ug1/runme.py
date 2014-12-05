@@ -13,11 +13,11 @@ SIZE = (700, 700)
 TILE = (64, 64)
 font_path = "fonts/SourceCodePro-Regular.ttf"
 
-topic_dir = "../../Topics/Topic_1/"
+topic_dir = "../../Topics/Topic_5/"
 
 
 def obtener_palabra():
-    archivo = "../../Topics/Topic_1/vocabulario.csv"
+    archivo = os.path.join(topic_dir, "vocabulario.csv")
     tabla = csv.DictReader(file(archivo))
     lista = []
     for linea in tabla:
@@ -127,7 +127,9 @@ class Tablero(spyral.Sprite):
 
     def reset(self):
         self.ganadas = self.ganadas + 1
-        self.palabra, self.archivo_img = obtener_palabra()
+        self.palabra_anterior = self.palabra
+        while self.palabra_anterior==self.palabra:
+            self.palabra, self.archivo_img = obtener_palabra()
         self.text = self.palabra
         self.acertadas = ""
         self.mostrar(self.palabra, self.acertadas)

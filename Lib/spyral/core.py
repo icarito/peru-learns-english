@@ -40,8 +40,6 @@ def _get_executing_scene():
         if sys.version_info[0:2]==(2,6):
             # workaround for Python 2.6, see http://bugs.python.org/issue4092 
             args = inspect.ArgInfo(*args)
-        print type(args)
-        print args
         if len(args.args) > 0 and args.args[0] == 'self':
             obj = args.locals['self']
             if isinstance(obj, spyral.Scene):
