@@ -90,6 +90,7 @@ class GameView(gtk.EventBox):
 
     def run(self, topic):
         self.pygamecanvas.run_pygame(self.__run_game)
+        self.pygamecanvas.grab_focus()
         self.show()
 
     def procesar_key_press_event(self, event):
