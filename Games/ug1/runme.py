@@ -1,20 +1,20 @@
 #!/bin/env python2
 # *-* coding: utf-8 *-*
 
+import os
 import sys
 sys.path.insert(1, "../../Lib/")
 
+game_dir = os.path.abspath(os.path.dirname(__file__))
+os.chdir(game_dir)
+
 import pygame
 import spyral
-import os
 import random
 import csv
 
 SIZE = (700, 700)
 TILE = (64, 64)
-
-game_dir = os.path.abspath(os.path.dirname(__file__))
-
 
 def gamedir(archivo):
     return os.path.join(game_dir, archivo)
