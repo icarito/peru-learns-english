@@ -22,6 +22,7 @@
 import os
 import gtk
 import gobject
+import pango
 
 from VideoPlayer.VideoPlayer import VideoPlayer
 from JAMediaImagenes.ImagePlayer import ImagePlayer
@@ -53,8 +54,12 @@ class VideoView(gtk.EventBox):
         tabla.set_border_width(4)
 
         self.titulo = gtk.Label("Título")
+        self.titulo.modify_font(pango.FontDescription("Purisa 18"))
+        self.titulo.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
         self.videoplayer = VideoPlayer()
         self.links = gtk.Label("Links")
+        self.links.modify_font(pango.FontDescription("Purisa 18"))
+        self.links.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
 
         tabla.attach(self.titulo, 0, 2, 0, 1)
         tabla.attach(self.videoplayer, 0, 2, 1, 9)
@@ -125,11 +130,13 @@ class GameImage(gtk.DrawingArea):
         return False
 
 
-class FlashCardsPreview(gtk.Table):
+class FlashCardsPreview(gtk.EventBox):
 
     def __init__(self):
 
-        gtk.Table.__init__(self, rows=1, columns=2, homogeneous=True)
+        gtk.EventBox.__init__(self)
+
+        self.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
 
         self.vocabulario = []
         self.index_select = 1
@@ -140,10 +147,16 @@ class FlashCardsPreview(gtk.Table):
 
         self.drawing = gtk.DrawingArea()
         self.label = gtk.Label("Text")
+        self.drawing.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
+        self.label.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
+        self.label.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
+        self.label.modify_font(pango.FontDescription("Purisa 18"))
 
-        self.attach(self.drawing, 0, 1, 0, 1)
-        self.attach(self.label, 1, 2, 0, 1)
+        tabla = gtk.Table(rows=1, columns=2, homogeneous=True)
+        tabla.attach(self.drawing, 0, 1, 0, 1)
+        tabla.attach(self.label, 1, 2, 0, 1)
 
+        self.add(tabla)
         self.show_all()
 
     def __run_secuencia(self):
@@ -175,5 +188,5 @@ class FlashCardsPreview(gtk.Table):
         self.vocabulario = get_vocabulario(csvfile)
         self.index_select = 1
         self.__run_secuencia()
-        gobject.timeout_add(4000, self.__run_secuencia)
+        gobject.timeout_add(5000, self.__run_secuencia)
         return False

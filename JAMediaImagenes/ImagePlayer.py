@@ -42,6 +42,8 @@ import gtk
 
 PR = False
 
+gobject.threads_init()
+
 
 class ImagePlayer(gobject.GObject):
 
@@ -117,10 +119,10 @@ class PlayerBin(gobject.GObject):
     def __sync_message(self, bus, message):
         if message.type == gst.MESSAGE_ELEMENT:
             if message.structure.get_name() == 'prepare-xwindow-id':
-                gtk.gdk.threads_enter()
-                gtk.gdk.display_get_default().sync()
+                #gtk.gdk.threads_enter()
+                #gtk.gdk.display_get_default().sync()
                 message.src.set_xwindow_id(self.ventana_id)
-                gtk.gdk.threads_leave()
+                #gtk.gdk.threads_leave()
 
         elif message.type == gst.MESSAGE_ERROR:
             err, debug = message.parse_error()
