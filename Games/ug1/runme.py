@@ -303,11 +303,7 @@ class Visualizador(spyral.Sprite):
         self.line_height = self.font.linesize
         self.margen = 50
 
-        self.text = scene.tablero.palabra
-        self.palabra_png = scene.tablero.archivo_img
-
-        self.image.draw_image(self.render_image(self.palabra_png),
-            position=(25, 0), anchor="midleft")
+        self.reset()
 
     def set_text(self, text):
         nueva = spyral.Image(size=(self.width - self.margen,
@@ -320,8 +316,20 @@ class Visualizador(spyral.Sprite):
     def reset(self):
         self.text = self.scene.tablero.palabra
         self.palabra_png = self.scene.tablero.archivo_img
-        self.image.draw_image(self.render_image(self.palabra_png),
+
+        image1 = self.image.copy()
+        image1.draw_image(self.render_image(self.palabra_png),
             position=(25, 0), anchor="midleft")
+        image2 = self.image.copy()
+
+        nueva = spyral.Image(size=(self.width - self.margen,
+            self.height - self.margen)).fill((255, 255, 255))
+        image2.draw_image(nueva,
+            position=(self.margen / 2, 0), anchor="midleft")
+        image2.draw_image(self.render_text("Press a letter !"),
+            position=(0, 0), anchor="midleft")
+        a = spyral.Animation("image", spyral.easing.Iterate([image1, image2], 6), 6)
+        self.animate(a)
 
     def render_image(self, image):
         try:

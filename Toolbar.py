@@ -70,7 +70,7 @@ class Toolbar(gtk.EventBox):
             item = gtk.ToolItem()
             item.set_expand(True)
             label = gtk.Label(text)
-            label.modify_font(pango.FontDescription("Purisa 20"))
+            label.modify_font(pango.FontDescription("Purisa Bold 20"))
             boton = gtk.ToggleToolButton()
             boton.set_label_widget(label)
             boton.connect("toggled", self.__do_toggled)
@@ -126,10 +126,10 @@ class MenuBar(gtk.MenuBar):
 
         self.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
         self.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
-        self.modify_font(pango.FontDescription("Purisa 20"))
+        self.modify_font(pango.FontDescription("Purisa Bold 20"))
 
         itemmenu = gtk.MenuItem("Topics")
-        itemmenu.child.modify_font(pango.FontDescription("Purisa 20"))
+        itemmenu.child.modify_font(pango.FontDescription("Purisa Bold 20"))
         itemmenu.child.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
         itemmenu.child.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
 
@@ -148,7 +148,7 @@ class MenuBar(gtk.MenuBar):
             except:
                 pass
             boton = gtk.Label(arch)
-            boton.modify_font(pango.FontDescription("Purisa 20"))
+            boton.modify_font(pango.FontDescription("Purisa Bold 20"))
             boton.set_padding(xpad=20, ypad=20)
             item.add(boton)
             item.connect("activate", self.__emit_accion_menu)

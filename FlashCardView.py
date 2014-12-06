@@ -201,7 +201,7 @@ class Derecha(gtk.EventBox):
 
         self.label = gtk.Label("")
         self.label.set_property("justify", gtk.JUSTIFY_CENTER)
-        self.label.modify_font(pango.FontDescription("Purisa 22"))
+        self.label.modify_font(pango.FontDescription("Purisa Bold 28"))
         self.label.modify_fg(gtk.STATE_NORMAL, COLORES["rojo"])
         tabla.attach(self.label, 0, 3, 0, 1)
 
@@ -211,19 +211,19 @@ class Derecha(gtk.EventBox):
         tabla.attach(button0, 0, 3, 1, 2)
 
         button1 = MyButton("I knew it !",
-            pango.FontDescription("Purisa 12"))
+            pango.FontDescription("Purisa 11"))
         button1.modify_bg(gtk.STATE_NORMAL, COLORES["verde"])
         button1.connect("clicked", self.__seguir)
         tabla.attach(button1, 0, 1, 2, 3)
 
         button2 = MyButton("I wasn't sure.",
-            pango.FontDescription("Purisa 12"))
+            pango.FontDescription("Purisa 11"))
         button2.modify_bg(gtk.STATE_NORMAL, COLORES["amarillo"])
         button2.connect("clicked", self.__seguir)
         tabla.attach(button2, 1, 2, 2, 3)
 
         button3 = MyButton("I had no idea !",
-            pango.FontDescription("Purisa 12"))
+            pango.FontDescription("Purisa 11"))
         button3.modify_bg(gtk.STATE_NORMAL, COLORES["rojo"])
         button3.connect("clicked", self.__seguir)
         tabla.attach(button3, 2, 3, 2, 3)
