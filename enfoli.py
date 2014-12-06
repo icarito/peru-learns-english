@@ -25,7 +25,6 @@ import sys
 
 from Toolbar import Toolbar
 from Globales import COLORES
-from HomeView import HomeView
 from VideoView import VideoView
 from FlashCardView import FlashCardView
 from GameView import GameView
@@ -48,20 +47,13 @@ class Main(gtk.Window):
         self.set_title("English for Peru")
         #self.set_icon_from_file(os.path.join(BASE_PATH, "Iconos", ""))
         self.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
-        self.maximize()
-        
-        # FIXME: Esto no funciona, deja la ventana chiquitísima
-        #self.set_resizable(False)
-
         self.set_border_width(2)
-        self.set_position(gtk.WIN_POS_CENTER)
+        self.maximize()
+        self.set_resizable(False)
 
         self.vbox = gtk.VBox()
         self.toolbar = Toolbar()
         self.vbox.pack_start(self.toolbar, False, False, 0)
-
-        #self.homeview = HomeView()
-        #self.vbox.pack_start(self.homeview, True, True, 0)
 
         self.videoview = VideoView()
         self.vbox.pack_start(self.videoview, True, True, 0)
@@ -102,9 +94,7 @@ class Main(gtk.Window):
 
     def __switch(self, widget, label, data=False):
         map(ocultar, self.vbox.get_children()[1:])
-        if label == "Home":
-            self.homeview.run()
-        elif label == "Instructions":
+        if label == "Instructions":
             self.instructionsview.run()
         elif label == "Credits":
             self.creditsview.run()
