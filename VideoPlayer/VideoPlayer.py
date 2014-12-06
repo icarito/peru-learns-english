@@ -20,7 +20,6 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import gtk
-import threading
 
 from PlayerControls import PlayerControls
 from ProgressPlayer import ProgressPlayer
@@ -109,8 +108,7 @@ class VideoPlayer(gtk.EventBox):
         self.player.connect("newposicion", self.__update_progress)
 
         self.player.load(path)
-        self._thread = threading.Thread(target=self.player.play)
-        self._thread.start()
+        self.player.play()
         self.player.set_volumen(volumen)
         self.progress.volumen.set_value(volumen / 10)
 

@@ -136,8 +136,8 @@ def pop():
 
 def push(scene):
     """
-    Place *scene* on the top of the stack, and move control to it. This does 
-    return control, so remember to return immediately after calling it. 
+    Place *scene* on the top of the stack, and move control to it. This does
+    return control, so remember to return immediately after calling it.
 
     :param scene: The new scene.
     :type scene: :class:`Scene <spyral.Scene>`
@@ -199,23 +199,26 @@ def run(sugar=False, profiling=False, scene=None):
                 A closure for handling events, which includes firing the update
                 related events (e.g., pre_update, update, and post_update).
                 """
-                global _tick
-                if sugar:
-                    while gtk.events_pending():
-                        gtk.main_iteration()
-                if len(pygame.event.get([pygame.VIDEOEXPOSE])) > 0:
-                    scene.redraw()
-                    scene._handle_event("director.redraw")
+                try:
+                    global _tick
+                    if sugar:
+                        while gtk.events_pending():
+                            gtk.main_iteration()
+                    if len(pygame.event.get([pygame.VIDEOEXPOSE])) > 0:
+                        scene.redraw()
+                        scene._handle_event("director.redraw")
 
-                scene._event_source.tick()
-                events = scene._event_source.get()
-                for event in events:
-                    scene._queue_event(*spyral.event._pygame_to_spyral(event))
-                scene._handle_event("director.pre_update")
-                scene._handle_event("director.update",
-                                    spyral.Event(delta=delta))
-                _tick += 1
-                scene._handle_event("director.post_update")
+                    scene._event_source.tick()
+                    events = scene._event_source.get()
+                    for event in events:
+                        scene._queue_event(*spyral.event._pygame_to_spyral(event))
+                    scene._handle_event("director.pre_update")
+                    scene._handle_event("director.update",
+                                        spyral.Event(delta=delta))
+                    _tick += 1
+                    scene._handle_event("director.post_update")
+                except:
+                    pass
             clock.frame_callback = frame_callback
             clock.update_callback = update_callback
         clock.tick()

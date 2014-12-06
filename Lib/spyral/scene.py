@@ -12,7 +12,7 @@ try:
 except ImportError:
     spyral.exceptions.actors_not_available_warning()
     _GREENLETS_AVAILABLE = False
-    
+
 from itertools import chain
 from layertree import _LayerTree
 from collections import defaultdict
@@ -100,7 +100,7 @@ class Scene(object):
         spyral.event.register('director.update', self._handle_events,
                               scene=self)
         if _GREENLETS_AVAILABLE:
-            spyral.event.register('director.update', self._run_actors, 
+            spyral.event.register('director.update', self._run_actors,
                                   ('delta',), scene=self)
         spyral.event.register('spyral.internal.view.changed',
                               self._invalidate_views, scene=self)
@@ -270,7 +270,7 @@ class Scene(object):
                 self._handle_event(type, event)
             self._events = self._pending
             self._pending = []
-    
+
     def _unregister_sprite_events(self, sprite):
         for name, handlers in self._handlers.items():
             self._handlers[name] = [h for h in handlers
@@ -295,7 +295,7 @@ class Scene(object):
                                              in self._handlers[event_namespace]
                                              if ((not isinstance(h[0], WeakMethodBound) and handler != h[0])
                                              or (isinstance(h[0], WeakMethodBound)
-                                                and ((h[0].func is not handler.im_func) 
+                                                and ((h[0].func is not handler.im_func)
                                                 or (h[0].weak_object_ref() is not handler.im_self))))]
         if not self._handlers[event_namespace]:
             del self._handlers[event_namespace]
@@ -584,7 +584,7 @@ class Scene(object):
         # This function sits in a potential hot loop
         # For that reason, some . lookups are optimized away
         screen = self._surface
-        
+
         # First we test if the background has been updated
         if self._background_version != self._background_image._version:
             self._set_background(self._background_image)
@@ -595,7 +595,10 @@ class Scene(object):
         for i in self._clear_this_frame + self._soft_clear:
             i = x.clip(i)
             b = self._background.subsurface(i)
-            screen.blit(b, i)
+            try:
+                screen.blit(b, i)
+            except:
+                return
 
         # Now, we need to blit layers, while simultaneously re-blitting
         # any static blits which were obscured
@@ -617,7 +620,10 @@ class Scene(object):
         # as they are drawn and then no longer cleared
         soft_clear = self._soft_clear
         self._soft_clear = []
-        screen_rect = screen.get_rect()
+        try:
+            screen_rect = screen.get_rect()
+        except:
+            return
         drawn_static = 0
 
         blit_flags_available = pygame.version.vernum < (1, 8)

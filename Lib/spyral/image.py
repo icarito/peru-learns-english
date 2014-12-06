@@ -6,13 +6,17 @@ import pygame
 import spyral
 import copy
 
+
 def _new_spyral_surface(size):
     """
     Internal method for creating a new Spyral-compliant Pygame surface.
     """
-    return pygame.Surface((int(size[0]),
-                           int(size[1])),
-                          pygame.SRCALPHA, 32).convert_alpha()
+    try:
+        return pygame.Surface((int(size[0]),
+            int(size[1])), pygame.SRCALPHA, 32).convert_alpha()
+    except:
+        return False
+
 
 def from_sequence(images, orientation="right", padding=0):
     """
@@ -166,7 +170,7 @@ class Image(object):
                  filename.
     :type size: :class:`Vec2D <spyral.Vec2D>`
     :param str filename:  If filename is set, the file with that name is loaded.
-                          The appendix has a list of the 
+                          The appendix has a list of the
                           :ref:`valid image formats<ref.image_formats>`. If you do
                           not specify a filename, you *must* pass in a size.
 

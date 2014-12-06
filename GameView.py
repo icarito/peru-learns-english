@@ -19,8 +19,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import os
-from signal import SIGTERM
 import sys
 sys.path.insert(1, "Lib/")
 
@@ -28,7 +26,13 @@ import gtk
 
 from Globales import COLORES
 
-import subprocess
+import gobject
+import sugargame2
+import sugargame2.canvas
+import spyral
+import pygame
+from Games.ug1.runme import Escena
+
 
 class GameView(gtk.EventBox):
 
@@ -39,16 +43,50 @@ class GameView(gtk.EventBox):
         self.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
         self.set_border_width(4)
 
-        self.add(gtk.Label("Juego 1"))
-        self.game = None
+        self.game = False
+        self.pump = False
+
+        self.pygamecanvas = sugargame2.canvas.PygameCanvas(self)
+        self.pygamecanvas.set_flags(gtk.EXPAND)
+        self.pygamecanvas.set_flags(gtk.FILL)
+
+        self.add(self.pygamecanvas)
+
+        self.connect("size-allocate", self.__reescalar)
         self.show_all()
 
-    def stop(self):
+    def __reescalar(self, widget, event):
         if self.game:
-            os.kill(self.game, SIGTERM)
+            rect = self.get_allocation()
+            print "FIXME: El juego debe reescalarse a", rect.width, rect.height
+
+    def __run_game(self):
+        rect = self.get_allocation()
+        spyral.director.init((rect.width, rect.height),
+            fullscreen=False, max_fps=30)
+        self.game = Escena(self)
+        spyral.director.push(self.game)
+        if self.pump:
+            gobject.source_remove(self.pump)
+            self.pump = False
+        self.pump = gobject.timeout_add(300, self.__pump)
+        spyral.director.run(sugar=True)
+
+    def __pump(self):
+        pygame.event.clear()
+        return True
+
+    def stop(self):
+        if self.pump:
+            gobject.source_remove(self.pump)
+            self.pump = False
+        if self.game:
+            spyral.quit()
+            del(self.game)
+            self.game = False
         self.hide()
 
     def run(self, topic):
-        p = subprocess.Popen("python2 Games/ug1/runme.py", shell=True)
-        self.game = p.pid
+        self.pygamecanvas.run_pygame(self.__run_game)
+        self.pygamecanvas.grab_focus()
         self.show()
