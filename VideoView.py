@@ -65,10 +65,11 @@ class VideoView(gtk.EventBox):
         imagen.set_from_file("Imagenes/flashcards.png")
         flashcards.add(imagen)
 
-        self.imagen_juego = DrawingArea_1()
+        self.imagen_juego = GameImage()
+        self.flashcards_preview = FlashCardsPreview()
         tabla.attach(self.imagen_juego, 2, 3, 0, 4)
         tabla.attach(flashcards, 2, 3, 4, 6)
-        tabla.attach(DrawingArea_2(), 2, 3, 6, 10)
+        tabla.attach(self.flashcards_preview, 2, 3, 6, 10)
 
         self.add(tabla)
         self.show_all()
@@ -85,26 +86,25 @@ class VideoView(gtk.EventBox):
     def stop(self):
         self.videoplayer.stop()
         self.imagen_juego.stop()
+        self.flashcards_preview.stop()
         self.hide()
 
     def run(self, topic):
         self.show()
         self.topic = topic
         self.videoplayer.load(os.path.join(self.topic, "video.ogv"))
-        gobject.idle_add(self.imagen_juego.load, topic)
+        self.imagen_juego.load(topic)
+        self.flashcards_preview.load(topic)
 
 
-class DrawingArea_1(gtk.DrawingArea):
+class GameImage(gtk.DrawingArea):
 
     def __init__(self):
 
         gtk.DrawingArea.__init__(self)
 
         self.modify_bg(gtk.STATE_NORMAL, COLORES["text"])
-
-        self.add_events(
-            gtk.gdk.BUTTON_PRESS_MASK
-        )
+        self.add_events(gtk.gdk.BUTTON_PRESS_MASK)
 
         self.imagenplayer = False
         self.path = False
@@ -120,31 +120,49 @@ class DrawingArea_1(gtk.DrawingArea):
     def load(self, topic):
         self.stop()
         self.path = os.path.abspath("Imagenes/juego1.png")
-
         self.imagenplayer = ImagePlayer(self)
         self.imagenplayer.load(self.path)
         return False
 
-class DrawingArea_2(gtk.DrawingArea):
+
+class FlashCardsPreview(gtk.Table):
 
     def __init__(self):
 
-        gtk.DrawingArea.__init__(self)
-
-        self.modify_bg(gtk.STATE_NORMAL, COLORES["text"])
-
-        self.add_events(
-            gtk.gdk.BUTTON_PRESS_MASK
-        )
+        gtk.Table.__init__(self, rows=1, columns=2, homogeneous=True)
 
         self.vocabulario = []
         self.index_select = 1
         self.imagenplayer = False
         self.path = False
+        self.control = False
+        self.topic = False
+
+        self.drawing = gtk.DrawingArea()
+        self.label = gtk.Label("Text")
+
+        self.attach(self.drawing, 0, 1, 0, 1)
+        self.attach(self.label, 1, 2, 0, 1)
 
         self.show_all()
 
+    def __run_secuencia(self):
+        self.stop()
+        self.path = os.path.join(self.topic, "Imagenes",
+            "%s.png" % self.vocabulario[self.index_select][0])
+        self.imagenplayer = ImagePlayer(self.drawing)
+        self.imagenplayer.load(self.path)
+        self.label.set_text(self.vocabulario[self.index_select][1])
+        if self.index_select < len(self.vocabulario) - 1:
+            self.index_select += 1
+        else:
+            self.index_select = 1
+        return True
+
     def stop(self):
+        if self.control:
+            gobject.source_remove(self.control)
+            self.control = False
         if self.imagenplayer:
             self.imagenplayer.stop()
             del(self.imagenplayer)
@@ -152,11 +170,10 @@ class DrawingArea_2(gtk.DrawingArea):
 
     def load(self, topic):
         self.stop()
+        self.topic = topic
         csvfile = os.path.join(topic, "vocabulario.csv")
         self.vocabulario = get_vocabulario(csvfile)
         self.index_select = 1
-        self.path = os.path.join(topic, "Imagenes",
-            "%s.png" % self.vocabulario[self.index_select][0])
-        self.imagenplayer = ImagePlayer(self)
-        self.imagenplayer.load(self.path)
+        self.__run_secuencia()
+        gobject.timeout_add(4000, self.__run_secuencia)
         return False

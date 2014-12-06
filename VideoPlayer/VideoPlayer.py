@@ -58,7 +58,6 @@ class VideoPlayer(gtk.EventBox):
     def __endfile(self, widget=None, senial=None):
         if self.video_path:
             self.load(self.video_path)
-        self.__control(False, "stop")
 
     def __update_progress(self, objetoemisor, valor):
         self.progress.set_progress(float(valor))
@@ -111,9 +110,11 @@ class VideoPlayer(gtk.EventBox):
         self.player.play()
         self.player.set_volumen(volumen)
         self.progress.volumen.set_value(volumen / 10)
+        return False
 
     def stop(self):
-        self.__control(False, "stop")
+        if self.player:
+            self.player.stop()
 
 
 class Visor(gtk.DrawingArea):
