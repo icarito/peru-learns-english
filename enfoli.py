@@ -48,7 +48,8 @@ class Main(gtk.Window):
         #self.set_title("")
         #self.set_icon_from_file(os.path.join(BASE_PATH, "Iconos", ""))
         self.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
-        self.set_resizable(True)
+        self.maximize()
+        self.set_resizable(False)
         self.set_border_width(2)
         self.set_position(gtk.WIN_POS_CENTER)
 
@@ -83,7 +84,6 @@ class Main(gtk.Window):
         self.videoview.connect("game", self.__play_game)
         self.connect("delete-event", self.__salir)
 
-        self.resize(640, 480)
         self.toolbar.buttons[0].set_active(True)
 
     def __play_game(self, widget, topic):
