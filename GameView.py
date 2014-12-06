@@ -40,17 +40,20 @@ class GameView(gtk.EventBox):
 
         gtk.EventBox.__init__(self)
 
-        self.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
+        self.modify_bg(gtk.STATE_NORMAL, COLORES["contenido"])
         self.set_border_width(4)
 
         self.game = False
         self.pump = False
 
         self.pygamecanvas = sugargame2.canvas.PygameCanvas(self)
-        self.pygamecanvas.set_flags(gtk.EXPAND)
-        self.pygamecanvas.set_flags(gtk.FILL)
+        #self.pygamecanvas.set_flags(gtk.EXPAND)
+        #self.pygamecanvas.set_flags(gtk.FILL)
 
-        self.add(self.pygamecanvas)
+        grupo = gtk.Alignment(0.5, 0.5, 0,0)
+        grupo.add(self.pygamecanvas)
+
+        self.add(grupo)
 
         self.connect("size-allocate", self.__reescalar)
         self.show_all()
@@ -62,9 +65,11 @@ class GameView(gtk.EventBox):
 
     def __run_game(self):
         rect = self.get_allocation()
-        spyral.director.init((rect.width, rect.height),
+        self.lado = min(rect.width-8, rect.height-8)
+        self.pygamecanvas.set_size_request(self.lado, self.lado)
+        spyral.director.init((self.lado, self.lado),
             fullscreen=False, max_fps=30)
-        self.game = Escena(self)
+        self.game = Escena(self, self.topic)
         spyral.director.push(self.game)
         if self.pump:
             gobject.source_remove(self.pump)
@@ -73,7 +78,7 @@ class GameView(gtk.EventBox):
         spyral.director.run(sugar=True)
 
     def __pump(self):
-        pygame.event.clear()
+        pygame.event.pump()
         return True
 
     def stop(self):
@@ -87,6 +92,8 @@ class GameView(gtk.EventBox):
         self.hide()
 
     def run(self, topic):
+        print topic
+        self.topic = topic
         self.pygamecanvas.run_pygame(self.__run_game)
         self.pygamecanvas.grab_focus()
         self.show()

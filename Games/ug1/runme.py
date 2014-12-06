@@ -24,7 +24,7 @@ font_path = gamedir("fonts/SourceCodePro-Regular.ttf")
 topic_dir = gamedir("../../Topics/Topic_5/")
 
 
-def obtener_palabra():
+def obtener_palabra(topic_dir=topic_dir):
     archivo = os.path.join(topic_dir, "vocabulario.csv")
     tabla = csv.DictReader(file(archivo))
     lista = []
@@ -61,7 +61,7 @@ class DelayAnimation(spyral.Animation):
 
 class Escena(spyral.Scene):
 
-    def __init__(self, window=None):
+    def __init__(self, window=None, topic=topic_dir):
 
         spyral.Scene.__init__(self, SIZE, 20, 20)
 
@@ -80,7 +80,7 @@ class Escena(spyral.Scene):
         self.j = Jugador(self)
         self.l = Lluvia(self)
 
-        self.tablero = Tablero(self)
+        self.tablero = Tablero(self, topic)
         self.terraza = Terraza(self)
         self.v = Visualizador(self)
 
@@ -113,7 +113,7 @@ class Terraza(spyral.Sprite):
 
 class Tablero(spyral.Sprite):
 
-    def __init__(self, scene):
+    def __init__(self, scene, topic=topic_dir):
 
         spyral.Sprite.__init__(self, scene)
 
@@ -122,9 +122,11 @@ class Tablero(spyral.Sprite):
         self.layer = "abajo"
         self.ganadas = 0
 
+        self.topic = topic
+
         font_path = gamedir("fonts/SourceCodePro-Regular.ttf")
         self.font = spyral.Font(font_path, 60, (0, 0, 0))
-        self.palabra, self.archivo_img = obtener_palabra()
+        self.palabra, self.archivo_img = obtener_palabra(self.topic)
         self.text = self.palabra
         self.image = self.font.render("")
 
@@ -142,7 +144,7 @@ class Tablero(spyral.Sprite):
         self.ganadas = self.ganadas + 1
         self.palabra_anterior = self.palabra
         while self.palabra_anterior == self.palabra:
-            self.palabra, self.archivo_img = obtener_palabra()
+            self.palabra, self.archivo_img = obtener_palabra(self.topic)
         self.text = self.palabra
         self.acertadas = ""
         self.mostrar(self.palabra, self.acertadas)

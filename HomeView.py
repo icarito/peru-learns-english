@@ -30,7 +30,7 @@ class HomeView(gtk.EventBox):
 
         gtk.EventBox.__init__(self)
 
-        self.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
+        self.modify_bg(gtk.STATE_NORMAL, COLORES["contenido"])
         self.set_border_width(4)
 
         self.add(gtk.Label("Home"))

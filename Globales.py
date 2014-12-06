@@ -27,8 +27,11 @@ from gtk import gdk
 COLORES = {
     "window": gdk.color_parse("#ffffff"),
     "toolbar": gdk.color_parse("#778899"),
+    "contenido": gdk.color_parse("#779977"),
     "text": gdk.color_parse("#000000"),
     "rojo": gdk.color_parse("#ff0000"),
+    "verde": gdk.color_parse("#00ff00"),
+    "amarillo": gdk.color_parse("#ffff00"),
     }
 
 

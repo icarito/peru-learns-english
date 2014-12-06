@@ -42,7 +42,7 @@ class VideoView(gtk.EventBox):
 
         gtk.EventBox.__init__(self)
 
-        self.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
+        self.modify_bg(gtk.STATE_NORMAL, COLORES["contenido"])
         self.set_border_width(4)
 
         self.topic = False
@@ -60,12 +60,15 @@ class VideoView(gtk.EventBox):
         tabla.attach(self.videoplayer, 0, 2, 1, 9)
         tabla.attach(self.links, 0, 2, 9, 10)
 
-        flashcards = gtk.Button("FlashCards")
+        flashcards = gtk.Button()
+        imagen = gtk.Image()
+        imagen.set_from_file("Imagenes/flashcards.png")
+        flashcards.add(imagen)
 
-        self.imagen_juego = DrawingArea()
+        self.imagen_juego = DrawingArea_1()
         tabla.attach(self.imagen_juego, 2, 3, 0, 4)
         tabla.attach(flashcards, 2, 3, 4, 6)
-        tabla.attach(DrawingArea(), 2, 3, 6, 10)
+        tabla.attach(DrawingArea_2(), 2, 3, 6, 10)
 
         self.add(tabla)
         self.show_all()
@@ -91,7 +94,38 @@ class VideoView(gtk.EventBox):
         gobject.idle_add(self.imagen_juego.load, topic)
 
 
-class DrawingArea(gtk.DrawingArea):
+class DrawingArea_1(gtk.DrawingArea):
+
+    def __init__(self):
+
+        gtk.DrawingArea.__init__(self)
+
+        self.modify_bg(gtk.STATE_NORMAL, COLORES["text"])
+
+        self.add_events(
+            gtk.gdk.BUTTON_PRESS_MASK
+        )
+
+        self.imagenplayer = False
+        self.path = False
+
+        self.show_all()
+
+    def stop(self):
+        if self.imagenplayer:
+            self.imagenplayer.stop()
+            del(self.imagenplayer)
+            self.imagenplayer = False
+
+    def load(self, topic):
+        self.stop()
+        self.path = os.path.abspath("Imagenes/juego1.png")
+
+        self.imagenplayer = ImagePlayer(self)
+        self.imagenplayer.load(self.path)
+        return False
+
+class DrawingArea_2(gtk.DrawingArea):
 
     def __init__(self):
 

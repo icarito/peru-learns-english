@@ -45,11 +45,14 @@ class Main(gtk.Window):
 
         gtk.Window.__init__(self)
 
-        #self.set_title("")
+        self.set_title("English for Peru")
         #self.set_icon_from_file(os.path.join(BASE_PATH, "Iconos", ""))
         self.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
         self.maximize()
-        self.set_resizable(False)
+        
+        # FIXME: Esto no funciona, deja la ventana chiquitísima
+        #self.set_resizable(False)
+
         self.set_border_width(2)
         self.set_position(gtk.WIN_POS_CENTER)
 
@@ -57,8 +60,8 @@ class Main(gtk.Window):
         self.toolbar = Toolbar()
         self.vbox.pack_start(self.toolbar, False, False, 0)
 
-        self.homeview = HomeView()
-        self.vbox.pack_start(self.homeview, True, True, 0)
+        #self.homeview = HomeView()
+        #self.vbox.pack_start(self.homeview, True, True, 0)
 
         self.videoview = VideoView()
         self.vbox.pack_start(self.videoview, True, True, 0)
@@ -85,6 +88,8 @@ class Main(gtk.Window):
         self.connect("delete-event", self.__salir)
 
         self.toolbar.buttons[0].set_active(True)
+
+        self.__switch(False, "Instructions", None)
 
     def __play_game(self, widget, topic):
         self.__switch(False, "game", topic)

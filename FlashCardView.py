@@ -37,7 +37,7 @@ class FlashCardView(gtk.EventBox):
 
         gtk.EventBox.__init__(self)
 
-        self.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
+        self.modify_bg(gtk.STATE_NORMAL, COLORES["contenido"])
         self.set_border_width(4)
 
         self.topic = False
@@ -72,7 +72,7 @@ class FlashCardView(gtk.EventBox):
 
     def __siguiente(self, widget, respuesta):
         """
-        Continúa con siguiente palabra del bocabulario cargado.
+        Continúa con siguiente palabra del vocabulario cargado.
         """
         # FIXME: Persistir datos según respuesta y self.vocabulario[self.index_select]
         # FIXME: Tomar indice según persistencia
@@ -135,7 +135,7 @@ class FlashCard(gtk.EventBox):
 
         gtk.EventBox.__init__(self)
 
-        self.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
+        self.modify_bg(gtk.STATE_NORMAL, COLORES["contenido"])
         self.set_border_width(10)
 
         self.drawing = gtk.DrawingArea()
@@ -151,7 +151,7 @@ class Cabecera(gtk.EventBox):
 
         gtk.EventBox.__init__(self)
 
-        self.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
+        self.modify_bg(gtk.STATE_NORMAL, COLORES["contenido"])
 
         tabla = gtk.Table(rows=2, columns=2, homogeneous=True)
         tabla.set_property("column-spacing", 5)
@@ -160,21 +160,20 @@ class Cabecera(gtk.EventBox):
 
         self.titulo = gtk.Label("Título")
         self.titulo.set_property("justify", gtk.JUSTIFY_CENTER)
-        self.titulo.modify_font(pango.FontDescription("Purisa 12"))
+        self.titulo.modify_font(pango.FontDescription("Purisa 18"))
         self.titulo.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
 
-        self.label1 = gtk.Label("Keywords")
-        self.label1.set_property("justify", gtk.JUSTIFY_CENTER)
-        self.label1.modify_font(pango.FontDescription("Purisa 12"))
-        self.label1.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
+        self.subtitulo = gtk.Image()
+        self.subtitulo.set_from_file("Imagenes/flashcards_disabled.png")
+        self.subtitulo.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
 
         self.label2 = gtk.Label("What is This?")
         self.label2.set_property("justify", gtk.JUSTIFY_CENTER)
-        self.label2.modify_font(pango.FontDescription("Purisa 12"))
+        self.label2.modify_font(pango.FontDescription("Purisa 16"))
         self.label2.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
 
         tabla.attach(self.titulo, 0, 2, 0, 1)
-        tabla.attach(self.label1, 0, 1, 1, 2)
+        tabla.attach(self.subtitulo, 0, 1, 1, 2)
         tabla.attach(self.label2, 1, 2, 1, 2)
 
         self.add(tabla)
@@ -193,7 +192,7 @@ class Derecha(gtk.EventBox):
 
         gtk.EventBox.__init__(self)
 
-        self.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
+        self.modify_bg(gtk.STATE_NORMAL, COLORES["contenido"])
 
         tabla = gtk.Table(rows=4, columns=3, homogeneous=True)
         tabla.set_property("column-spacing", 5)
@@ -207,22 +206,25 @@ class Derecha(gtk.EventBox):
         tabla.attach(self.label, 0, 3, 0, 1)
 
         button0 = MyButton("Show me the answer",
-            pango.FontDescription("Purisa 12"))
+            pango.FontDescription("Purisa 18"))
         button0.connect("clicked", self.__show_answer)
         tabla.attach(button0, 0, 3, 1, 2)
 
-        button1 = MyButton("Had not\nidea",
-            pango.FontDescription("Purisa 8"))
+        button1 = MyButton("I knew it !",
+            pango.FontDescription("Purisa 12"))
+        button1.modify_bg(gtk.STATE_NORMAL, COLORES["verde"])
         button1.connect("clicked", self.__seguir)
         tabla.attach(button1, 0, 1, 2, 3)
 
-        button2 = MyButton("Just What\nThougth",
-            pango.FontDescription("Purisa 8"))
+        button2 = MyButton("I wasn't sure.",
+            pango.FontDescription("Purisa 12"))
+        button2.modify_bg(gtk.STATE_NORMAL, COLORES["amarillo"])
         button2.connect("clicked", self.__seguir)
         tabla.attach(button2, 1, 2, 2, 3)
 
-        button3 = MyButton("Thew it !",
-            pango.FontDescription("Purisa 8"))
+        button3 = MyButton("I had no idea !",
+            pango.FontDescription("Purisa 12"))
+        button3.modify_bg(gtk.STATE_NORMAL, COLORES["rojo"])
         button3.connect("clicked", self.__seguir)
         tabla.attach(button3, 2, 3, 2, 3)
 
@@ -238,6 +240,7 @@ class Derecha(gtk.EventBox):
     def __show_answer(self, button):
         self.emit("show_answer")
         self.label.show()
+        self.buttons[0].hide()
         self.buttons[1].show()
         self.buttons[2].show()
         self.buttons[3].show()
@@ -246,6 +249,7 @@ class Derecha(gtk.EventBox):
         self.buttons[0].set_sensitive(False)
         self.label.set_text("")
         self.label.hide()
+        self.buttons[0].show()
         self.buttons[1].hide()
         self.buttons[2].hide()
         self.buttons[3].hide()
