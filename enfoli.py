@@ -45,11 +45,11 @@ class Main(gtk.Window):
         gtk.Window.__init__(self)
 
         self.set_title("English for Peru")
-        #self.set_icon_from_file(os.path.join(BASE_PATH, "Iconos", ""))
+        self.set_icon_from_file("icono.svg")
         self.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
         self.set_border_width(2)
         self.maximize()
-        self.set_resizable(False)
+        #self.set_resizable(False)
 
         self.vbox = gtk.VBox()
         self.toolbar = Toolbar()
