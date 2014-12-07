@@ -59,8 +59,8 @@ class Main(gtk.Window):
 
         if OLD_GTK:
             # Esto es un hack para que gtk viejo en la XO no se maree
-            width = gtk.gdk.screen_width() - 50
-            height = gtk.gdk.screen_height() - 50
+            width = gtk.gdk.screen_width() - 4 
+            height = gtk.gdk.screen_height() - 85
             self.set_geometry_hints(self, width, height, width, height)
         self.maximize()
 
