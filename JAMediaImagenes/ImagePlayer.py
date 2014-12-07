@@ -37,11 +37,7 @@ Descripción:
 
 import os
 import gobject
-import gst
-
-PR = False
-
-gobject.threads_init()
+import gtk
 
 
 class ImagePlayer(gobject.GObject):
@@ -52,116 +48,34 @@ class ImagePlayer(gobject.GObject):
 
         self.ventana = ventana
         self.src_path = ""
-
-        rect = self.ventana.get_allocation()
-        self.width = rect.width
-        self.height = rect.height
-
-        self.xid = self.ventana.get_property('window').xid
-        self.player = PlayerBin(self.xid, self.width, self.height)
+        self.pixbuf = False
 
         self.ventana.connect("expose-event", self.__set_size)
 
     def __set_size(self, widget, event):
+        if not self.pixbuf:
+            return
         rect = self.ventana.get_allocation()
-        self.width = rect.width
-        self.height = rect.height
-        if self.src_path:
-            self.load(self.src_path)
+        ctx = self.ventana.get_property("window").cairo_create()
+        ctx.rectangle(event.area.x, event.area.y,
+            event.area.width, event.area.height)
+        ctx.clip()
+        temp_pixbuf = self.pixbuf.scale_simple(
+            rect.width, rect.height, gtk.gdk.INTERP_TILES)
+        ctx.set_source_pixbuf(temp_pixbuf, 0, 0)
+        ctx.paint()
+        return True
 
     def load(self, uri):
-        self.src_path = uri
-        if self.player:
-            self.player.stop()
-            del(self.player)
-            self.player = False
-        self.player = PlayerBin(self.xid, self.width, self.height)
-        self.player.load(self.src_path)
+        self.src_path = False
+        self.pixbuf = False
+        if os.path.exists(uri):
+            self.src_path = uri
+            self.pixbuf = gtk.gdk.pixbuf_new_from_file(self.src_path)
+            self.ventana.queue_draw()
 
     def stop(self):
-        self.player.stop()
         try:
             self.ventana.disconnect_by_func(self.__set_size)
         except:
             pass
-
-
-class PlayerBin(gobject.GObject):
-
-    def __init__(self, ventana_id, width, height):
-
-        gobject.GObject.__init__(self)
-
-        self.ventana_id = ventana_id
-        self.player = None
-        self.bus = None
-
-        self.player = gst.element_factory_make("playbin2", "player")
-        self.video_bin = Video_Out(width, height)
-        self.player.set_property('video-sink', self.video_bin)
-
-        self.bus = self.player.get_bus()
-        self.bus.add_signal_watch()
-        self.bus.enable_sync_message_emission()
-        self.bus.connect('sync-message', self.__sync_message)
-
-    def __sync_message(self, bus, message):
-        if message.type == gst.MESSAGE_ELEMENT:
-            if message.structure.get_name() == 'prepare-xwindow-id':
-                message.src.set_xwindow_id(self.ventana_id)
-        elif message.type == gst.MESSAGE_ERROR:
-            err, debug = message.parse_error()
-            if PR:
-                print "ImagePlayer ERROR:"
-                print "\t%s" % err
-                print "\t%s" % debug
-
-    def __play(self):
-        self.player.set_state(gst.STATE_PLAYING)
-
-    def stop(self):
-        self.player.set_state(gst.STATE_NULL)
-
-    def load(self, uri):
-        self.stop()
-        if not uri:
-            return
-        if os.path.exists(uri):
-            direccion = "file://" + uri
-            self.player.set_property("uri", direccion)
-            self.__play()
-        return False
-
-
-class Video_Out(gst.Pipeline):
-
-    def __init__(self, width, height):
-
-        gst.Pipeline.__init__(self)
-
-        self.set_name('video_out')
-
-        videoconvert = gst.element_factory_make(
-            'ffmpegcolorspace', 'ffmpegcolorspace')
-
-        caps = gst.Caps(
-            'video/x-raw-rgb, width=%s,height=%s' % (width, height))
-        filtro = gst.element_factory_make("capsfilter", "filtro")
-        filtro.set_property("caps", caps)
-
-        ximagesink = gst.element_factory_make('ximagesink', "ximagesink")
-        ximagesink.set_property("force-aspect-ratio", True)
-
-        self.add(videoconvert)
-        self.add(filtro)
-        self.add(ximagesink)
-
-        videoconvert.link(filtro)
-        filtro.link(ximagesink)
-
-        self.ghost_pad = gst.GhostPad(
-            "sink", videoconvert.get_static_pad("sink"))
-
-        self.ghost_pad.set_target(videoconvert.get_static_pad("sink"))
-
-        self.add_pad(self.ghost_pad)
