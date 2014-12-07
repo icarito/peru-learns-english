@@ -38,7 +38,6 @@ Descripción:
 import os
 import gobject
 import gst
-import gtk
 
 PR = False
 

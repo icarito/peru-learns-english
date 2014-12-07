@@ -61,7 +61,7 @@ class GameView(gtk.EventBox):
     def __reescalar(self, widget, event):
         if self.game:
             rect = self.get_allocation()
-            print "FIXME: El juego debe reescalarse a", rect.width, rect.height
+            # FIXME: El juego debe reescalarse a: rect.width, rect.height
 
     def __run_game(self):
         rect = self.get_allocation()
@@ -92,7 +92,6 @@ class GameView(gtk.EventBox):
         self.hide()
 
     def run(self, topic):
-        print topic
         self.topic = topic
         self.pygamecanvas.run_pygame(self.__run_game)
         self.pygamecanvas.grab_focus()

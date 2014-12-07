@@ -90,7 +90,7 @@ class VideoPlayer(gtk.EventBox):
         self.video_path = path
         volumen = 1.0
         if self.player:
-            # No funciona en la XO con Fedora 11
+            # FIXME: No funciona en la XO con Fedora 11
             #volumen = float("{:.1f}".format(
             #    self.progress.volumen.get_value() * 10))
             self.player.disconnect_by_func(self.__endfile)

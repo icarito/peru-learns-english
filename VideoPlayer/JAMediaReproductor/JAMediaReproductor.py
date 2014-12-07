@@ -22,7 +22,6 @@
 import os
 import gobject
 import gst
-import gtk
 
 from JAMediaBins import JAMedia_Audio_Pipeline
 from JAMediaBins import JAMedia_Video_Pipeline
@@ -83,29 +82,22 @@ class JAMediaReproductor(gobject.GObject):
         if message.type == gst.MESSAGE_ELEMENT:
             if message.structure.get_name() == 'prepare-xwindow-id':
                 message.src.set_xwindow_id(self.ventana_id)
-
         elif message.type == gst.MESSAGE_STATE_CHANGED:
             old, new, pending = message.parse_state_changed()
-
             if self.estado != new:
                 self.estado = new
-
                 if new == gst.STATE_PLAYING:
                     self.emit("estado", "playing")
                     self.__new_handle(True)
-
                 elif new == gst.STATE_PAUSED:
                     self.emit("estado", "paused")
                     self.__new_handle(False)
-
                 elif new == gst.STATE_NULL:
                     self.emit("estado", "None")
                     self.__new_handle(False)
-
                 else:
                     self.emit("estado", "paused")
                     self.__new_handle(False)
-
         elif message.type == gst.MESSAGE_TAG:
             taglist = message.parse_tag()
             datos = taglist.keys()
@@ -113,10 +105,8 @@ class JAMediaReproductor(gobject.GObject):
                 if self.video == False or self.video == None:
                     self.video = True
                     self.emit("video", self.video)
-
         elif message.type == gst.MESSAGE_LATENCY:
             self.player.recalculate_latency()
-
         elif message.type == gst.MESSAGE_ERROR:
             err, debug = message.parse_error()
             if PR:
@@ -129,7 +119,6 @@ class JAMediaReproductor(gobject.GObject):
         if message.type == gst.MESSAGE_EOS:
             self.__new_handle(False)
             self.emit("endfile")
-
         elif message.type == gst.MESSAGE_ERROR:
             err, debug = message.parse_error()
             if PR:
@@ -137,7 +126,6 @@ class JAMediaReproductor(gobject.GObject):
                 print "\t%s" % err
                 print "\t%s" % debug
             self.__new_handle(False)
-
         elif message.type == gst.MESSAGE_BUFFERING:
             buf = int(message.structure["buffer-percent"])
             if buf < 100 and self.estado == gst.STATE_PLAYING:
@@ -160,19 +148,14 @@ class JAMediaReproductor(gobject.GObject):
     def __handle(self):
         if not self.progressbar:
             return True
-
         duracion = self.player.query_duration(gst.FORMAT_TIME)[0] / gst.SECOND
         posicion = self.player.query_position(gst.FORMAT_TIME)[0] / gst.SECOND
-
         pos = posicion * 100 / duracion
-
         if self.duracion != duracion:
             self.duracion = duracion
-
         if pos != self.posicion:
             self.posicion = pos
             self.emit("newposicion", self.posicion)
-
         return True
 
     def play(self):
@@ -185,17 +168,6 @@ class JAMediaReproductor(gobject.GObject):
         elif self.estado == gst.STATE_PLAYING:
             self.__pause()
 
-    def rotar(self, valor):
-        self.video_bin.rotar(valor)
-
-    def set_balance(self, brillo=False, contraste=False,
-        saturacion=False, hue=False, gamma=False):
-        self.video_bin.set_balance(brillo=brillo, contraste=contraste,
-            saturacion=saturacion, hue=hue, gamma=gamma)
-
-    def get_balance(self):
-        return self.video_bin.get_balance()
-
     def stop(self):
         self.__new_handle(False)
         self.player.set_state(gst.STATE_NULL)
@@ -204,12 +176,10 @@ class JAMediaReproductor(gobject.GObject):
     def load(self, uri):
         if not uri:
             return False
-
         self.duracion = 0.0
         self.posicion = 0.0
         self.emit("newposicion", self.posicion)
         self.emit("loading-buffer", 100)
-
         if os.path.exists(uri):
             direccion = "file://" + uri
             self.player.set_property("uri", direccion)
@@ -218,7 +188,6 @@ class JAMediaReproductor(gobject.GObject):
             if gst.uri_is_valid(uri):
                 self.player.set_property("uri", uri)
                 self.progressbar = False
-
         return False
 
     def set_position(self, posicion):
