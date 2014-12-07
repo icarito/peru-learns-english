@@ -57,6 +57,7 @@ class VideoView(gtk.EventBox):
         self.titulo.modify_font(pango.FontDescription("Purisa 18"))
         self.titulo.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
         self.videoplayer = VideoPlayer()
+
         self.links = gtk.Label("Links")
         self.links.modify_font(pango.FontDescription("Purisa 18"))
         self.links.modify_fg(gtk.STATE_NORMAL, COLORES["window"])

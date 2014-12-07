@@ -50,10 +50,15 @@ class Main(gtk.Window):
 
         self.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
         self.set_border_width(2)
-        self.maximize()
 
-        # FIXME: No funciona en la XO
+        # FIXME: No funciona en la XO con fedora 11
         #self.set_resizable(False)
+
+        # Esto es un hack para que gtk viejo en la XO no se maree
+        width = gtk.gdk.screen_width() - 50
+        height = gtk.gdk.screen_height() - 50
+        self.set_geometry_hints(self, width, height, width, height)
+        self.maximize()
 
         self.vbox = gtk.VBox()
         self.toolbar = Toolbar()
