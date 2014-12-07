@@ -46,9 +46,12 @@ class Main(gtk.Window):
 
         self.set_title("English for Peru")
         self.set_icon_from_file("icono.svg")
+
         self.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
         self.set_border_width(2)
         self.maximize()
+
+        # FIXME: No funciona en la XO
         #self.set_resizable(False)
 
         self.vbox = gtk.VBox()
