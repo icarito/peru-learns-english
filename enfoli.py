@@ -33,6 +33,9 @@ from CreditsView import CreditsView
 
 BASE_PATH = os.path.dirname(__file__)
 
+OLD_GTK = False
+if gtk.pygtk_version[0]==2 and gtk.pygtk_version[1]<15:
+    OLD_GTK = True
 
 def ocultar(widget):
     widget.stop()
@@ -54,10 +57,11 @@ class Main(gtk.Window):
         # FIXME: No funciona en la XO con fedora 11
         #self.set_resizable(False)
 
-        # Esto es un hack para que gtk viejo en la XO no se maree
-        width = gtk.gdk.screen_width() - 50
-        height = gtk.gdk.screen_height() - 50
-        self.set_geometry_hints(self, width, height, width, height)
+        if OLD_GTK:
+            # Esto es un hack para que gtk viejo en la XO no se maree
+            width = gtk.gdk.screen_width() - 50
+            height = gtk.gdk.screen_height() - 50
+            self.set_geometry_hints(self, width, height, width, height)
         self.maximize()
 
         self.vbox = gtk.VBox()
