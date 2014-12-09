@@ -1,0 +1,7 @@
+
+
+Bienvenido! 
+
+Esta aplicación ha sido diseñada para asistir a estudiantes y profesores en el proceso de aprendizaje del idioma Inglés. En ella encontrarás temáticas compuestas por cápsulas de video, flashcards y juegos. Para iniciar el proceso de aprendizaje, selecciona una temática e inicia la exploración.
+
+Esta aplicación utiliza obras en el dominio público o licenciadas bajo las Licencias Creative Commons.De la misma manera, el software está publicado en un repositorio público bajo la Licencia Pública General GPL v3.0 o cualquier versión posterior. 
