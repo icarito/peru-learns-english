@@ -70,7 +70,7 @@ class Toolbar(gtk.EventBox):
             item = gtk.ToolItem()
             item.set_expand(True)
             label = gtk.Label(text)
-            label.modify_font(pango.FontDescription("Purisa Bold 16"))
+            label.modify_font(pango.FontDescription("DejaVu Sans Bold 16"))
             boton = gtk.ToggleToolButton()
             boton.set_label_widget(label)
             boton.connect("toggled", self.__do_toggled)
@@ -126,15 +126,15 @@ class MenuBar(gtk.MenuBar):
 
         self.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
         self.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
-        self.modify_font(pango.FontDescription("Purisa Bold 16"))
+        self.modify_font(pango.FontDescription("DejaVu Sans Bold 16"))
 
         itemmenu = gtk.MenuItem("Topics")
-        itemmenu.child.modify_font(pango.FontDescription("Purisa Bold 16"))
+        itemmenu.child.modify_font(pango.FontDescription("DejaVu Sans Bold 16"))
         itemmenu.child.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
         itemmenu.child.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
 
         menu = gtk.Menu()
-        menu.modify_font(pango.FontDescription("Purisa 12"))
+        menu.modify_font(pango.FontDescription("DejaVu Sans 12"))
         menu.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
         menu.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
         itemmenu.set_submenu(menu)
@@ -148,7 +148,7 @@ class MenuBar(gtk.MenuBar):
             except:
                 pass
             boton = gtk.Label(arch)
-            boton.modify_font(pango.FontDescription("Purisa Bold 16"))
+            boton.modify_font(pango.FontDescription("DejaVu Sans Bold 16"))
             boton.set_padding(xpad=20, ypad=20)
             item.add(boton)
             item.connect("activate", self.__emit_accion_menu)
