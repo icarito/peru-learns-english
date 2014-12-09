@@ -1,11 +1,6 @@
 id,term
-to_copy,"to copy"
-theft,theft
-to_steal,"to steal"
-a_thing,"a thing"
-the_bicycle,"the bicycle"
-the_bus,"the bus"
-the_copies,"the copies"
-an_idea,"an idea"
-to_share,"to share"
-fun,fun
+bike,bike
+boat,boat
+bus,bus
+motorcycle,motorcycle
+truck,truck
