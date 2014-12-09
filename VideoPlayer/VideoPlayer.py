@@ -108,10 +108,11 @@ class VideoPlayer(gtk.EventBox):
             # FIXME: No funciona en la XO con Fedora 11
             #volumen = float("{:.1f}".format(
             #    self.progress.volumen.get_value() * 10))
+            self.player.stop()
             self.player.disconnect_by_func(self.__endfile)
             self.player.disconnect_by_func(self.__state_changed)
             self.player.disconnect_by_func(self.__update_progress)
-            self.player.stop()
+
             del(self.player)
             self.player = False
 

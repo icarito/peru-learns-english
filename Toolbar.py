@@ -24,6 +24,8 @@ import gtk
 import gobject
 import pango
 
+from ConfigParser import SafeConfigParser
+
 from Globales import COLORES
 
 BASE_PATH = os.path.dirname(__file__)
@@ -60,6 +62,7 @@ class Toolbar(gtk.EventBox):
         boton.connect("clicked", self.__go_home)
         item.add(boton)
         toolbar.insert(item, -1)
+
         separador = gtk.SeparatorToolItem()
         separador.props.draw = True
         toolbar.insert(separador, -1)
@@ -147,14 +150,23 @@ class MenuBar(gtk.MenuBar):
                 item.get_child().destroy()
             except:
                 pass
-            boton = gtk.Label(arch)
+
+
+            parser = SafeConfigParser()
+            metadata = os.path.join(topics, arch, "topic.ini")
+            parser.read(metadata)
+
+            title = parser.get('topic', 'title')
+
+            boton = gtk.Label(title)
             boton.modify_font(pango.FontDescription("DejaVu Sans Bold 16"))
             boton.set_padding(xpad=20, ypad=20)
             item.add(boton)
-            item.connect("activate", self.__emit_accion_menu)
+            item.connect("activate", self.__emit_accion_menu, arch)
             menu.append(item)
 
-    def __emit_accion_menu(self, widget):
+    def __emit_accion_menu(self, widget, arch):
         #widget.get_children()[0].set_active(True)
-        label = widget.get_children()[0].get_label()
+        #label = widget.get_children()[0].get_label()
+        label = arch
         self.emit("activar", os.path.join(BASE_PATH, "Topics", label))

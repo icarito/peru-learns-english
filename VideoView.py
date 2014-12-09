@@ -24,6 +24,8 @@ import gtk
 import gobject
 import pango
 
+from ConfigParser import SafeConfigParser
+
 from VideoPlayer.VideoPlayer import VideoPlayer
 from JAMediaImagenes.ImagePlayer import ImagePlayer
 
@@ -49,18 +51,18 @@ class VideoView(gtk.EventBox):
         self.topic = False
 
         tabla = gtk.Table(rows=10, columns=3, homogeneous=True)
-        tabla.set_property("column-spacing", 5)
-        tabla.set_property("row-spacing", 5)
-        tabla.set_border_width(4)
+        tabla.set_property("column-spacing", 8)
+        tabla.set_property("row-spacing", 8)
+        tabla.set_border_width(8)
 
         self.titulo = gtk.Label("Título")
         self.titulo.modify_font(pango.FontDescription("DejaVu Sans 18"))
         self.titulo.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
         self.videoplayer = VideoPlayer()
 
-        self.links = gtk.Label("Links")
+        self.links = gtk.LinkButton("http://pe.sugarlabs.org/", "Links")
         self.links.modify_font(pango.FontDescription("DejaVu Sans 18"))
-        self.links.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
+        self.links.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
 
         tabla.attach(self.titulo, 0, 2, 0, 1)
         tabla.attach(self.videoplayer, 0, 2, 1, 9)
@@ -69,11 +71,13 @@ class VideoView(gtk.EventBox):
         flashcards = gtk.Button()
         imagen = gtk.Image()
         imagen.set_from_file("Imagenes/flashcards.png")
+        flashcards.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
         flashcards.add(imagen)
 
         self.imagen_juego = GameImage()
         self.flashcards_preview = FlashCardsPreview()
-        tabla.attach(self.imagen_juego, 2, 3, 0, 4)
+
+        tabla.attach(self.imagen_juego, 2, 3, 1, 4)
         tabla.attach(flashcards, 2, 3, 4, 6)
         tabla.attach(self.flashcards_preview, 2, 3, 6, 10)
 
@@ -93,6 +97,9 @@ class VideoView(gtk.EventBox):
         self.videoplayer.stop()
         self.imagen_juego.stop()
         self.flashcards_preview.stop()
+        if self.flashcards_preview.control:
+            gobject.source_remove(self.flashcards_preview.control)
+            self.flashcards_preview.control = False
         self.hide()
 
     def run(self, topic):
@@ -101,6 +108,14 @@ class VideoView(gtk.EventBox):
         self.videoplayer.load(os.path.join(self.topic, "video.ogv"))
         self.imagen_juego.load(topic)
         self.flashcards_preview.load(topic)
+
+        parser = SafeConfigParser()
+        metadata = os.path.join(topic, "topic.ini")
+        parser.read(metadata)
+
+        self.titulo.set_text(parser.get('topic', 'title'))
+        self.links.set_uri(parser.get('topic', 'link'))
+        self.links.set_label(parser.get('topic', 'link'))
 
 
 class GameImage(gtk.DrawingArea):
@@ -174,9 +189,6 @@ class FlashCardsPreview(gtk.EventBox):
         return True
 
     def stop(self):
-        if self.control:
-            gobject.source_remove(self.control)
-            self.control = False
         if self.imagenplayer:
             self.imagenplayer.stop()
             del(self.imagenplayer)
@@ -189,5 +201,6 @@ class FlashCardsPreview(gtk.EventBox):
         self.vocabulario = get_vocabulario(csvfile)
         self.index_select = 1
         self.__run_secuencia()
-        gobject.timeout_add(5000, self.__run_secuencia)
+        if not self.control:
+            self.control = gobject.timeout_add(3000, self.__run_secuencia)
         return False
