@@ -23,6 +23,9 @@ import os
 import gtk
 import sys
 
+installed_dir = os.path.abspath(os.path.dirname(__file__))
+os.chdir(installed_dir)
+
 from Toolbar import Toolbar
 from Globales import COLORES
 from VideoView import VideoView
@@ -59,10 +62,11 @@ class Main(gtk.Window):
 
         if OLD_GTK:
             # Esto es un hack para que gtk viejo en la XO no se maree
-            width = gtk.gdk.screen_width() - 4 
-            height = gtk.gdk.screen_height() - 85
+            width = gtk.gdk.screen_width() - 6 
+            height = gtk.gdk.screen_height() - 100 
             self.set_geometry_hints(self, width, height, width, height)
-        self.maximize()
+        else:
+            self.maximize()
 
         self.vbox = gtk.VBox()
         self.toolbar = Toolbar()
