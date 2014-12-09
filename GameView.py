@@ -19,8 +19,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import os
 import sys
-sys.path.insert(1, "Lib/")
+installed_dir = os.path.abspath(os.path.dirname(__file__))
+sys.path.insert(1, os.path.join(installed_dir, "Lib/"))
 
 import gtk
 import sugargame2
