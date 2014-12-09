@@ -89,16 +89,6 @@ class VideoPlayer(gtk.EventBox):
     def load(self, path):
         self.video_path = path
         volumen = 1.0
-        if self.player:
-            # FIXME: No funciona en la XO con Fedora 11
-            #volumen = float("{:.1f}".format(
-            #    self.progress.volumen.get_value() * 10))
-            self.player.disconnect_by_func(self.__endfile)
-            self.player.disconnect_by_func(self.__state_changed)
-            self.player.disconnect_by_func(self.__update_progress)
-            self.player.stop()
-            del(self.player)
-            self.player = False
 
         xid = self.visor.get_property('window').xid
         self.player = JAMediaReproductor(xid)
@@ -115,7 +105,15 @@ class VideoPlayer(gtk.EventBox):
 
     def stop(self):
         if self.player:
+            # FIXME: No funciona en la XO con Fedora 11
+            #volumen = float("{:.1f}".format(
+            #    self.progress.volumen.get_value() * 10))
+            self.player.disconnect_by_func(self.__endfile)
+            self.player.disconnect_by_func(self.__state_changed)
+            self.player.disconnect_by_func(self.__update_progress)
             self.player.stop()
+            del(self.player)
+            self.player = False
 
 
 class Visor(gtk.DrawingArea):
