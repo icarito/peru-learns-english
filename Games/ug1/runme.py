@@ -20,7 +20,7 @@ def gamedir(archivo):
     return os.path.join(game_dir, archivo)
 
 
-font_path = gamedir("fonts/SourceCodePro-Regular.ttf")
+font_path = gamedir("fonts/DejaVuSans.ttf")
 topic_dir = gamedir("../../Topics/Topic_2/")
 
 
@@ -125,7 +125,7 @@ class Tablero(spyral.Sprite):
 
         self.topic = topic
 
-        font_path = gamedir("fonts/SourceCodePro-Regular.ttf")
+        font_path = gamedir("fonts/DejaVuSans.ttf")
         self.font = spyral.Font(font_path, 60, (0, 0, 0))
         self.palabra, self.archivo_img = obtener_palabra(self.topic)
         self.text = self.palabra

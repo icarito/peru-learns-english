@@ -91,6 +91,7 @@ class GameView(gtk.EventBox):
             self.pump = False
         if self.game:
             try:
+                pygame.event.clear()
                 spyral.quit()
                 del(self.game)
             except spyral.exceptions.GameEndException, pygame.error:

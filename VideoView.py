@@ -54,12 +54,12 @@ class VideoView(gtk.EventBox):
         tabla.set_border_width(4)
 
         self.titulo = gtk.Label("Título")
-        self.titulo.modify_font(pango.FontDescription("Purisa 18"))
+        self.titulo.modify_font(pango.FontDescription("DejaVu Sans 18"))
         self.titulo.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
         self.videoplayer = VideoPlayer()
 
         self.links = gtk.Label("Links")
-        self.links.modify_font(pango.FontDescription("Purisa 18"))
+        self.links.modify_font(pango.FontDescription("DejaVu Sans 18"))
         self.links.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
 
         tabla.attach(self.titulo, 0, 2, 0, 1)
@@ -151,7 +151,7 @@ class FlashCardsPreview(gtk.EventBox):
         self.drawing.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
         self.label.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
         self.label.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
-        self.label.modify_font(pango.FontDescription("Purisa 18"))
+        self.label.modify_font(pango.FontDescription("DejaVu Sans 18"))
 
         tabla = gtk.Table(rows=1, columns=2, homogeneous=True)
         tabla.attach(self.drawing, 0, 1, 0, 1)

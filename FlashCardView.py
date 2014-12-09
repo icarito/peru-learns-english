@@ -160,7 +160,7 @@ class Cabecera(gtk.EventBox):
 
         self.titulo = gtk.Label("Título")
         self.titulo.set_property("justify", gtk.JUSTIFY_CENTER)
-        self.titulo.modify_font(pango.FontDescription("Purisa 18"))
+        self.titulo.modify_font(pango.FontDescription("DejaVu Sans 18"))
         self.titulo.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
 
         self.subtitulo = gtk.Image()
@@ -169,7 +169,7 @@ class Cabecera(gtk.EventBox):
 
         self.label2 = gtk.Label("What is This?")
         self.label2.set_property("justify", gtk.JUSTIFY_CENTER)
-        self.label2.modify_font(pango.FontDescription("Purisa 16"))
+        self.label2.modify_font(pango.FontDescription("DejaVu Sans 16"))
         self.label2.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
 
         tabla.attach(self.titulo, 0, 2, 0, 1)
@@ -201,29 +201,29 @@ class Derecha(gtk.EventBox):
 
         self.label = gtk.Label("")
         self.label.set_property("justify", gtk.JUSTIFY_CENTER)
-        self.label.modify_font(pango.FontDescription("Purisa Bold 28"))
-        self.label.modify_fg(gtk.STATE_NORMAL, COLORES["rojo"])
+        self.label.modify_font(pango.FontDescription("DejaVu Sans Bold 28"))
+        self.label.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
         tabla.attach(self.label, 0, 3, 0, 1)
 
-        button0 = MyButton("Show me the answer",
-            pango.FontDescription("Purisa 18"))
+        button0 = MyButton("Show me\nthe answer",
+            pango.FontDescription("DejaVu Sans 16"))
         button0.connect("clicked", self.__show_answer)
         tabla.attach(button0, 0, 3, 1, 2)
 
-        button1 = MyButton("I knew it !",
-            pango.FontDescription("Purisa 11"))
+        button1 = MyButton("I\nknew\nit !",
+            pango.FontDescription("DejaVu Sans 10"))
         button1.modify_bg(gtk.STATE_NORMAL, COLORES["verde"])
         button1.connect("clicked", self.__seguir)
         tabla.attach(button1, 0, 1, 2, 3)
 
-        button2 = MyButton("I wasn't sure.",
-            pango.FontDescription("Purisa 11"))
+        button2 = MyButton("I\nwasn't\nsure.",
+            pango.FontDescription("DejaVu Sans 10"))
         button2.modify_bg(gtk.STATE_NORMAL, COLORES["amarillo"])
         button2.connect("clicked", self.__seguir)
         tabla.attach(button2, 1, 2, 2, 3)
 
-        button3 = MyButton("I had no idea !",
-            pango.FontDescription("Purisa 11"))
+        button3 = MyButton("I\nhad\nno idea !",
+            pango.FontDescription("DejaVu Sans 10"))
         button3.modify_bg(gtk.STATE_NORMAL, COLORES["rojo"])
         button3.connect("clicked", self.__seguir)
         tabla.attach(button3, 2, 3, 2, 3)
