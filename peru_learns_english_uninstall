@@ -1,0 +1,10 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import os
+import subprocess
+
+subprocess.call("rm -r /usr/local/share/peru-learns-english", shell=True)
+subprocess.call("rm /usr/share/applications/Peru_Learns_English.desktop", shell=True)
+subprocess.call("rm /usr/bin/peru_learns_english_run", shell=True)
+subprocess.call("rm /usr/bin/peru_learns_english_uninstall", shell=True)
