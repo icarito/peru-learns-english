@@ -1,6 +1,4 @@
 id,term
-right,right
-left,left
 llama,llama
 dove,dove
 dolphin,dolphin
@@ -8,4 +6,5 @@ dog,dog
 crocodile,crocodile
 crab,crab
 cat,cat
-box,box
+left,left
+right,right
