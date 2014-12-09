@@ -176,30 +176,30 @@ def run(sugar=False, profiling=False, scene=None):
     scene = get_scene()
     clock = scene.clock
     stack = _stack
-    while True:
-        scene = stack[-1]
-        if scene is not old_scene:
-            if profiling and old_scene is not None:
-                return
-            clock = scene.clock
-            old_scene = scene
+    try:
+        while True:
+            scene = stack[-1]
+            if scene is not old_scene:
+                if profiling and old_scene is not None:
+                    return
+                clock = scene.clock
+                old_scene = scene
 
-            def frame_callback(interpolation):
-                """
-                A closure for handling drawing, which includes forcing the
-                rendering-related events to be fired.
-                """
-                scene._handle_event("director.pre_render")
-                scene._handle_event("director.render")
-                scene._draw()
-                scene._handle_event("director.post_render")
+                def frame_callback(interpolation):
+                    """
+                    A closure for handling drawing, which includes forcing the
+                    rendering-related events to be fired.
+                    """
+                    scene._handle_event("director.pre_render")
+                    scene._handle_event("director.render")
+                    scene._draw()
+                    scene._handle_event("director.post_render")
 
-            def update_callback(delta):
-                """
-                A closure for handling events, which includes firing the update
-                related events (e.g., pre_update, update, and post_update).
-                """
-                try:
+                def update_callback(delta):
+                    """
+                    A closure for handling events, which includes firing the update
+                    related events (e.g., pre_update, update, and post_update).
+                    """
                     global _tick
                     if sugar:
                         while gtk.events_pending():
@@ -217,8 +217,8 @@ def run(sugar=False, profiling=False, scene=None):
                                         spyral.Event(delta=delta))
                     _tick += 1
                     scene._handle_event("director.post_update")
-                except:
-                    pass
-            clock.frame_callback = frame_callback
-            clock.update_callback = update_callback
-        clock.tick()
+                clock.frame_callback = frame_callback
+                clock.update_callback = update_callback
+            clock.tick()
+    except spyral.exceptions.GameEndException:
+        pass

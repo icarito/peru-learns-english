@@ -21,7 +21,7 @@ def gamedir(archivo):
 
 
 font_path = gamedir("fonts/SourceCodePro-Regular.ttf")
-topic_dir = gamedir("../../Topics/Topic_5/")
+topic_dir = gamedir("../../Topics/Topic_2/")
 
 
 def obtener_palabra(topic_dir=topic_dir):
@@ -85,13 +85,14 @@ class Escena(spyral.Scene):
         self.v = Visualizador(self)
 
         spyral.event.register("system.quit", spyral.director.pop)
-        spyral.event.register("director.scene.enter", self.entrar)
+        #spyral.event.register("director.scene.enter", self.entrar)
         spyral.event.register("director.scene.enter", self.l.llover)
 
         #spyral.event.register("director.update", self.chequea)
 
-    def entrar(self):
-        self.j.set_caminar(self.scene.width / 2)
+    #No funcionó en la XO Fedora 11
+    #def entrar(self):
+    #    self.j.set_caminar(self.scene.width / 2)
 
 
 class Terraza(spyral.Sprite):
@@ -252,7 +253,7 @@ class Lluvia(spyral.Sprite):
         self.scale = 2
 
     def reset(self):
-        self.x = self.scene.width / 2 + random.randint(0, 300) - 150
+        self.x = self.scene.width / 2 + random.randint(0, 600) - 300
         self.stop_all_animations()
         self.stop_all_animations()
         self.stop_all_animations()
@@ -263,8 +264,8 @@ class Lluvia(spyral.Sprite):
 
     def llover(self):
         p = spyral.Animation("y",
-            spyral.easing.QuadraticIn(0, self.scene.height - 75),
-            duration=2 * len(self.scene.tablero.palabra))
+            spyral.easing.CubicIn(0, self.scene.height - 75),
+            duration=2 * len(self.scene.tablero.palabra) + 3)
         self.animate(p)
 
     def finalizar(self):
@@ -314,6 +315,7 @@ class Visualizador(spyral.Sprite):
             position=(0, 0), anchor="midleft")
 
     def reset(self):
+        self.stop_all_animations()
         self.text = self.scene.tablero.palabra
         self.palabra_png = self.scene.tablero.archivo_img
 
@@ -381,6 +383,7 @@ class Jugador(spyral.Sprite):
         self.full_image = spyral.Image(filename=gamedir("images/user2.png"))
         self.estado = "nuevo"
         self.y = scene.height - 138
+        self.x = scene.width / 2
         self.velocidad = 90
         self.anchor = "midtop"
         self.layer = "arriba"
@@ -475,7 +478,10 @@ class Jugador(spyral.Sprite):
         self.estado = "caminando"
         return tiempo
 
+def main():
+    spyral.director.push(Escena())
 
 if __name__ == "__main__":
     spyral.director.init(SIZE, fullscreen=False)
-    spyral.director.run(scene=Escena())
+    main()
+    spyral.director.run(profiling=True)

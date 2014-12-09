@@ -23,15 +23,14 @@ import sys
 sys.path.insert(1, "Lib/")
 
 import gtk
-
-from Globales import COLORES
-
-import gobject
 import sugargame2
 import sugargame2.canvas
 import spyral
 import pygame
-from Games.ug1.runme import Escena
+
+from Globales import COLORES
+
+import gobject
 
 
 class GameView(gtk.EventBox):
@@ -64,6 +63,8 @@ class GameView(gtk.EventBox):
             # FIXME: El juego debe reescalarse a: rect.width, rect.height
 
     def __run_game(self):
+        from Games.ug1.runme import Escena
+
         rect = self.get_allocation()
         self.lado = min(rect.width-8, rect.height-8)
         self.pygamecanvas.set_size_request(self.lado, self.lado)
@@ -75,7 +76,10 @@ class GameView(gtk.EventBox):
             gobject.source_remove(self.pump)
             self.pump = False
         self.pump = gobject.timeout_add(300, self.__pump)
-        spyral.director.run(sugar=True)
+        try:
+            spyral.director.run(sugar=True)
+        except spyral.exceptions.GameEndException, pygame.error:
+            pass
 
     def __pump(self):
         pygame.event.pump()
@@ -86,9 +90,13 @@ class GameView(gtk.EventBox):
             gobject.source_remove(self.pump)
             self.pump = False
         if self.game:
-            spyral.quit()
-            del(self.game)
-            self.game = False
+            try:
+                spyral.quit()
+                del(self.game)
+            except spyral.exceptions.GameEndException, pygame.error:
+                pass
+            finally:
+                self.game = False
         self.hide()
 
     def run(self, topic):

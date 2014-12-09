@@ -6,17 +6,13 @@ import pygame
 import spyral
 import copy
 
-
 def _new_spyral_surface(size):
     """
     Internal method for creating a new Spyral-compliant Pygame surface.
     """
-    try:
-        return pygame.Surface((int(size[0]),
-            int(size[1])), pygame.SRCALPHA, 32).convert_alpha()
-    except:
-        return False
-
+    return pygame.Surface((int(size[0]),
+                           int(size[1])),
+                          pygame.SRCALPHA, 32).convert_alpha()
 
 def from_sequence(images, orientation="right", padding=0):
     """
@@ -114,13 +110,13 @@ def render_nine_slice(image, size):
 
     topleft = surf.subsurface(pygame.Rect((0, 0), ps))
     left = surf.subsurface(pygame.Rect((0, ph), ps))
-    bottomleft = surf.subsurface(pygame.Rect((0, 2*pw), ps))
+    bottomleft = surf.subsurface(pygame.Rect((0, 2*ph), ps))
     top = surf.subsurface(pygame.Rect((pw, 0), ps))
     mid = surf.subsurface(pygame.Rect((pw, ph), ps))
     bottom = surf.subsurface(pygame.Rect((pw, 2*ph), ps))
     topright = surf.subsurface(pygame.Rect((2*pw, 0), ps))
-    right = surf.subsurface(pygame.Rect((2*ph, pw), ps))
-    bottomright = surf.subsurface(pygame.Rect((2*ph, 2*pw), ps))
+    right = surf.subsurface(pygame.Rect((2*pw, ph), ps))
+    bottomright = surf.subsurface(pygame.Rect((2*pw, 2*ph), ps))
 
     # corners
     s.blit(topleft, (0, 0))
@@ -170,7 +166,7 @@ class Image(object):
                  filename.
     :type size: :class:`Vec2D <spyral.Vec2D>`
     :param str filename:  If filename is set, the file with that name is loaded.
-                          The appendix has a list of the
+                          The appendix has a list of the 
                           :ref:`valid image formats<ref.image_formats>`. If you do
                           not specify a filename, you *must* pass in a size.
 

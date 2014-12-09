@@ -69,13 +69,9 @@ def scale_surface(s, target_size):
                 int(math.ceil(target_size[1])))
     if new_size == s.get_size():
         return s
-    try:
-        t = pygame.transform.smoothscale(s, new_size,
-            spyral.image._new_spyral_surface(new_size))
-        return t
-    except:
-        return False
-
+    t = pygame.transform.smoothscale(s, new_size,
+                                     spyral.image._new_spyral_surface(new_size))
+    return t
 
 class _Blit(object):
     """
@@ -158,13 +154,10 @@ class _Blit(object):
         Performs all the final calculations for this blit and calculates the
         rect.
         """
-        try:
-            self.surface = scale_surface(self.surface, self.final_size)
-            self.surface = self.surface.subsurface(self.area._to_pygame())
-            self.rect = pygame.Rect((self.position[0], self.position[1]),
-                                    self.surface.get_size())
-        except:
-            pass
+        self.surface = scale_surface(self.surface, self.final_size)
+        self.surface = self.surface.subsurface(self.area._to_pygame())
+        self.rect = pygame.Rect((self.position[0], self.position[1]),
+                                self.surface.get_size())
 
 class _CollisionBox(object):
     """
@@ -203,4 +196,4 @@ class _CollisionBox(object):
 
     def finalize(self):
         self.rect = spyral.Rect(self.position, self.area.size)
-
+        

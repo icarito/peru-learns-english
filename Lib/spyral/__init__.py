@@ -39,7 +39,7 @@ ALL_BY_MODULE = {
 
 ATTRIBUTE_MODULES = frozenset(['memoize', 'point', 'exceptions', 'easing',
                                'mouse', 'event', '_lib', 'font', 'form',
-                               'director', 'sprite', '_style', 'widgets',
+                               'director', 'sprite', 'widgets',
                                'util', 'keyboard', 'image'])
 
 OBJECT_ORIGINS = {}

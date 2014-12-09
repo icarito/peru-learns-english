@@ -12,7 +12,7 @@ try:
 except ImportError:
     spyral.exceptions.actors_not_available_warning()
     _GREENLETS_AVAILABLE = False
-
+    
 from itertools import chain
 from layertree import _LayerTree
 from collections import defaultdict
@@ -48,6 +48,8 @@ class Scene(object):
                         `max_fps` is pulled from the director.
     """
     def __init__(self, size = None, max_ups=None, max_fps=None):
+        if not size:
+            size = pygame.display.get_surface().get_size()
         time_source = time.time
         self.clock = spyral.GameClock(
             time_source=time_source,
@@ -100,8 +102,11 @@ class Scene(object):
         spyral.event.register('director.update', self._handle_events,
                               scene=self)
         if _GREENLETS_AVAILABLE:
-            spyral.event.register('director.update', self._run_actors,
+            spyral.event.register('director.update', self._run_actors, 
                                   ('delta',), scene=self)
+        spyral.event.register('system.focus_change', self.redraw)
+        spyral.event.register('system.video_resize', self.redraw)
+        spyral.event.register('system.video_expose', self.redraw)
         spyral.event.register('spyral.internal.view.changed',
                               self._invalidate_views, scene=self)
 
@@ -110,8 +115,8 @@ class Scene(object):
         self._views = []
 
         # Loading default styles
-        self.load_style(spyral._get_spyral_path() +
-                        'resources/form_defaults.spys')
+        #self.load_style(spyral._get_spyral_path() +
+        #                'resources/form_defaults.spys')
 
     # Actor Handling
     def _register_actor(self, actor, greenlet):
@@ -186,7 +191,9 @@ class Scene(object):
         Internal method for returning all the registered namespaces that are in
         the given namespace.
         """
-        return [n for n in self._namespaces if namespace.startswith(n)]
+        return [n for n in self._namespaces if (namespace == n or
+                                        n.rsplit(".",1)[0].startswith(namespace) or
+                                        namespace.rsplit(".",1)[0].startswith(n))]
 
     def _send_event_to_handler(self, event, type, handler, args,
                                kwargs, priority, dynamic):
@@ -270,7 +277,7 @@ class Scene(object):
                 self._handle_event(type, event)
             self._events = self._pending
             self._pending = []
-
+    
     def _unregister_sprite_events(self, sprite):
         for name, handlers in self._handlers.items():
             self._handlers[name] = [h for h in handlers
@@ -295,7 +302,7 @@ class Scene(object):
                                              in self._handlers[event_namespace]
                                              if ((not isinstance(h[0], WeakMethodBound) and handler != h[0])
                                              or (isinstance(h[0], WeakMethodBound)
-                                                and ((h[0].func is not handler.im_func)
+                                                and ((h[0].func is not handler.im_func) 
                                                 or (h[0].weak_object_ref() is not handler.im_self))))]
         if not self._handlers[event_namespace]:
             del self._handlers[event_namespace]
@@ -584,7 +591,7 @@ class Scene(object):
         # This function sits in a potential hot loop
         # For that reason, some . lookups are optimized away
         screen = self._surface
-
+        
         # First we test if the background has been updated
         if self._background_version != self._background_image._version:
             self._set_background(self._background_image)
@@ -595,10 +602,7 @@ class Scene(object):
         for i in self._clear_this_frame + self._soft_clear:
             i = x.clip(i)
             b = self._background.subsurface(i)
-            try:
-                screen.blit(b, i)
-            except:
-                return
+            screen.blit(b, i)
 
         # Now, we need to blit layers, while simultaneously re-blitting
         # any static blits which were obscured
@@ -620,10 +624,7 @@ class Scene(object):
         # as they are drawn and then no longer cleared
         soft_clear = self._soft_clear
         self._soft_clear = []
-        try:
-            screen_rect = screen.get_rect()
-        except:
-            return
+        screen_rect = screen.get_rect()
         drawn_static = 0
 
         blit_flags_available = pygame.version.vernum < (1, 8)

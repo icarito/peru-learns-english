@@ -157,5 +157,4 @@ class MenuBar(gtk.MenuBar):
     def __emit_accion_menu(self, widget):
         #widget.get_children()[0].set_active(True)
         label = widget.get_children()[0].get_label()
-        print label
         self.emit("activar", os.path.join(BASE_PATH, "Topics", label))
