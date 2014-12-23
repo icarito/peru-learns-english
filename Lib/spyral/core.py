@@ -1,6 +1,5 @@
 """Core functionality module - e.g., init, quit"""
 
-import sys
 import spyral
 import pygame
 import inspect
@@ -17,7 +16,7 @@ def _init():
         return
     _inited = True
     spyral.event._init()
-    #spyral._style.init()
+    spyral._style.init()
     pygame.display.init()
     pygame.font.init()
 
@@ -28,7 +27,6 @@ def _quit():
     pygame.quit()
     spyral.director._stack = []
     spyral.director._initialized = False
-    #raise spyral.exceptions.GameEndException("The game has ended correctly.")
 
 def _get_executing_scene():
     """
@@ -38,9 +36,6 @@ def _get_executing_scene():
     """
     for frame, _, _, _, _, _ in inspect.stack():
         args = inspect.getargvalues(frame)
-        if sys.version_info[0:2]==(2,6):
-            # workaround for Python 2.6, see http://bugs.python.org/issue4092 
-            args = inspect.ArgInfo(*args)
         if len(args.args) > 0 and args.args[0] == 'self':
             obj = args.locals['self']
             if isinstance(obj, spyral.Scene):

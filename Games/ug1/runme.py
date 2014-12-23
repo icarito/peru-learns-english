@@ -4,6 +4,7 @@
 import sys
 sys.path.insert(1, "../../Lib/")
 
+import collections
 import pygame
 import spyral
 import os
@@ -15,6 +16,21 @@ TILE = (64, 64)
 
 game_dir = os.path.abspath(os.path.dirname(__file__))
 
+def wrap(text, length):
+    """
+    Sirve para cortar texto en varias lineas
+    """
+    words = text.split()
+    lines = []
+    line = ''
+    for w in words:
+        if len(w) + len(line) > length:
+            lines.append(line)
+            line = ''
+        line = line + w + ' '
+        if w is words[-1]:
+            lines.append(line)
+    return '\n'.join(lines)
 
 def gamedir(archivo):
     return os.path.join(game_dir, archivo)
@@ -60,12 +76,10 @@ class DelayAnimation(spyral.Animation):
 
 
 class Escena(spyral.Scene):
+    def __init__(self, topic=topic_dir):
+        spyral.Scene.__init__(self, SIZE)
 
-    def __init__(self, window=None, topic=topic_dir):
-
-        spyral.Scene.__init__(self, SIZE, 20, 20)
-
-        self.layers = ["abajo", "arriba", "primer"]
+        self.layers = ["abajo", "abajo2", "arriba", "primer"]
 
         img = spyral.Image(filename=gamedir(
             "images/Peru_Machu_Picchu_Sunrise.jpg")).scale(self.scene.size)
@@ -87,13 +101,15 @@ class Escena(spyral.Scene):
         spyral.event.register("system.quit", spyral.director.pop)
         #spyral.event.register("director.scene.enter", self.entrar)
         spyral.event.register("director.scene.enter", self.l.llover)
-
-        #spyral.event.register("director.update", self.chequea)
+        spyral.event.register("input.keyboard.down.esc", self.back_intro)
 
     #No funcionó en la XO Fedora 11
     #def entrar(self):
-    #    self.j.set_caminar(self.scene.width / 2)
+    #    self.j.set_caminar_x(self.scene.width / 2)
 
+    def back_intro(self):
+        spyral.director.replace(Finale())
+        spyral.director.run(sugar=True)
 
 class Terraza(spyral.Sprite):
 
@@ -194,7 +210,7 @@ class Tablero(spyral.Sprite):
                 "input.keyboard.down.*", self.procesar_tecla)
             self.scene.l.stop_all_animations()
             self.scene.l.stop_all_animations()  # spyral, please?
-            tiempo = self.scene.j.set_caminar(self.scene.l.x - 20, True)
+            tiempo = self.scene.j.set_caminar_x(self.scene.l.x - 20, True)
             self.scene.l.explotar(tiempo + 1)
 
             d = DelayAnimation(tiempo + 3)
@@ -294,7 +310,6 @@ class Lluvia(spyral.Sprite):
 class Visualizador(spyral.Sprite):
 
     def __init__(self, scene):
-
         spyral.Sprite.__init__(self, scene)
 
         self.image = spyral.Image(gamedir("images/golden-border.png"))
@@ -314,23 +329,36 @@ class Visualizador(spyral.Sprite):
         self.image.draw_image(self.render_text(text),
             position=(0, 0), anchor="midleft")
 
-    def reset(self):
+    def reset(self, txt=None, img=None, loop=False):
         self.stop_all_animations()
-        self.text = self.scene.tablero.palabra
-        self.palabra_png = self.scene.tablero.archivo_img
+        
+        if not txt:
+            self.text = "Please type the word"
+        else:
+            self.text = txt
+
+        if not img:
+            try:
+                self.palabra_png = self.scene.tablero.archivo_img
+            except AttributeError:
+                self.palabra_png = spyral.Image(size=(self.width - self.margen,
+                    self.height - self.margen)).fill((255, 255, 255))
+        else:
+            self.palabra_png = img
 
         image1 = self.image.copy()
         image1.draw_image(self.render_image(self.palabra_png),
             position=(25, 0), anchor="midleft")
+
         image2 = self.image.copy()
 
         nueva = spyral.Image(size=(self.width - self.margen,
             self.height - self.margen)).fill((255, 255, 255))
         image2.draw_image(nueva,
             position=(self.margen / 2, 0), anchor="midleft")
-        image2.draw_image(self.render_text("Press a letter !"),
+        image2.draw_image(self.render_text(self.text),
             position=(0, 0), anchor="midleft")
-        a = spyral.Animation("image", spyral.easing.Iterate([image1, image2], 6), 6)
+        a = spyral.Animation("image", spyral.easing.Iterate([image1, image2], 6), 6, loop=loop)
         self.animate(a)
 
     def render_image(self, image):
@@ -345,7 +373,7 @@ class Visualizador(spyral.Sprite):
     def render_text(self, text):
         ancho_promedio = self.font.get_size("X")[0]
         caracteres = (self.width - 2 * self.margen) / ancho_promedio
-        lineas = self.wrap(text, caracteres).splitlines()
+        lineas = wrap(text, caracteres).splitlines()
 
         altura = len(lineas) * self.line_height
         bloque = spyral.Image(size=(self.width, altura))
@@ -356,22 +384,6 @@ class Visualizador(spyral.Sprite):
                 position=(0, ln * self.line_height), anchor="midtop")
             ln = ln + 1
         return bloque
-
-    def wrap(self, text, length):
-        """
-        Sirve para cortar texto en varias lineas
-        """
-        words = text.split()
-        lines = []
-        line = ''
-        for w in words:
-            if len(w) + len(line) > length:
-                lines.append(line)
-                line = ''
-            line = line + w + ' '
-            if w is words[-1]:
-                lines.append(line)
-        return '\n'.join(lines)
 
 
 class Jugador(spyral.Sprite):
@@ -386,8 +398,9 @@ class Jugador(spyral.Sprite):
         self.x = scene.width / 2
         self.velocidad = 90
         self.anchor = "midtop"
-        self.layer = "arriba"
-        self.north = self.full_image.copy().crop((0, 8 * 64), TILE)
+        self.layer = "primer"
+        self.northq = self.full_image.copy().crop((0, 8 * 64), TILE)
+        self.southq = self.full_image.copy().crop((0, 10 * 64), TILE)
 
         self.east = []
         for i in range(0, 8):
@@ -398,6 +411,16 @@ class Jugador(spyral.Sprite):
         for i in range(0, 8):
             self.west.append(
                 self.full_image.copy().crop((i * 64, 9 * 64), TILE))
+
+        self.south = []
+        for i in range(0, 8):
+            self.south.append(
+                self.full_image.copy().crop((i * 64, 10 * 64), TILE))
+
+        self.north = []
+        for i in range(0, 8):
+            self.north.append(
+                self.full_image.copy().crop((i * 64, 8 * 64), TILE))
 
         self.fire = []
         for i in range(0, 7):
@@ -416,7 +439,7 @@ class Jugador(spyral.Sprite):
             self.caer.append(
                 self.full_image.copy().crop((i * 64, 20 * 64), TILE))
 
-        self.quieto = self.north
+        self.quieto = self.northq
 
         # saltar
         #spyral.event.register("input.keyboard.down.up", self.set_saltar)
@@ -435,22 +458,41 @@ class Jugador(spyral.Sprite):
         self.stop_all_animations()
         self.set_quieto()
 
-    def derecha(self):
-        self.set_caminar(self.scene.width - 32)
-
-    def izquierda(self):
-        self.set_caminar(32)
-
     def set_quieto(self):
         self.estado = "quieto"
         self.image = self.quieto
+
+    def set_mirame(self):
+        self.estado = "mirando"
+        self.image = self.southq
 
     def set_caer(self):
         self.stop_all_animations()
         z = spyral.Animation("image", spyral.easing.Iterate(self.caer, 1), 5)
         self.animate(z)
 
-    def set_caminar(self, x, disparar=False):
+    def set_deambular(self):
+        if self.estado in ["caminando"]:
+            self.stop_all_animations()
+
+        tiempo = 16
+
+        frames = self.east + self.west
+        frames = collections.deque(frames)
+        frames.rotate(-4)
+
+        # Calculamos el tiempo para obtener una velocidad constante
+        a = spyral.Animation("image",
+            spyral.easing.Iterate(frames), duration=tiempo, loop=True)
+        b = spyral.Animation("x", spyral.easing.Sine(100), shift=self.scene.width/2, duration=tiempo, loop=True)
+
+        c = a & b
+        c.property = "deambular"
+        self.estado = "caminando"
+        self.animate(c)
+
+
+    def set_caminar_x(self, x, disparar=False):
         if self.estado in ["caminando"]:
             self.stop_all_animations()
 
@@ -478,10 +520,258 @@ class Jugador(spyral.Sprite):
         self.estado = "caminando"
         return tiempo
 
+    def set_caminar_y(self, y, disparar=False):
+        if self.estado in ["caminando"]:
+            self.stop_all_animations()
+
+        # Calculamos el tiempo para obtener una velocidad constante
+        distancia = self.pos.distance((y, self.x))
+        tiempo = distancia / self.velocidad
+
+        if self.y < y:
+            direccion = self.south
+            self.quieto = self.southq
+        else:
+            direccion = self.north
+            self.quieto = self.northq
+
+        a = spyral.Animation("image",
+            spyral.easing.Iterate(direccion, tiempo), tiempo)
+        b = spyral.Animation("y", spyral.easing.Linear(self.y, y), tiempo)
+        d = spyral.Animation("image",
+            spyral.easing.Iterate([self.quieto], 0.1), 0.1)
+        c = a & b
+        c = c + d
+
+        if disparar:
+            z = spyral.Animation("image",
+                spyral.easing.Iterate(self.fire, 1), 1)
+            c = c + z
+        c.property = "traslado"
+        self.animate(c)
+        self.estado = "caminando"
+        return tiempo
+
+
+class Dialogo(spyral.Sprite):
+
+    def __init__(self, scene, texto):
+        spyral.Sprite.__init__(self, scene)
+
+        self.anchor = 'center'
+        self.pos = spyral.Vec2D(scene.size) / 2
+        self.margen = 5 
+        self.layer = "primer"
+
+        self.image = spyral.Image(filename=gamedir("images/Menu_1.png"))
+        #self.image.draw_rect(color=(128,128,128),
+        #        position=(0,0), size=(self.height,self.width))
+
+        font_path = gamedir("fonts/DejaVuSans.ttf")
+        self.font = spyral.Font(font_path, 24, (0, 0, 0))
+        self.line_height = self.font.linesize
+
+        nueva = self.set_text(texto)
+        self.image.draw_image(nueva,
+            position=(self.margen / 2, -17), anchor="midleft")
+
+    def set_text(self, text):
+        self._text = text
+        ancho_promedio = self.font.get_size("X")[0]
+        caracteres = (self.width - 2 * self.margen) / ancho_promedio
+        lineas = wrap(text, caracteres).splitlines()
+
+        altura = len(lineas) * self.line_height
+        bloque = spyral.Image(size=(self.width, altura))
+
+        ln = 0
+        for linea in lineas:
+            bloque.draw_image(image=self.font.render(linea),
+                position=(0, ln * self.line_height), anchor="midtop")
+            ln = ln + 1
+        return bloque
+
+
+class Texto(spyral.Sprite):
+
+    def __init__(self, scene, texto):
+        spyral.Sprite.__init__(self, scene)
+
+        self.anchor = 'center'
+        self.pos = spyral.Vec2D(scene.size) / 2
+        self.margen = 5 
+        self.layer = "primer"
+
+        self.image = spyral.Image(filename=gamedir("images/Menu_2.png"))
+        #self.image.draw_rect(color=(128,128,128),
+        #        position=(0,0), size=(self.height,self.width))
+
+        font_path = gamedir("fonts/DejaVuSans.ttf")
+        self.font = spyral.Font(font_path, 24, (0, 0, 0))
+        self.line_height = self.font.linesize
+
+        nueva = self.set_text(texto)
+        self.image.draw_image(nueva,
+            position=(self.margen / 2, 0), anchor="midleft")
+
+    def set_text(self, text):
+        self._text = text
+        ancho_promedio = self.font.get_size("X")[0]
+        caracteres = (self.width - 2 * self.margen) / ancho_promedio
+        lineas = wrap(text, caracteres).splitlines()
+
+        altura = len(lineas) * self.line_height
+        bloque = spyral.Image(size=(self.width, altura))
+
+        ln = 0
+        for linea in lineas:
+            bloque.draw_image(image=self.font.render(linea),
+                position=(0, ln * self.line_height), anchor="midtop")
+            ln = ln + 1
+        return bloque
+
+
+class Camino(spyral.Sprite):
+
+    def __init__(self, scene):
+
+        spyral.Sprite.__init__(self, scene)
+
+        self.anchor = "midbottom"
+        self.layer = "abajo2"
+        self.image = spyral.Image(filename=gamedir("images/entrada.png"))
+        self.pos = spyral.Vec2D(self.scene.size)/2
+
+    def temblar(self):
+        m = spyral.Animation("x", spyral.easing.Iterate(
+            [-3, 0, 3], 5), 2, shift=self.x)
+        self.animate(m)
+
+
+class Finale(spyral.Scene):
+
+    def __init__(self):
+        spyral.Scene.__init__(self, SIZE)
+
+        self.layers = ["abajo", "abajo2", "arriba", "primer"]
+
+        img = spyral.Image(filename=gamedir(
+            "images/Peru_Machu_Picchu_Sunrise.jpg")).scale(self.scene.size)
+        self.background = img
+
+        self.j = Jugador(self)
+        self.the_question = Dialogo(self, "Play again?")
+
+        self.terraza = Terraza(self)
+        spyral.event.register("system.quit", spyral.director.pop)
+
+        spyral.event.register("input.keyboard.down.esc", spyral.director.pop)
+        spyral.event.register("input.keyboard.down.return", self.goplay)
+
+    def goplay(self):
+        spyral.director.replace(Escena())
+        spyral.director.run(sugar=True)
+
+
+class Intro(spyral.Scene):
+
+    def __init__(self, topic=topic_dir):
+        spyral.Scene.__init__(self, SIZE)
+
+        global topic_dir
+        topic_dir = topic
+
+        self.layers = ["abajo", "abajo2", "arriba", "primer"]
+
+        img = spyral.Image(filename=gamedir(
+            "images/Peru_Machu_Picchu_Sunrise.jpg")).scale(self.scene.size)
+        self.background = img
+
+        self.camino = Camino(self)
+        self.camino.y = 0
+        self.terraza = Terraza(self)
+
+        spyral.event.register("system.quit", spyral.director.pop)
+        spyral.event.register("input.keyboard.down.space", self.goplay)
+        spyral.event.register("director.scene.enter", self.intro0)
+
+    def goplay(self):
+        spyral.director.replace(Escena())
+        spyral.director.run(sugar=True)
+
+    def intro0(self):
+        a = spyral.Animation("y", spyral.easing.Linear(self.camino.y, self.scene.height), duration=4)
+        self.camino.animate(a)
+
+        spyral.event.register("Camino.y.animation.end", self.intro1)
+
+    def intro1(self):
+        spyral.event.unregister("Camino.y.animation.end", self.intro1)
+        self.j = Jugador(self)
+        self.j.x = self.width / 2
+        self.j.y = -64
+        self.j.set_mirame()
+
+        self.mensaje = Texto(self, "Hello children of Peru")
+        self.mensaje.y = 80
+        self.mensaje.x = 120
+
+        self.j.set_caminar_y(self.scene.height/2)
+        spyral.event.register("Jugador.traslado.animation.end", self.intro2)
+
+    def intro2(self):
+        spyral.event.unregister("Jugador.traslado.animation.end", self.intro2)
+        self.mensaje.kill()
+        self.mensaje = Texto(self, "There is no time to explain")
+        self.mensaje.y = self.height / 2 - 50
+
+        self.d = DelayAnimation(3)
+        self.d.property="demora"
+        self.j.animate(self.d)
+
+        spyral.event.register("Jugador.demora.animation.end", self.intro3)
+
+    def intro3(self):
+        spyral.event.unregister("Jugador.demora.animation.end", self.intro3)
+        self.j.set_caminar_y(self.scene.height-self.j.height)
+        spyral.event.register("Jugador.traslado.animation.end", self.intro4)
+
+    def intro4(self):
+        spyral.event.unregister("Jugador.traslado.animation.end", self.intro4)
+        self.mensaje.kill()
+        self.mensaje = Texto(self, "An asteroid is coming!")
+        self.mensaje.y = self.height - 200
+
+        self.d = DelayAnimation(3)
+        self.d.property="demora"
+        self.j.animate(self.d)
+
+        spyral.event.register("Jugador.demora.animation.end", self.intro5)
+
+    def intro5(self):
+        spyral.event.unregister("Jugador.demora.animation.end", self.intro5)
+        a = spyral.Animation("y", spyral.easing.Linear(self.scene.height, 0), duration=4)
+        self.camino.animate(a)
+
+        img = spyral.Image(filename=gamedir(
+        "images/Peru_Machu_Picchu_Sunrise.jpg")).scale(self.scene.size)
+
+        self.v = Visualizador(self)
+        self.v.reset("Press space to begin.", loop=True)
+
+        n = pygame.Surface.convert_alpha(img._surf)
+        # red at 50%
+        n.fill((255, 0, 0, 127))
+        img._surf.blit(n, (0, 0))
+
+        self.scene.background = img
+
+        self.j.set_deambular()
+
 def main():
-    spyral.director.push(Escena())
+    spyral.director.push(Intro())
 
 if __name__ == "__main__":
     spyral.director.init(SIZE, fullscreen=False)
     main()
-    spyral.director.run(profiling=True)
+    spyral.director.run()

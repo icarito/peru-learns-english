@@ -136,8 +136,8 @@ def pop():
 
 def push(scene):
     """
-    Place *scene* on the top of the stack, and move control to it. This does
-    return control, so remember to return immediately after calling it.
+    Place *scene* on the top of the stack, and move control to it. This does 
+    return control, so remember to return immediately after calling it. 
 
     :param scene: The new scene.
     :type scene: :class:`Scene <spyral.Scene>`
@@ -176,49 +176,46 @@ def run(sugar=False, profiling=False, scene=None):
     scene = get_scene()
     clock = scene.clock
     stack = _stack
-    try:
-        while True:
-            scene = stack[-1]
-            if scene is not old_scene:
-                if profiling and old_scene is not None:
-                    return
-                clock = scene.clock
-                old_scene = scene
+    while True:
+        scene = stack[-1]
+        if scene is not old_scene:
+            if profiling and old_scene is not None:
+                return
+            clock = scene.clock
+            old_scene = scene
 
-                def frame_callback(interpolation):
-                    """
-                    A closure for handling drawing, which includes forcing the
-                    rendering-related events to be fired.
-                    """
-                    scene._handle_event("director.pre_render")
-                    scene._handle_event("director.render")
-                    scene._draw()
-                    scene._handle_event("director.post_render")
+            def frame_callback(interpolation):
+                """
+                A closure for handling drawing, which includes forcing the
+                rendering-related events to be fired.
+                """
+                scene._handle_event("director.pre_render")
+                scene._handle_event("director.render")
+                scene._draw()
+                scene._handle_event("director.post_render")
 
-                def update_callback(delta):
-                    """
-                    A closure for handling events, which includes firing the update
-                    related events (e.g., pre_update, update, and post_update).
-                    """
-                    global _tick
-                    if sugar:
-                        while gtk.events_pending():
-                            gtk.main_iteration()
-                    if len(pygame.event.get([pygame.VIDEOEXPOSE])) > 0:
-                        scene.redraw()
-                        scene._handle_event("director.redraw")
+            def update_callback(delta):
+                """
+                A closure for handling events, which includes firing the update
+                related events (e.g., pre_update, update, and post_update).
+                """
+                global _tick
+                if sugar:
+                    while gtk.events_pending():
+                        gtk.main_iteration()
+                if len(pygame.event.get([pygame.VIDEOEXPOSE])) > 0:
+                    scene.redraw()
+                    scene._handle_event("director.redraw")
 
-                    scene._event_source.tick()
-                    events = scene._event_source.get()
-                    for event in events:
-                        scene._queue_event(*spyral.event._pygame_to_spyral(event))
-                    scene._handle_event("director.pre_update")
-                    scene._handle_event("director.update",
-                                        spyral.Event(delta=delta))
-                    _tick += 1
-                    scene._handle_event("director.post_update")
-                clock.frame_callback = frame_callback
-                clock.update_callback = update_callback
-            clock.tick()
-    except spyral.exceptions.GameEndException:
-        pass
+                scene._event_source.tick()
+                events = scene._event_source.get()
+                for event in events:
+                    scene._queue_event(*spyral.event._pygame_to_spyral(event))
+                scene._handle_event("director.pre_update")
+                scene._handle_event("director.update",
+                                    spyral.Event(delta=delta))
+                _tick += 1
+                scene._handle_event("director.post_update")
+            clock.frame_callback = frame_callback
+            clock.update_callback = update_callback
+        clock.tick()

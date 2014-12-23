@@ -65,14 +65,14 @@ class GameView(gtk.EventBox):
             # FIXME: El juego debe reescalarse a: rect.width, rect.height
 
     def __run_game(self):
-        from Games.ug1.runme import Escena
+        from Games.ug1.runme import Intro
 
         rect = self.get_allocation()
         self.lado = min(rect.width-8, rect.height-8)
         self.pygamecanvas.set_size_request(self.lado, self.lado)
         spyral.director.init((self.lado, self.lado),
             fullscreen=False, max_fps=30)
-        self.game = Escena(self, self.topic)
+        self.game = Intro(self.topic)
         spyral.director.push(self.game)
         if self.pump:
             gobject.source_remove(self.pump)
