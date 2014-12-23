@@ -7,8 +7,9 @@ PLE is being designed and put together by the SomosAzucar R&D Team in collaborat
 
 
 Asset Copyright Attribution
----------------------
+---------------------------
 
+**Videos**
 
 *Bunny Bonita “Feelings” CC-BY-NC
 Bunny Bonita “Family” CC-BY-NC*
@@ -20,10 +21,9 @@ Art4Apps “Trish the Fish” CC-BY-SA
 Art4Apps “A Shell at the Shore” CC-BY-SA*
  © 2012—2014 Smart4kids LLC
 
+*QuestionCopyright “Copying is not Theft” Public Domain*
+ Nina Paley
 
-
-QuestionCopyright “Copying is not Theft” Dominio Público
-
-*Question Copyright*
-Nina Paley
-Bajo licencia Creative Commons - Reconocimiento No-Comercial (CC-BY-SA)
+**UG1**
+golden-border.png - nicubunu - Public Domain
+Peru_Machu_Picchu_Sunrise.jpg - © 2007 Flamurai - CC BY 2.0
