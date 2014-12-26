@@ -331,7 +331,7 @@ class Visualizador(spyral.Sprite):
 
     def reset(self, txt=None, img=None, loop=False):
         self.stop_all_animations()
-        
+
         if not txt:
             self.text = "Please type the word"
         else:
@@ -560,7 +560,7 @@ class Dialogo(spyral.Sprite):
 
         self.anchor = 'center'
         self.pos = spyral.Vec2D(scene.size) / 2
-        self.margen = 5 
+        self.margen = 5
         self.layer = "primer"
 
         self.image = spyral.Image(filename=gamedir("images/Menu_1.png"))
@@ -599,7 +599,7 @@ class Texto(spyral.Sprite):
 
         self.anchor = 'center'
         self.pos = spyral.Vec2D(scene.size) / 2
-        self.margen = 5 
+        self.margen = 5
         self.layer = "primer"
 
         self.image = spyral.Image(filename=gamedir("images/Menu_2.png"))
@@ -656,17 +656,25 @@ class Finale(spyral.Scene):
         self.layers = ["abajo", "abajo2", "arriba", "primer"]
 
         img = spyral.Image(filename=gamedir(
-            "images/Peru_Machu_Picchu_Sunrise.jpg")).scale(self.scene.size)
+            "images/Peru_Machu_Picchu_Sunrise.jpg")).scale(self.size)
         self.background = img
 
         self.j = Jugador(self)
+        self.j.set_mirame()
         self.the_question = Dialogo(self, "Play again?")
 
         self.terraza = Terraza(self)
         spyral.event.register("system.quit", spyral.director.pop)
 
         spyral.event.register("input.keyboard.down.esc", spyral.director.pop)
+        spyral.event.register("input.keyboard.down.n", spyral.director.pop)
         spyral.event.register("input.keyboard.down.return", self.goplay)
+        spyral.event.register("input.keyboard.down.y", self.goplay)
+        spyral.event.register("input.mouse.down.left", self.click)
+
+    def click(self, pos):
+        if self.the_question.collide_point(pos):
+            self.goplay()
 
     def goplay(self):
         spyral.director.replace(Escena())
