@@ -1,6 +1,24 @@
 #!/bin/env python2
 # *-* coding: utf-8 *-*
 
+#   Juego UG1 por:
+#   Sebastian Silva <sebastian@fuentelibre.org>
+#   Planeta Tierra
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
 import sys
 sys.path.insert(1, "../../Lib/")
 
@@ -99,15 +117,11 @@ class Escena(spyral.Scene):
         self.v = Visualizador(self)
 
         spyral.event.register("system.quit", spyral.director.pop)
-        #spyral.event.register("director.scene.enter", self.entrar)
         spyral.event.register("director.scene.enter", self.l.llover)
-        spyral.event.register("input.keyboard.down.esc", self.back_intro)
+        spyral.event.register("input.keyboard.down.esc", self.endgame)
 
-    #No funcionó en la XO Fedora 11
-    #def entrar(self):
-    #    self.j.set_caminar_x(self.scene.width / 2)
 
-    def back_intro(self):
+    def endgame(self):
         spyral.director.replace(Finale())
         spyral.director.run(sugar=True)
 
@@ -295,6 +309,12 @@ class Lluvia(spyral.Sprite):
             self.scene.terraza.temblar()
             self.scene.j.set_caer()
 
+            spyral.event.register("input.keyboard.down.*", 
+                self.scene.endgame)
+
+            spyral.event.register("input.mouse.down.*", 
+                self.scene.endgame)
+
     def explotar(self, wait=0):
         n = spyral.Animation("image", spyral.easing.Iterate(
             self.explosion_frames, 1), 2)
@@ -331,7 +351,7 @@ class Visualizador(spyral.Sprite):
 
     def reset(self, txt=None, img=None, loop=False):
         self.stop_all_animations()
-        
+
         if not txt:
             self.text = "Please type the word"
         else:
@@ -560,7 +580,7 @@ class Dialogo(spyral.Sprite):
 
         self.anchor = 'center'
         self.pos = spyral.Vec2D(scene.size) / 2
-        self.margen = 5 
+        self.margen = 5
         self.layer = "primer"
 
         self.image = spyral.Image(filename=gamedir("images/Menu_1.png"))
@@ -599,7 +619,7 @@ class Texto(spyral.Sprite):
 
         self.anchor = 'center'
         self.pos = spyral.Vec2D(scene.size) / 2
-        self.margen = 5 
+        self.margen = 5
         self.layer = "primer"
 
         self.image = spyral.Image(filename=gamedir("images/Menu_2.png"))
@@ -656,17 +676,25 @@ class Finale(spyral.Scene):
         self.layers = ["abajo", "abajo2", "arriba", "primer"]
 
         img = spyral.Image(filename=gamedir(
-            "images/Peru_Machu_Picchu_Sunrise.jpg")).scale(self.scene.size)
+            "images/Peru_Machu_Picchu_Sunrise.jpg")).scale(self.size)
         self.background = img
 
         self.j = Jugador(self)
+        self.j.set_mirame()
         self.the_question = Dialogo(self, "Play again?")
 
         self.terraza = Terraza(self)
         spyral.event.register("system.quit", spyral.director.pop)
 
         spyral.event.register("input.keyboard.down.esc", spyral.director.pop)
+        spyral.event.register("input.keyboard.down.n", spyral.director.pop)
         spyral.event.register("input.keyboard.down.return", self.goplay)
+        spyral.event.register("input.keyboard.down.y", self.goplay)
+        spyral.event.register("input.mouse.down.left", self.click)
+
+    def click(self, pos):
+        if self.the_question.collide_point(pos):
+            self.goplay()
 
     def goplay(self):
         spyral.director.replace(Escena())
