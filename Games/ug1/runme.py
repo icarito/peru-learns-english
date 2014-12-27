@@ -117,9 +117,9 @@ class Escena(spyral.Scene):
         self.terraza = Terraza(self)
         self.v = Visualizador(self)
 
-        spyral.event.register("system.quit", spyral.director.pop)
-        spyral.event.register("director.scene.enter", self.l.llover)
-        spyral.event.register("input.keyboard.down.esc", self.endgame)
+        spyral.event.register("system.quit", spyral.director.pop, scene=self)
+        spyral.event.register("director.scene.enter", self.l.llover, scene=self)
+        spyral.event.register("input.keyboard.down.esc", self.endgame, scene=self)
 
 
     def endgame(self):
@@ -169,8 +169,8 @@ class Tablero(spyral.Sprite):
 
         self.mostrar(self.text, "")
 
-        spyral.event.register("input.keyboard.down.*", self.procesar_tecla)
-        spyral.event.register("Tablero.reset.animation.end", self.reset)
+        spyral.event.register("input.keyboard.down.*", self.procesar_tecla, scene=self.scene)
+        spyral.event.register("Tablero.reset.animation.end", self.reset, scene=self.scene)
 
     def reset(self):
         self.ganadas = self.ganadas + 1
@@ -182,7 +182,7 @@ class Tablero(spyral.Sprite):
         self.mostrar(self.palabra, self.acertadas)
         self.scene.l.reset()
         self.scene.v.reset()
-        spyral.event.register("input.keyboard.down.*", self.procesar_tecla)
+        spyral.event.register("input.keyboard.down.*", self.procesar_tecla, scene=self.scene)
 
     def set_text(self, text):
         self.image = self.font.render(text)
@@ -280,7 +280,7 @@ class Lluvia(spyral.Sprite):
                 self.explosion_full.copy().crop((i * explosion_size, 0),
                 (explosion_size, explosion_size)))
 
-        spyral.event.register("Lluvia.y.animation.end", self.finalizar)
+        spyral.event.register("Lluvia.y.animation.end", self.finalizar, scene=self.scene)
         self.scale = 2
 
     def reset(self):
@@ -311,10 +311,10 @@ class Lluvia(spyral.Sprite):
             self.scene.j.set_caer()
 
             spyral.event.register("input.keyboard.down.*", 
-                self.scene.endgame)
+                self.scene.endgame, scene=self.scene)
 
             spyral.event.register("input.mouse.down.*", 
-                self.scene.endgame)
+                self.scene.endgame, scene=self.scene)
 
     def explotar(self, wait=0):
         n = spyral.Animation("image", spyral.easing.Iterate(
@@ -461,16 +461,6 @@ class Jugador(spyral.Sprite):
                 self.full_image.copy().crop((i * 64, 20 * 64), TILE))
 
         self.quieto = self.northq
-
-        # saltar
-        #spyral.event.register("input.keyboard.down.up", self.set_saltar)
-        #spyral.event.register("Jugador.y.animation.end", self.set_quieto)
-
-        # trasladar
-        #spyral.event.register("input.keyboard.up.right", self.frenar)
-        #spyral.event.register("input.keyboard.up.left", self.frenar)
-        #spyral.event.register("input.keyboard.down.right", self.derecha)
-        #spyral.event.register("input.keyboard.down.left", self.izquierda)
 
         self.set_quieto()
         self.scale = 2
@@ -685,13 +675,13 @@ class Finale(spyral.Scene):
         self.the_question = Dialogo(self, "Play again?")
 
         self.terraza = Terraza(self)
-        spyral.event.register("system.quit", spyral.director.pop)
+        spyral.event.register("system.quit", spyral.director.pop, scene=self)
 
         #spyral.event.register("input.keyboard.down.esc", spyral.director.pop)
         #spyral.event.register("input.keyboard.down.n", spyral.director.pop)
-        spyral.event.register("input.keyboard.down.return", self.goplay)
-        spyral.event.register("input.keyboard.down.y", self.goplay)
-        spyral.event.register("input.mouse.down.left", self.click)
+        spyral.event.register("input.keyboard.down.return", self.goplay, scene=self)
+        spyral.event.register("input.keyboard.down.y", self.goplay, scene=self)
+        spyral.event.register("input.mouse.down.left", self.click, scene=self)
 
     def click(self, pos):
         if self.the_question.collide_point(pos):
@@ -720,9 +710,9 @@ class Intro(spyral.Scene):
         self.camino.y = 0
         self.terraza = Terraza(self)
 
-        spyral.event.register("system.quit", spyral.director.pop)
-        spyral.event.register("input.keyboard.down.space", self.goplay)
-        spyral.event.register("director.scene.enter", self.intro0)
+        spyral.event.register("system.quit", spyral.director.pop, scene=self)
+        spyral.event.register("input.keyboard.down.space", self.goplay, scene=self)
+        spyral.event.register("director.scene.enter", self.intro0, scene=self)
 
     def goplay(self):
         spyral.director.replace(Escena())
@@ -732,7 +722,7 @@ class Intro(spyral.Scene):
         a = spyral.Animation("y", spyral.easing.Linear(self.camino.y, self.scene.height), duration=4)
         self.camino.animate(a)
 
-        spyral.event.register("Camino.y.animation.end", self.intro1)
+        spyral.event.register("Camino.y.animation.end", self.intro1, scene=self)
 
     def intro1(self):
         spyral.event.unregister("Camino.y.animation.end", self.intro1)
@@ -746,7 +736,7 @@ class Intro(spyral.Scene):
         self.mensaje.x = 120
 
         self.j.set_caminar_y(self.scene.height/2)
-        spyral.event.register("Jugador.traslado.animation.end", self.intro2)
+        spyral.event.register("Jugador.traslado.animation.end", self.intro2, scene=self)
 
     def intro2(self):
         spyral.event.unregister("Jugador.traslado.animation.end", self.intro2)
@@ -758,12 +748,12 @@ class Intro(spyral.Scene):
         self.d.property="demora"
         self.j.animate(self.d)
 
-        spyral.event.register("Jugador.demora.animation.end", self.intro3)
+        spyral.event.register("Jugador.demora.animation.end", self.intro3, scene=self)
 
     def intro3(self):
         spyral.event.unregister("Jugador.demora.animation.end", self.intro3)
         self.j.set_caminar_y(self.scene.height-self.j.height)
-        spyral.event.register("Jugador.traslado.animation.end", self.intro4)
+        spyral.event.register("Jugador.traslado.animation.end", self.intro4, scene=self)
 
     def intro4(self):
         spyral.event.unregister("Jugador.traslado.animation.end", self.intro4)
@@ -775,7 +765,7 @@ class Intro(spyral.Scene):
         self.d.property="demora"
         self.j.animate(self.d)
 
-        spyral.event.register("Jugador.demora.animation.end", self.intro5)
+        spyral.event.register("Jugador.demora.animation.end", self.intro5, scene=self)
 
     def intro5(self):
         spyral.event.unregister("Jugador.demora.animation.end", self.intro5)
