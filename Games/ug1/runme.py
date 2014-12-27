@@ -20,19 +20,22 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import sys
-sys.path.insert(1, "../../Lib/")
+import os
 
-import collections
+game_dir = os.path.abspath(os.path.dirname(__file__))
+def gamedir(archivo):
+    return os.path.join(game_dir, archivo)
+
+sys.path.insert(1, gamedir("../../Lib/"))
+
 import pygame
 import spyral
-import os
 import random
 import csv
+import collections
 
 SIZE = (700, 700)
 TILE = (64, 64)
-
-game_dir = os.path.abspath(os.path.dirname(__file__))
 
 def wrap(text, length):
     """
@@ -50,8 +53,6 @@ def wrap(text, length):
             lines.append(line)
     return '\n'.join(lines)
 
-def gamedir(archivo):
-    return os.path.join(game_dir, archivo)
 
 
 font_path = gamedir("fonts/DejaVuSans.ttf")
@@ -686,8 +687,8 @@ class Finale(spyral.Scene):
         self.terraza = Terraza(self)
         spyral.event.register("system.quit", spyral.director.pop)
 
-        spyral.event.register("input.keyboard.down.esc", spyral.director.pop)
-        spyral.event.register("input.keyboard.down.n", spyral.director.pop)
+        #spyral.event.register("input.keyboard.down.esc", spyral.director.pop)
+        #spyral.event.register("input.keyboard.down.n", spyral.director.pop)
         spyral.event.register("input.keyboard.down.return", self.goplay)
         spyral.event.register("input.keyboard.down.y", self.goplay)
         spyral.event.register("input.mouse.down.left", self.click)

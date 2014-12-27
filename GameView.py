@@ -80,7 +80,7 @@ class GameView(gtk.EventBox):
         self.pump = gobject.timeout_add(300, self.__pump)
         try:
             spyral.director.run(sugar=True)
-        except spyral.exceptions.GameEndException, pygame.error:
+        except pygame.error:
             pass
 
     def __pump(self):

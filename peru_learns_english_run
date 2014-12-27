@@ -1,2 +1,2 @@
 #!/bin/sh
-exec "/usr/bin/python2" "/usr/local/share/peru-learns-english/enfoli.py" "$@"
+exec "/usr/bin/python2" "/usr/local/share/peru-learns-english/ple.py" "$@"
