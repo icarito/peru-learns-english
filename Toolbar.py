@@ -24,6 +24,8 @@ import gtk
 import gobject
 import pango
 
+from popupmenubutton import PopupMenuButton 
+
 from ConfigParser import SafeConfigParser
 
 from Globales import COLORES
@@ -47,8 +49,6 @@ class Toolbar(gtk.EventBox):
 
         toolbar = gtk.Toolbar()
 
-        self.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
-        self.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
         toolbar.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
         toolbar.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
 
@@ -74,6 +74,7 @@ class Toolbar(gtk.EventBox):
             item.set_expand(True)
             label = gtk.Label(text)
             label.modify_font(pango.FontDescription("DejaVu Sans Bold 16"))
+            label.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
             boton = gtk.ToggleToolButton()
             boton.set_label_widget(label)
             boton.connect("toggled", self.__do_toggled)
@@ -84,19 +85,27 @@ class Toolbar(gtk.EventBox):
             separador.props.draw = True
             toolbar.insert(separador, -1)
 
-        self.menubar = MenuBar()
+        self.menu = Menu()
+
+        self.menubutton = PopupMenuButton("Topics")
+        self.menubutton.child.modify_font(pango.FontDescription("DejaVu Sans Bold 16"))
+        self.menubutton.child.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
+        self.menubutton.child.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
+        self.menubutton.set_menu(self.menu)
 
         item = gtk.ToolItem()
         item.set_expand(True)
-        item.add(self.menubar)
+        item.add(self.menubutton)
         toolbar.insert(item, -1)
 
         self.add(toolbar)
         self.show_all()
 
-        self.menubar.connect("activar", self.__emit_accion_menu)
+        self.menu.connect("activar", self.__emit_accion_menu)
 
     def __emit_accion_menu(self, widget, topic):
+        for button in self.buttons:
+            button.set_active(False)
         self.emit("video", topic)
 
     def __go_home(self, widget):
@@ -110,47 +119,28 @@ class Toolbar(gtk.EventBox):
                 if label != button.get_label_widget().get_text():
                     button.set_active(False)
             self.emit("activar", label)
+            self.menubutton.set_active(False)
         else:
             for button in self.buttons:
                 if button.get_active():
                     return
-            self.buttons[0].set_active(True)
 
 
-class MenuBar(gtk.MenuBar):
+class Menu(gtk.Menu):
 
     __gsignals__ = {
     "activar": (gobject.SIGNAL_RUN_FIRST,
         gobject.TYPE_NONE, (gobject.TYPE_STRING, ))}
 
     def __init__(self):
-
-        gtk.MenuBar.__init__(self)
+        gtk.Menu.__init__(self)
 
         self.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
         self.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
-        self.modify_font(pango.FontDescription("DejaVu Sans Bold 16"))
-
-        itemmenu = gtk.MenuItem("Topics")
-        itemmenu.child.modify_font(pango.FontDescription("DejaVu Sans Bold 16"))
-        itemmenu.child.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
-        itemmenu.child.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
-
-        menu = gtk.Menu()
-        menu.modify_font(pango.FontDescription("DejaVu Sans 12"))
-        menu.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
-        menu.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
-        itemmenu.set_submenu(menu)
-        self.append(itemmenu)
 
         topics = os.path.join(BASE_PATH, "Topics")
         for arch in sorted(os.listdir(topics)):
             item = gtk.MenuItem()
-            try:
-                item.get_child().destroy()
-            except:
-                pass
-
 
             parser = SafeConfigParser()
             metadata = os.path.join(topics, arch, "topic.ini")
@@ -163,10 +153,10 @@ class MenuBar(gtk.MenuBar):
             boton.set_padding(xpad=20, ypad=20)
             item.add(boton)
             item.connect("activate", self.__emit_accion_menu, arch)
-            menu.append(item)
+            item.show()
+            boton.show()
+            self.append(item)
 
     def __emit_accion_menu(self, widget, arch):
-        #widget.get_children()[0].set_active(True)
-        #label = widget.get_children()[0].get_label()
         label = arch
         self.emit("activar", os.path.join(BASE_PATH, "Topics", label))
