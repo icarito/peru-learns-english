@@ -5,6 +5,9 @@
 #   Flavio Danesse <fdanesse@gmail.com>
 #   Uruguay
 
+#   Contribuciones de Sebastian Silva <sebastian@somosazucar.org>
+#   Planeta Tierra
+
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
@@ -23,6 +26,8 @@ import os
 import gtk
 import pango
 import gobject
+
+from ConfigParser import SafeConfigParser
 
 from JAMediaImagenes.ImagePlayer import ImagePlayer
 
@@ -119,6 +124,12 @@ class FlashCardView(gtk.EventBox):
         Carga Vocabulario, pone widgets a estado inicial y
         carga primera palabra.
         """
+        parser = SafeConfigParser()
+        metadata = os.path.join(topic, "topic.ini")
+        parser.read(metadata)
+
+        self.cabecera.titulo.set_text(parser.get('topic', 'title'))
+
         self.derecha.run()
         self.topic = topic
         csvfile = os.path.join(topic, "vocabulario.csv")
