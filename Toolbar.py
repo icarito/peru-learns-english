@@ -24,7 +24,7 @@ import gtk
 import gobject
 import pango
 
-from popupmenubutton import PopupMenuButton 
+from popupmenubutton import PopupMenuButton
 
 from ConfigParser import SafeConfigParser
 
@@ -49,6 +49,7 @@ class Toolbar(gtk.EventBox):
 
         toolbar = gtk.Toolbar()
 
+        self.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
         toolbar.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
         toolbar.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
 
