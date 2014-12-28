@@ -48,6 +48,7 @@ class VideoView(gtk.EventBox):
         self.modify_bg(gtk.STATE_NORMAL, COLORES["contenido"])
         self.set_border_width(4)
 
+        self.full = False
         self.topic = False
 
         tabla = gtk.Table(rows=10, columns=3, homogeneous=True)
@@ -86,6 +87,34 @@ class VideoView(gtk.EventBox):
 
         flashcards.connect("clicked", self.__emit_flashcards)
         self.imagen_juego.connect("button-press-event", self.__emit_game)
+        self.videoplayer.connect("full", self.__set_full)
+        self.videoplayer.connect("endfile", self.__force_unfull)
+
+    def __force_unfull(self, widget):
+        if self.full:
+            self.__set_full(False)
+        self.videoplayer.stop()
+        self.videoplayer.load(os.path.join(self.topic, "video.ogv"))
+        self.videoplayer.pause()
+
+    def __set_full(self, widget):
+        tabla = self.get_child()
+        for child in tabla.children():
+            child.hide()
+
+        if self.full:
+            self.videoplayer.hide()
+            tabla.set_homogeneous(True)
+            tabla.set_property("column-spacing", 8)
+            tabla.set_property("row-spacing", 8)
+            self.show_all()
+            self.full = False
+        else:
+            tabla.set_homogeneous(False)
+            tabla.set_property("column-spacing", 0)
+            tabla.set_property("row-spacing", 0)
+            self.videoplayer.show()
+            self.full = True
 
     def __emit_game(self, widget, event):
         self.emit("game", self.topic)
@@ -116,6 +145,8 @@ class VideoView(gtk.EventBox):
         self.titulo.set_text(parser.get('topic', 'title'))
         self.links.set_uri(parser.get('topic', 'link'))
         self.links.set_label(parser.get('topic', 'link'))
+        self.full = False
+        self.__set_full(False)
 
 
 class GameImage(gtk.DrawingArea):

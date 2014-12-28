@@ -130,12 +130,12 @@ class JAMediaReproductor(gobject.GObject):
             buf = int(message.structure["buffer-percent"])
             if buf < 100 and self.estado == gst.STATE_PLAYING:
                 self.emit("loading-buffer", buf)
-                self.__pause()
+                self.pause()
             elif buf > 99 and self.estado != gst.STATE_PLAYING:
                 self.emit("loading-buffer", buf)
                 self.play()
 
-    def __pause(self):
+    def pause(self):
         self.player.set_state(gst.STATE_PAUSED)
 
     def __new_handle(self, reset):
@@ -166,7 +166,7 @@ class JAMediaReproductor(gobject.GObject):
             or self.estado == gst.STATE_READY:
             self.play()
         elif self.estado == gst.STATE_PLAYING:
-            self.__pause()
+            self.pause()
 
     def stop(self):
         self.__new_handle(False)

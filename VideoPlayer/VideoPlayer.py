@@ -20,6 +20,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import gtk
+import gobject
 
 from PlayerControls import PlayerControls
 from ProgressPlayer import ProgressPlayer
@@ -29,6 +30,12 @@ from Globales import COLORES
 
 
 class VideoPlayer(gtk.EventBox):
+
+    __gsignals__ = {
+    "full": (gobject.SIGNAL_RUN_LAST,
+        gobject.TYPE_NONE, []),
+    "endfile": (gobject.SIGNAL_RUN_LAST,
+        gobject.TYPE_NONE, []),}
 
     def __init__(self):
 
@@ -56,8 +63,7 @@ class VideoPlayer(gtk.EventBox):
         self.progress.connect("volumen", self.__volumen)
 
     def __endfile(self, widget=None, senial=None):
-        if self.video_path:
-            self.load(self.video_path)
+        self.emit("endfile")
 
     def __update_progress(self, objetoemisor, valor):
         self.progress.set_progress(float(valor))
@@ -85,6 +91,8 @@ class VideoPlayer(gtk.EventBox):
         elif accion == "pausa-play":
             if self.player:
                 self.player.pause_play()
+        elif accion == "full":
+            self.emit("full")
 
     def load(self, path):
         self.video_path = path
@@ -115,6 +123,10 @@ class VideoPlayer(gtk.EventBox):
 
             del(self.player)
             self.player = False
+
+    def pause(self):
+        if self.player:
+            self.player.pause()
 
 
 class Visor(gtk.DrawingArea):
