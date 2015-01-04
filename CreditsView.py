@@ -19,11 +19,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import os
 import gtk
 import gobject
-import cairo
-from collections import OrderedDict
 
 from Globales import COLORES
 
@@ -176,7 +173,7 @@ class Visor(gtk.DrawingArea):
         rect = self.get_allocation()
         new_tam = TAM
 
-        for key in self._dict.keys():
+        for key in sorted(self._dict.keys()):
             tam = self._dict[key].get("tam", TAM)
             cr.select_font_face(self._dict[key].get("font", FONT))
             cr.set_font_size(tam)
@@ -189,7 +186,7 @@ class Visor(gtk.DrawingArea):
             if tam < new_tam:
                 new_tam = tam
 
-        for key in self._dict.keys():
+        for key in sorted(self._dict.keys()):
             cr.select_font_face(self._dict[key].get("font", FONT))
             cr.set_font_size(new_tam)
             (x_bearing, y_bearing, width, height, x_advance, y_advance) = cr.text_extents(self._dict[key]["text"])
@@ -203,8 +200,7 @@ class Visor(gtk.DrawingArea):
     def __realize(self, widget):
         cr = self.get_property("window").cairo_create()
 
-        _dict = OrderedDict()
-        rect = self.get_allocation()
+        _dict = {}
         cont = 0
         for line in TEXT:
             tam = TAM
@@ -240,10 +236,10 @@ class Visor(gtk.DrawingArea):
         rect = self.get_allocation()
 
         cr.set_source_rgb(255, 255, 255)
-        cr.paint ()
+        cr.paint()
 
         y = self.posy
-        for key in self._dict.keys():
+        for key in sorted(self._dict.keys()):
             cr.select_font_face(self._dict[key].get("font", FONT))
             cr.set_font_size(self._dict[key].get("tam", TAM))
             r, g, b = self._dict[key].get("color", (RED, GREEN, BLUE))
