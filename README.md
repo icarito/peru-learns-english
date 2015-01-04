@@ -1,7 +1,7 @@
 Peru Learns English
 ===================
 
-### English ##
+### English ###
 
 Peru Learns English (PLE) is a system for engaging young people in the acquisition of vocabulary, by means of appealing to multi-sensory stimuli in audiovisual cinematic scenes as well as fun videogames.
 
@@ -10,7 +10,7 @@ A simplified [spaced repetition tool](http://en.wikipedia.org/wiki/Spaced_repeti
 
 PLE is being designed and put together by the SomosAzucar R&D Team in collaboration with specialists from the Ministry of Education of Peru.
 
-### Español ##
+### Español ###
 
 Peru Learns English (PLE) es un sistema para involucrar a jóvenes en la adquisición de vocabulario, apelando a estímulos con escenas audiovisuales cinemáticas así como a videojuegos divertidos.
 
