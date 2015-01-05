@@ -98,6 +98,7 @@ class Escena(spyral.Scene):
     def __init__(self, topic=topic_dir):
         spyral.Scene.__init__(self, SIZE)
 
+        self.topic = topic
         self.layers = ["abajo", "abajo2", "arriba", "primer"]
 
         img = spyral.Image(filename=gamedir(
@@ -123,7 +124,7 @@ class Escena(spyral.Scene):
 
 
     def endgame(self):
-        spyral.director.replace(Finale())
+        spyral.director.replace(Finale(self.topic))
         spyral.director.run(sugar=True)
 
 class Terraza(spyral.Sprite):
@@ -310,10 +311,10 @@ class Lluvia(spyral.Sprite):
             self.scene.terraza.temblar()
             self.scene.j.set_caer()
 
-            spyral.event.register("input.keyboard.down.*", 
+            spyral.event.register("input.keyboard.down.*",
                 self.scene.endgame, scene=self.scene)
 
-            spyral.event.register("input.mouse.down.*", 
+            spyral.event.register("input.mouse.down.*",
                 self.scene.endgame, scene=self.scene)
 
     def explotar(self, wait=0):
@@ -661,11 +662,12 @@ class Camino(spyral.Sprite):
 
 class Finale(spyral.Scene):
 
-    def __init__(self):
+    def __init__(self, topic=None):
         spyral.Scene.__init__(self, SIZE)
 
         self.layers = ["abajo", "abajo2", "arriba", "primer"]
 
+        self.topic = topic
         img = spyral.Image(filename=gamedir(
             "images/Peru_Machu_Picchu_Sunrise.jpg")).scale(self.size)
         self.background = img
@@ -688,7 +690,7 @@ class Finale(spyral.Scene):
             self.goplay()
 
     def goplay(self):
-        spyral.director.replace(Escena())
+        spyral.director.replace(Escena(self.topic))
         spyral.director.run(sugar=True)
 
 
@@ -699,6 +701,7 @@ class Intro(spyral.Scene):
 
         global topic_dir
         topic_dir = topic
+        self.topic = topic
 
         self.layers = ["abajo", "abajo2", "arriba", "primer"]
 
@@ -715,7 +718,7 @@ class Intro(spyral.Scene):
         spyral.event.register("director.scene.enter", self.intro0, scene=self)
 
     def goplay(self):
-        spyral.director.replace(Escena())
+        spyral.director.replace(Escena(self.topic))
         spyral.director.run(sugar=True)
 
     def intro0(self):
