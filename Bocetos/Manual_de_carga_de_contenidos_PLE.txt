@@ -1,0 +1,8 @@
+
+Ubicarse en Proyectos
+Ubicarse en english-for-life
+De ahí, a la terminal:
+
+git pull 
+
+Editar las carpetas.
