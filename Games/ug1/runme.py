@@ -55,7 +55,7 @@ def wrap(text, length):
 
 
 
-font_path = gamedir("fonts/DejaVuSans.ttf")
+font_path = gamedir("../fonts/DejaVuSans.ttf")
 topic_dir = gamedir("../../Topics/Topic_2/")
 
 
@@ -157,7 +157,7 @@ class Tablero(spyral.Sprite):
 
         self.topic = topic
 
-        font_path = gamedir("fonts/DejaVuSans.ttf")
+        font_path = gamedir("../fonts/DejaVuSans.ttf")
         self.font = spyral.Font(font_path, 60, (0, 0, 0))
         self.palabra, self.archivo_img = obtener_palabra(self.topic)
         self.text = self.palabra
@@ -579,7 +579,7 @@ class Dialogo(spyral.Sprite):
         #self.image.draw_rect(color=(128,128,128),
         #        position=(0,0), size=(self.height,self.width))
 
-        font_path = gamedir("fonts/DejaVuSans.ttf")
+        font_path = gamedir("../fonts/DejaVuSans.ttf")
         self.font = spyral.Font(font_path, 24, (0, 0, 0))
         self.line_height = self.font.linesize
 
@@ -618,7 +618,7 @@ class Texto(spyral.Sprite):
         #self.image.draw_rect(color=(128,128,128),
         #        position=(0,0), size=(self.height,self.width))
 
-        font_path = gamedir("fonts/DejaVuSans.ttf")
+        font_path = gamedir("../fonts/DejaVuSans.ttf")
         self.font = spyral.Font(font_path, 24, (0, 0, 0))
         self.line_height = self.font.linesize
 
