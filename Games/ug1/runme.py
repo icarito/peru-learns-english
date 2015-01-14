@@ -33,6 +33,7 @@ import spyral
 import random
 import csv
 import collections
+pygame.mixer.init()
 
 SIZE = (700, 700)
 TILE = (64, 64)
@@ -173,6 +174,9 @@ class Tablero(spyral.Sprite):
         spyral.event.register("input.keyboard.down.*", self.procesar_tecla, scene=self.scene)
         spyral.event.register("Tablero.reset.animation.end", self.reset, scene=self.scene)
 
+        self.blup_snd = pygame.mixer.Sound(gamedir("sonidos/Randomize3.wav"))
+        self.hit_snd = pygame.mixer.Sound(gamedir("sonidos/Pickup_Coin.wav"))
+
     def reset(self):
         self.ganadas = self.ganadas + 1
         self.palabra_anterior = self.palabra
@@ -189,7 +193,7 @@ class Tablero(spyral.Sprite):
         self.image = self.font.render(text)
         self.text = text
 
-    def mostrar(self, frase, acertadas):
+    def mostrar(self, frase, acertadas, letra=None):
         total = 0
         estado = ""
         for letra in frase:
@@ -214,10 +218,17 @@ class Tablero(spyral.Sprite):
         if not 0 < key < 255:
             return
 
+
         respuesta = chr(key)
 
         if respuesta not in self.acertadas:
             self.acertadas = self.acertadas + respuesta
+
+        if respuesta in self.palabra:
+            self.hit_snd.play()
+        else:
+            self.blup_snd.play()
+            
 
         self.mostrar(self.palabra, self.acertadas)
 
@@ -282,7 +293,11 @@ class Lluvia(spyral.Sprite):
                 (explosion_size, explosion_size)))
 
         spyral.event.register("Lluvia.y.animation.end", self.finalizar, scene=self.scene)
+        spyral.event.register("Lluvia.demora.animation.end", self.sonar_explosion)
         self.scale = 2
+
+        self.explotar_snd = pygame.mixer.Sound(gamedir("sonidos/Explosion.wav"))
+        self.alarm_snd = pygame.mixer.Sound(gamedir("sonidos/ambient_alarm1.wav"))
 
     def reset(self):
         self.x = self.scene.width / 2 + random.randint(0, 600) - 300
@@ -295,6 +310,7 @@ class Lluvia(spyral.Sprite):
         self.llover()
 
     def llover(self):
+        self.alarm_snd.play()
         p = spyral.Animation("y",
             spyral.easing.CubicIn(0, self.scene.height - 75),
             duration=2 * len(self.scene.tablero.palabra) + 3)
@@ -328,6 +344,13 @@ class Lluvia(spyral.Sprite):
         self.stop_all_animations()
         self.animate(n)
 
+        d = DelayAnimation(wait)
+        d.property="demora"
+        self.animate(d)
+
+
+    def sonar_explosion(self):
+        self.explotar_snd.play()
 
 class Visualizador(spyral.Sprite):
 
