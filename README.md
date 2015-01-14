@@ -76,3 +76,7 @@ Fotografía tomada con licencia de [Wikipedia](http://wikipedia.org/).
 
 #### Biblioteca para Videojuegos: ["Spyral"](http://platipy.org/) GPLv2.1
  © 2014 Robert Deaton, Austin Bart.
+
+ ### Tipografías
+
+Logotipos y títulos elaborados en *Decade*, de "Anthem Type" (Joey Nelson)

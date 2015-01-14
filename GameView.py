@@ -99,7 +99,7 @@ class GameView(gtk.EventBox):
         grupo1 = gtk.Alignment(0.5, 0, 0,0)
         butt = gtk.Button()
         img = gtk.Image()
-        img.set_from_stock(gtk.STOCK_GO_BACK, gtk.ICON_SIZE_DIALOG)
+        img.set_from_file("Imagenes/go_back_disabled.png")
         butt.set_image(img)
         butt.set_label("")
         butt.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
