@@ -228,7 +228,6 @@ class Tablero(spyral.Sprite):
             self.hit_snd.play()
         else:
             self.blup_snd.play()
-            
 
         self.mostrar(self.palabra, self.acertadas)
 

@@ -30,6 +30,7 @@ from Toolbar import Toolbar
 from Globales import COLORES
 from VideoView import VideoView
 from FlashCardView import FlashCardView
+from GameView import GameMenu
 from GameView import GameView
 from InstructionsView import InstructionsView
 from CreditsView import CreditsView
@@ -78,8 +79,8 @@ class Main(gtk.Window):
         self.flashcards = FlashCardView()
         self.vbox.pack_start(self.flashcards, True, True, 0)
 
-        self.gameview = GameView()
-        self.vbox.pack_start(self.gameview, True, True, 0)
+        self.gamemenu = GameMenu()
+        self.vbox.pack_start(self.gamemenu, True, True, 0)
 
         self.instructionsview = InstructionsView()
         self.vbox.pack_start(self.instructionsview, True, True, 0)
@@ -92,6 +93,7 @@ class Main(gtk.Window):
 
         self.toolbar.connect("activar", self.__switch)
         self.toolbar.connect("video", self.__play_video)
+        self.gamemenu.gameview.connect("video", self.__play_video)
         self.videoview.connect("flashcards", self.__play_flashcards)
         self.videoview.connect("game", self.__play_game)
         self.connect("delete-event", self.__salir)
@@ -120,7 +122,7 @@ class Main(gtk.Window):
         elif label == "flashcards":
             self.flashcards.run(data)
         elif label == "game":
-            self.gameview.run(data)
+            self.gamemenu.run(data)
         return False
 
     def __salir(self, widget=None, senial=None):

@@ -37,6 +37,13 @@ import collections
 SIZE = (700, 700)
 TILE = (64, 64)
 
+MAPA1 = [
+    [0, 0, 0, 1, 2],
+    [0, 1, 3, 0, 0],
+    [0, 0 ,0, 0, 0],
+    [3, 4, 0, 0, 2],
+    [5, 0, 5, 0, 4]]
+
 def wrap(text, length):
     """
     Sirve para cortar texto en varias lineas
@@ -598,7 +605,7 @@ class Escena(spyral.Scene):
         spyral.Scene.__init__(self, SIZE)
 
         img = spyral.Image(filename=gamedir(
-            "imagenes/Fazenda_Colorada.jpg")).scale(self.scene.size)
+            "imagenes/Crux-20100220.jpg")).scale(self.scene.size)
 
         #n = pygame.Surface.convert_alpha(img._surf)
         #n.fill((64, 0, 0, 127))
@@ -606,25 +613,24 @@ class Escena(spyral.Scene):
 
         self.background = img
 
-        mapa1 = [
-            [0, 0, 0, 1, 2],
-            [0, 1, 3, 0, 0],
-            [0, 0 ,0, 0, 0],
-            [3, 4, 0, 0, 2],
-            [5, 0, 5, 0, 4]]
-
-        self.tablero = Tablero(self, topic, mapa=mapa1)
+        #self.tablero = Tablero(self, topic, mapa=MAPA1)
 
         spyral.event.register("system.quit", spyral.director.pop, scene=self)
 
-def QuadraticOutTuple(start=(0, 0), finish=(0, 0)):
+# Tomado de Spyral
+class DelayAnimation(spyral.Animation):
     """
-    Linearly increasing, but with two properites instead of one.
+    Animation which performs no actions. Useful for lining up appended
+    and parallel animations so that things run at the right times.
     """
-    def quadratic_easing(sprite, delta):
-        return (start[0] + (finish[0] - start[0]) * (2 * delta - delta * delta),
-                start[1] + (finish[1] - start[1]) * (2* delta - delta * delta))
-    return quadratic_easing
+    def __init__(self, duration=1.0):
+        self.absolute = False
+        self.properties = set([])
+        self.duration = duration
+        self.loop = False
+
+    def evaluate(self, sprite, progress):
+        return {}
 
 def main():
     spyral.director.push(Escena())
