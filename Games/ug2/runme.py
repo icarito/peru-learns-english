@@ -135,33 +135,51 @@ class Tablero(spyral.View):
         self.ACTIVADO_INICIAL = ubicacion
         #print "Activado: "+str(ubicacion)
 
-    def desactivar(self):
-        for ubicacion in self.camino:
+    def desactivar(self, camino=None, unless=None):
+        if not camino:
+            camino = self.camino
+        for ubicacion in camino:
             nexo = self.tablero[ubicacion.y][ubicacion.x]
             nexo.reset()
         self.camino = []
-        spyral.event.queue("Bloque.open")
+        event = spyral.event.Event(unless=unless)
+        spyral.event.queue("Bloque.open", event)
         self.ACTIVADO = False
 
     def match(self, primero, segundo):
         self.ACTIVADO = False
-        primero.match()
-        segundo.match()
+        primero.match(self.camino)
+        segundo.match(self.camino)
         self.camino = []
         self.check_win()
 
     def check_win(self):
-        faltan = 0
+        bloques_rest = 0
+        nexos_rest = 0 
         for fila in self.tablero:
             for bloque in fila:
                 if "Bloque" in bloque.__class__.__name__:
                     if not bloque.MATCH:
-                        faltan += 1
-        if faltan==0:
+                        bloques_rest += 1
+                elif "Nexo" in bloque.__class__.__name__:
+                    if not bloque.visible:
+                        nexos_rest += 1
+        if bloques_rest==0 and nexos_rest>0:
+            # Avisar al usuario que debe llenar la pantalla
+            pass
+        elif bloques_rest==0 and nexos_rest==0:
             self.win()
 
     def win(self):
         spyral.event.queue("Bloque.final")
+
+    def get_match(self, primero):
+        for fila in self.tablero:
+            for bloque in fila:
+                if "Bloque" in bloque.__class__.__name__:
+                    if bloque.COLOR==primero.COLOR and bloque is not primero:
+                        return bloque
+        
 
     def movimiento(self, ubicacion):
         #print "Movimiento: "+str(ubicacion)
@@ -172,6 +190,8 @@ class Tablero(spyral.View):
                 ANTERIOR = self.tablero[self.ACTIVADO.y][self.ACTIVADO.x]
                 CANDIDATO = self.tablero[ubicacion.y][ubicacion.x]
                 if "Nexo" in CANDIDATO.__class__.__name__:
+                    if CANDIDATO.visible:
+                        return
                     if "Nexo" in ANTERIOR.__class__.__name__:
                         ANTERIOR.ir_a(ubicacion)
                     # Encontramos el camino!
@@ -184,12 +204,14 @@ class Tablero(spyral.View):
                     INICIAL = self.tablero[self.ACTIVADO_INICIAL.y][self.ACTIVADO_INICIAL.x]
                     if CANDIDATO.COLOR==INICIAL.COLOR:
                         self.match(INICIAL, CANDIDATO)
+                    elif CANDIDATO==INICIAL:
+                        return
                     else:
                         self.desactivar()
 
     def handle_motion(self, pos):
+        self.scene.tablero.cursor.pos = pos
         if self.ACTIVADO:
-            self.scene.tablero.cursor.pos = pos
             from_pos = (pos - self.scene.tablero.pos) / spyral.Vec2D(140,140)
             ubicacion = spyral.Vec2D(int(from_pos.x), int(from_pos.y))
             if ubicacion!=self.mov_anterior and ubicacion!=self.ACTIVADO:
@@ -220,18 +242,16 @@ class Nexo (spyral.Sprite):
         self.gowest = spyral.Image(filename=gamedir("imagenes/go-west.png"))
         self.goeast = spyral.Image(filename=gamedir("imagenes/go-east.png"))
 
-        spyral.event.register ("input.mouse.down.left", self.check_click)
-        spyral.event.register ("Tablero.mousemove", self.check_pos)
         spyral.event.register ("Cursor.click", self.check_click)
 
         self.pos = spyral.Vec2D(col * 135, row * 135)
+        self.pos = (col * 140 + 70, row * 140 + 70)
+        self.anchor = "center"
 
         self.ROW = row
         self.COL = col
 
         self.visible = False
-
-        spyral.event.register("input.keyboard.down.return", self.blink)
 
     def reset(self):
         self.vengo_de = None
@@ -284,7 +304,6 @@ class Nexo (spyral.Sprite):
                 self.image = self.gowest
             elif direccion == (+1, 0):
                 self.image = self.goeast
-            self.scale = 0.95
 
     def check_click(self, pos):
         if self.collide_point(pos):
@@ -298,27 +317,6 @@ class Nexo (spyral.Sprite):
             event = spyral.event.Event(ubicacion=spyral.Vec2D(self.ROW, self.COL))
             spyral.event.queue("Tablero.movimiento", event)
 
-    def init_animations(self):
-        off_row = 0
-        off_col = 0
-        secuencia = [   self.tiled(0 + off_row, 0 + off_col),
-                        self.tiled(0 + off_row, 1 + off_col),
-                        self.tiled(0 + off_row, 2 + off_col),
-                        self.tiled(1 + off_row, 0 + off_col),
-                        self.tiled(1 + off_row, 1 + off_col),
-                        self.tiled(1 + off_row, 2 + off_col)]
-
-        self.animation = spyral.Animation("image", spyral.easing.Iterate(secuencia, times=1), 2)
-
-    def blink(self):
-        try:
-            self.animate (self.animation)
-        except:
-            pass
-
-    def tiled(self, x, y):
-        MINITILE = spyral.Vec2D(32, 32)
-        return self.full_image.copy().crop((x,y)*MINITILE, MINITILE)
 
 class Cursor (spyral.Sprite):
     def __init__(self, scene):
@@ -329,7 +327,7 @@ class Cursor (spyral.Sprite):
         self.anchor = "center"
         self.layer = "primer"
         self.image = spyral.Image(filename=gamedir("imagenes/hud/square-01-whole.png"))
-        self.scale = 0.9
+        self.scale = 0.5
 
         spyral.event.register ("input.keyboard.down.left", self.left)
         spyral.event.register ("input.keyboard.down.up", self.up)
@@ -337,6 +335,7 @@ class Cursor (spyral.Sprite):
         spyral.event.register ("input.keyboard.down.right", self.right)
 
         spyral.event.register ("input.keyboard.down.space", self.click)
+        spyral.event.register ("input.keyboard.down.return", self.click)
 
         self.desplaz_anim = None
 
@@ -440,11 +439,11 @@ class Bloque (spyral.Sprite):
     def __repr__(self):
         return "Bloque en (" + str(self.ROW) + "," + str(self.COL) + ")"
 
-    def match(self):
+    def match(self, camino):
         self.oculto = True
         self.abierto = False
         self.BGCOLOR = self.COLOR
-        self.MATCH = True
+        self.MATCH = camino
         self.blink()
 
     def update(self):
@@ -539,10 +538,20 @@ class Bloque (spyral.Sprite):
 
     def check_click(self, pos):
         if self.collide_point(pos):
-            self.toggle()
-            self.scene.tablero.cursor.pos = pos
-            event = spyral.event.Event(ubicacion=spyral.Vec2D(self.COL, self.ROW))
-            spyral.event.queue("Tablero.movimiento", event)
+            if not self.MATCH:
+                if self.abierto:
+                    self.iclose()
+                else:
+                    self.iopen()
+                event = spyral.event.Event(ubicacion=spyral.Vec2D(self.COL, self.ROW))
+                spyral.event.queue("Tablero.movimiento", event)
+            else:
+                self.scene.tablero.desactivar(self.MATCH, unless=self)
+                alter = self.scene.tablero.get_match(self)
+                self.MATCH = False
+                alter.MATCH = False
+                alter.iopen()
+                self.scene.tablero.activar(spyral.Vec2D(self.COL, self.ROW))
 
     def check_pos(self, pos):
         if self.collide_point(pos):
@@ -550,7 +559,7 @@ class Bloque (spyral.Sprite):
 
     def final(self):
         self.abierto = True
-        self.blink()
+        #self.blink()
 
         # ESCAPAR
         self.escape_animation = spyral.Animation("pos", QuadraticOutTuple(self.pos, self.lado_mas_cercano()), 3)
@@ -558,12 +567,6 @@ class Bloque (spyral.Sprite):
             self.animate (self.escape_animation)
         except:
             pass
-
-    def toggle(self):
-        if self.abierto:
-            self.iclose()
-        else:
-            self.iopen()
 
     def iopen(self, unless=None):
         if (not unless==self) and (not self.MATCH):
@@ -604,10 +607,9 @@ class Escena(spyral.Scene):
         img = spyral.Image(filename=gamedir(
             "imagenes/Fazenda_Colorada.jpg")).scale(self.scene.size)
 
-        n = pygame.Surface.convert_alpha(img._surf)
-        # red at 50%
-        n.fill((64, 0, 0, 127))
-        img._surf.blit(n, (0, 0))
+        #n = pygame.Surface.convert_alpha(img._surf)
+        #n.fill((64, 0, 0, 127))
+        #img._surf.blit(n, (0, 0))
 
         self.background = img
 
