@@ -1,5 +1,5 @@
-Peru Learns English
-===================
+Peru Learns English / Peru Aprende Inglés
+=========================================
 
 ### English ###
 
@@ -20,48 +20,41 @@ PLE está siendo desarrollado por el equipo de I&D SomosAzúcar en colaboración
 
 1. ["The spacing effect: A case study in the failure to apply the results of psychological research."](http://psycnet.apa.org/journals/amp/43/8/627/), Dempster, Frank N., 1988.
 
-### Diseño (Design) ###
-
-© 2014-2015 Laura Vargas - CC BY-SA 3.0
-
-Con aportes de Koke Contreras, Sebastian Silva, Flavio Danesse, Cecilia Bustamante y Maria Elisa de la Vega.
-
-Reconocimiento de Obras (Attribution  of Works)
------------------------------------------------
 
 *We can only achieve quality, sustainable educational software by standing in the shoulders of giants and to contribute to the global common library of Free Software.*
 
 *Sólo podemos lograr software educativo de calidad y sustentable, irguiéndonos sobre hombros de gigantes y contribuyendo a la biblioteca mundial común de Software Libre.*
 
-### Código ###
+
+Credits / Créditos
+------------------
+
+### Code / Código ###
+
 * Interfase © 2014-2015 Flavio Danesse <fdanesse@gmail.com> Uruguay - GPLv2+
-* Videojuego 1 © 2014-2015 Sebastian Silva <sebastian@fuentelibre.org> - GPLv3
-* popupmenubutton.py - Copyright 2008-2011 Zuza Software Foundation - GPLv2+
+* Videojuego 1 © 2014-2015 Sebastian Silva <sebastian@fuentelibre.org> Peru - GPLv3
+* Videojuego 2 © 2014-2015 Sebastian Silva <sebastian@fuentelibre.org> Peru - GPLv3
+* popupmenubutton.py - Copyright 2008-2011 Zuza Software Foundation South Africa - GPLv2+
 
-Obras utilizadas
-----------------
+### User Experience Design / Diseño de Experiencia de Usuario ###
 
-### Videos ###
+* PLE V1.0 Beta 2014-2015 Laura Vargas - Colombia - CC BY-SA 3.0
 
-#### Bunny Bonita “Feelings” - CC BY-NC
-#### Bunny Bonita “Family” - CC BY-NC
- Ministerio de Educación Nacional República de Colombia
+Con aportes de Aliosh Neira, Koke Contreras, Sebastian Silva, Flavio Danesse, Cecilia Bustamante, Maria Elisa de la Vega y demás funcionarios del Plan de Inglés del Miniterio de Educación de Perú. Plan Nacional Perú Bilingüe en Inglés 2021.
 
- © 2008-2013 T&T Teaching and Tutoring y Faldita Films Bunny Bonita
 
-#### Art4Apps “Pete the Athlete” - CC BY-SA
-Art4Apps “Trish the Fish” CC BY-SA
-Art4Apps “A Shell at the Shore” CC BY-SA
+Attribution  of Works / Reconocimiento de Obras
+-----------------------------------------------
 
- © 2012—2014 Smart4kids LLC
 
-#### QuestionCopyright “Copying is not Theft” - Public Domain
-Nina Paley
+### Videos and Images / Videos e Imágenes ###
 
-### Videojuego 1: Asteroide ###
-
-Obras visuales tomadas con licencia de [OpenGameArt.Org](http://opengameart.org/).
-
+* "Bunny Bonita, Feelings” © 2008-2013- Ministerio de Educación Nacional República de Colombia coproducido con T&T Teaching and Tutoring y Faldita Films - CC BY-NC 
+* "Bunny Bonita, Family” © 2008-2013 - Ministerio de Educación Nacional República de Colombia coproducido con T&T Teaching and Tutoring y Faldita Films - CC BY-NC 
+* “Trish the Fish” © 2013-2015 - Art4Apps (files database) created by ET4D - CC BY-SA
+* "Pete the Athlete" © 2013-2015 - Art4Apps (files database) created by ET4D - CC BY-SA
+* “A Shell at the Shore” © 2013-2015 - Art4Apps (files database) created by ET4D - CC BY-SA
+* "Copying is not Theft" Nina Paley - Public Domain
 * golden-border.png - nicubunu - Public Domain
 * LPC Space Base Tube Passage - © 2013 Xenodora - CC BY SA 3.0 - GPLv3
 * Universal LPC Sprite Sheet Character Generator - © 2010-2014 Varios Autores - GPLv3 - CC BY-SA 3.0
@@ -69,10 +62,15 @@ Obras visuales tomadas con licencia de [OpenGameArt.Org](http://opengameart.org/
 * Golden Menu - © 2013 - Janna - Public Domain
 * Asteroid - © 2014 - GGo - CC BY 3.0
 * Small Objects & Generic Background - Lanea Zimmerman (AKA Sharm) - CC BY-SA 3.0
+* Peru_Machu_Picchu_Sunrise.jpg - © 2007 Flamurai - CC BY 2.0 tomadade [Wikipedia](http://wikipedia.org/).
+* [OpenGameArt.Org](http://opengameart.org/).
 
-Fotografía tomada con licencia de [Wikipedia](http://wikipedia.org/).
 
-* Peru_Machu_Picchu_Sunrise.jpg - © 2007 Flamurai - CC BY 2.0
+### Music and Sound Efects / Música y Efectos de Sonido ###
 
-#### Biblioteca para Videojuegos: ["Spyral"](http://platipy.org/) GPLv2.1
- © 2014 Robert Deaton, Austin Bart.
+
+
+#### Biblioteca para Videojuegos: 
+
+["Spyral"](http://platipy.org/) © 2014 Robert Deaton, Austin Bart GPLv2.1 
+
