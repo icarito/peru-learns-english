@@ -30,7 +30,7 @@ from VideoPlayer.VideoPlayer import VideoPlayer
 from JAMediaImagenes.ImagePlayer import ImagePlayer
 
 from Globales import COLORES
-from Globales import get_vocabulario
+from Globales import get_flashcards_previews
 
 
 class VideoView(gtk.EventBox):
@@ -187,7 +187,7 @@ class FlashCardsPreview(gtk.EventBox):
         self.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
 
         self.vocabulario = []
-        self.index_select = 1
+        self.index_select = 0
         self.imagenplayer = False
         self.path = False
         self.control = False
@@ -217,7 +217,7 @@ class FlashCardsPreview(gtk.EventBox):
         if self.index_select < len(self.vocabulario) - 1:
             self.index_select += 1
         else:
-            self.index_select = 1
+            self.index_select = 0
         return True
 
     def stop(self):
@@ -229,10 +229,9 @@ class FlashCardsPreview(gtk.EventBox):
     def load(self, topic):
         self.stop()
         self.topic = topic
-        print "FIXME: hay que modificar esto:", self.load
-        #self.vocabulario = get_vocabulario(self.topic)
-        #self.index_select = 1
-        #self.__run_secuencia()
-        #if not self.control:
-        #    self.control = gobject.timeout_add(3000, self.__run_secuencia)
+        self.vocabulario = get_flashcards_previews(self.topic)
+        self.index_select = 0
+        self.__run_secuencia()
+        if not self.control:
+            self.control = gobject.timeout_add(3000, self.__run_secuencia)
         return False

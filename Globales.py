@@ -75,6 +75,13 @@ def __set_dict(path, _dict):
     archivo.close()
 
 
+def __read_cvs(topic):
+    csvfile = os.path.join(topic, "vocabulario.csv")
+    reader = csv.reader(file(csvfile))
+    vocabulario = list(reader)
+    return vocabulario[1:]
+
+
 def guardar(topic, palabra, respuesta):
     dirpath = os.path.join(os.environ["HOME"], ".Ple")
     if not os.path.exists(dirpath):
@@ -99,11 +106,8 @@ def guardar(topic, palabra, respuesta):
     __set_dict(filepath, _dict)
 
 
-def __read_cvs(topic):
-    csvfile = os.path.join(topic, "vocabulario.csv")
-    reader = csv.reader(file(csvfile))
-    vocabulario = list(reader)
-    return vocabulario[1:]
+def get_flashcards_previews(topic):
+    return __read_cvs(topic)
 
 
 def get_vocabulario(topic):

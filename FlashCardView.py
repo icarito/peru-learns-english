@@ -92,7 +92,15 @@ class FlashCardView(gtk.EventBox):
             self.index_select += 1
             gobject.timeout_add(500, self.__load, self.index_select)
         else:
-            print "FIXME: No hay mas flashcards para hoy", self.__siguiente
+            dialog = gtk.Dialog(parent=self.get_toplevel(),
+                buttons=("OK", gtk.RESPONSE_ACCEPT))
+            dialog.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
+            dialog.set_border_width(15)
+            label = gtk.Label("Tarea Concluida")
+            label.show()
+            dialog.vbox.pack_start(label, True, True, 5)
+            dialog.run()
+            dialog.destroy()
 
     def __load(self, index):
         """
@@ -140,14 +148,21 @@ class FlashCardView(gtk.EventBox):
         self.derecha.run()
         vocabulario = get_vocabulario(topic)
         self.show()
-        # FIXME: Tomar indice según persistencia
         if vocabulario:
             self.vocabulario = vocabulario
             self.topic = topic
             self.index_select = 0
             gobject.timeout_add(500, self.__load, self.index_select)
         else:
-            print "FIXME: No hay nada para hacer", self.run
+            dialog = gtk.Dialog(parent=self.get_toplevel(),
+                buttons=("OK", gtk.RESPONSE_ACCEPT))
+            dialog.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
+            dialog.set_border_width(15)
+            label = gtk.Label("No Hay Tareas Programadas Para Hoy")
+            label.show()
+            dialog.vbox.pack_start(label, True, True, 5)
+            dialog.run()
+            dialog.destroy()
 
 
 class FlashCard(gtk.EventBox):
