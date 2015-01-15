@@ -82,7 +82,9 @@ class InstructionsView(gtk.EventBox):
         img = gtk.Image()
         img.set_from_file("Imagenes/manual_disabled.png")
         b.set_image(img)
-        bb.add(b)
+        bb.pack_start(b, True, True, 0)
+        img.show()
+        bb.show_all()
 
         b = gtk.Button("")
         b.set_relief(gtk.RELIEF_NONE)
@@ -93,7 +95,9 @@ class InstructionsView(gtk.EventBox):
         img = gtk.Image()
         img.set_from_file("Imagenes/contributors_disabled.png")
         b.set_image(img)
-        bb.add(b)
+        bb.pack_start(b, True, True, 0)
+        img.show()
+        bb.show_all()
 
         b = gtk.Button("")
         b.set_relief(gtk.RELIEF_NONE)
@@ -104,7 +108,9 @@ class InstructionsView(gtk.EventBox):
         img = gtk.Image()
         img.set_from_file("Imagenes/start.png")
         b.set_image(img)
-        bb.add(b)
+        bb.pack_start(b, True, True, 0)
+        img.show()
+        bb.show_all()
 
         tabla.attach(bb, 0, 2, 3, 4)
 
@@ -112,14 +118,10 @@ class InstructionsView(gtk.EventBox):
         self.show_all()
 
     def __decolor(self, widget, event, filestub):
-        img = gtk.Image()
-        img.set_from_file("Imagenes/%s_disabled.png" % filestub)
-        widget.set_image(img)
+        widget.get_image().set_from_file("Imagenes/%s_disabled.png" % filestub)
 
     def __color(self, widget, event, filestub):
-        img = gtk.Image()
-        img.set_from_file("Imagenes/%s.png" % filestub)
-        widget.set_image(img)
+        widget.get_image().set_from_file("Imagenes/%s.png" % filestub)
 
     def __credits(self, widget):
         self.emit("credits")
