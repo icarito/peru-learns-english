@@ -70,7 +70,7 @@ class Toolbar(gtk.EventBox):
 
         self.buttons = []
 
-        for text in ["Instructions", "Credits"]:
+        for text in ["Instructions"]:
             item = gtk.ToolItem()
             item.set_expand(True)
             label = gtk.Label(text)
