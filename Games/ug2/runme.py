@@ -33,9 +33,14 @@ import spyral
 import random
 import csv
 import collections
+pygame.mixer.init()
 
 SIZE = (700, 700)
 TILE = (64, 64)
+
+def play(res):
+    if not Escena.MUTE:
+        res.play()
 
 def wrap(text, length):
     """
@@ -125,6 +130,11 @@ class Tablero(spyral.View):
         spyral.event.register("Tablero.activar", self.activar)
         spyral.event.register("Tablero.movimiento", self.movimiento)
 
+        self.activar_snd = pygame.mixer.Sound(gamedir("sonidos/Retro_Game_Sounds_SFX_162.ogg"))
+        self.match_snd = pygame.mixer.Sound(gamedir("sonidos/Powerup.wav"))
+        self.desactivar_snd = pygame.mixer.Sound(gamedir("sonidos/Randomize2.wav"))
+        self.win_snd = pygame.mixer.Sound(gamedir("sonidos/Retro_Game_Sounds_SFX_161.ogg"))
+
     def reset(self, mapa):
         self.palabras = obtener_set(self.topic)
 
@@ -167,10 +177,13 @@ class Tablero(spyral.View):
         self.ACTIVADO = ubicacion
         self.ACTIVADO_INICIAL = ubicacion
         #print "Activado: "+str(ubicacion)
+        play(self.activar_snd)
 
     def desactivar(self, camino=None, unless=None):
         if not camino:
             camino = self.camino
+        if camino:
+            play(self.desactivar_snd)
         for ubicacion in camino:
             nexo = self.tablero[ubicacion.y][ubicacion.x]
             nexo.reset()
@@ -185,6 +198,7 @@ class Tablero(spyral.View):
         segundo.match(self.camino)
         self.camino = []
         self.check_win()
+        play(self.match_snd)
 
     def check_win(self):
         bloques_rest = 0
@@ -199,7 +213,7 @@ class Tablero(spyral.View):
                         nexos_rest += 1
         if bloques_rest==0 and nexos_rest>0:
             # Avisar al usuario que debe llenar la pantalla
-            pass
+            self.win()
         elif bloques_rest==0 and nexos_rest==0:
             self.win()
 
@@ -207,6 +221,7 @@ class Tablero(spyral.View):
         Bloque.RENDERED = []
         spyral.event.queue("Bloque.final")
         spyral.event.queue("Tablero.score")
+        play(self.win_snd)
 
     def get_match(self, primero):
         for fila in self.tablero:
