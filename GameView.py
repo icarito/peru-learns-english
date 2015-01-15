@@ -134,6 +134,8 @@ class GameView(gtk.EventBox):
         butt.connect("clicked", self.__emit_video)
         butt.connect("enter-notify-event", self.__color)
         butt.connect("leave-notify-event", self.__decolor)
+        img.show()
+        butt.show()
         vbox.add(butt)
 
         self.score_label = gtk.Label("SCORE\n0")
@@ -141,6 +143,7 @@ class GameView(gtk.EventBox):
         self.score_label.modify_font(pango.FontDescription("DejaVu Sans Mono 22"))
         self.score_label.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
         self.score_label.set_padding(xpad=30, ypad=30)
+        self.score_label.show()
         vbox.add(self.score_label)
 
         butt = gtk.ToggleButton()
@@ -151,6 +154,8 @@ class GameView(gtk.EventBox):
         img.set_from_file("Iconos/stock_volume-max.svg")
         butt.set_image(img)
         butt.set_label("")
+        img.show()
+        butt.show()
         butt.connect("toggled", self.update_volume)
 
         vbox.add(butt)
@@ -184,14 +189,10 @@ class GameView(gtk.EventBox):
         widget.set_image(img)
 
     def __decolor(self, widget, event):
-        img = gtk.Image()
-        img.set_from_file("Imagenes/go_back_disabled.png")
-        widget.set_image(img)
+        widget.get_image().set_from_file("Imagenes/go_back_disabled.png")
 
     def __color(self, widget, event):
-        img = gtk.Image()
-        img.set_from_file("Imagenes/go_back.png")
-        widget.set_image(img)
+        widget.get_image().set_from_file("Imagenes/go_back.png")
 
     def __emit_video(self, widget):
         self.emit("video", self.topic)

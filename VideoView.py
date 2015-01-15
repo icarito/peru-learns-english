@@ -88,17 +88,23 @@ class VideoView(gtk.EventBox):
 
         flashcards.connect("clicked", self.__emit_flashcards)
         self.imagen_juego.connect("button-press-event", self.__emit_game)
-        self.videoplayer.connect("full", self.__set_full)
+        self.videoplayer.connect("full", self.set_full)
         self.videoplayer.connect("endfile", self.__force_unfull)
 
     def __force_unfull(self, widget):
         if self.full:
-            self.__set_full(False)
+            self.set_full(False)
         self.videoplayer.stop()
         self.videoplayer.load(os.path.join(self.topic, "video.ogv"))
         self.videoplayer.pause()
 
-    def __set_full(self, widget):
+    def __emit_game(self, widget, event):
+        self.emit("game", self.topic)
+
+    def __emit_flashcards(self, widget):
+        self.emit("flashcards", self.topic)
+
+    def set_full(self, widget):
         tabla = self.get_child()
         for child in tabla.children():
             child.hide()
@@ -116,12 +122,6 @@ class VideoView(gtk.EventBox):
             tabla.set_property("row-spacing", 0)
             self.videoplayer.show()
             self.full = True
-
-    def __emit_game(self, widget, event):
-        self.emit("game", self.topic)
-
-    def __emit_flashcards(self, widget):
-        self.emit("flashcards", self.topic)
 
     def stop(self):
         self.videoplayer.stop()
@@ -147,7 +147,7 @@ class VideoView(gtk.EventBox):
         self.links.set_uri(parser.get('topic', 'link'))
         self.links.set_label(parser.get('topic', 'link'))
         self.full = False
-        self.__set_full(False)
+        self.set_full(False)
 
 
 class GameImage(gtk.DrawingArea):

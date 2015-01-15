@@ -93,7 +93,7 @@ class Main(gtk.Window):
 
         self.toolbar.connect("activar", self.__switch)
         self.toolbar.connect("video", self.__play_video)
-        self.gamemenu.gameview.connect("video", self.__play_video)
+        self.gamemenu.gameview.connect("video", self.__game_return_to_video)
         self.videoview.connect("flashcards", self.__play_flashcards)
         self.videoview.connect("game", self.__play_game)
         self.instructionsview.connect("credits", self.__play_credits)
@@ -103,6 +103,10 @@ class Main(gtk.Window):
         self.toolbar.buttons[0].set_active(True)
 
         self.__switch(False, "Instructions", None)
+
+    def __game_return_to_video(self, widget, topic):
+        self.__play_video(widget, topic)
+        self.videoview.set_full(False)
 
     def __play_game(self, widget, topic):
         self.__switch(False, "game", topic)
