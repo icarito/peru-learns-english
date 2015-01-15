@@ -57,7 +57,7 @@ class VideoView(gtk.EventBox):
         tabla.set_border_width(8)
 
         self.titulo = gtk.Label("Título")
-        self.titulo.modify_font(pango.FontDescription("DejaVu Sans 18"))
+        self.titulo.modify_font(pango.FontDescription("DejaVu Sans Bold 20"))
         self.titulo.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
         self.videoplayer = VideoPlayer()
 
@@ -70,6 +70,7 @@ class VideoView(gtk.EventBox):
         tabla.attach(self.links, 0, 2, 9, 10)
 
         flashcards = gtk.Button()
+        flashcards.set_relief(gtk.RELIEF_NONE)
         imagen = gtk.Image()
         imagen.set_from_file("Imagenes/flashcards.png")
         flashcards.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
@@ -142,7 +143,7 @@ class VideoView(gtk.EventBox):
         metadata = os.path.join(topic, "topic.ini")
         parser.read(metadata)
 
-        self.titulo.set_text(parser.get('topic', 'title'))
+        self.titulo.set_text("Topic: " + parser.get('topic', 'title'))
         self.links.set_uri(parser.get('topic', 'link'))
         self.links.set_label(parser.get('topic', 'link'))
         self.full = False

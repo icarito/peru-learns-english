@@ -102,6 +102,7 @@ class Tablero(spyral.View):
 
         self.ACTIVADO = False
         self.mov_anterior = None
+        self.intentos = 0
 
         for row in range(len(self.tablero)):
             for col in range(len(self.tablero[row])):
@@ -165,6 +166,7 @@ class Tablero(spyral.View):
 
     def win(self):
         spyral.event.queue("Bloque.final")
+        spyral.event.queue("Tablero.score")
 
     def get_match(self, primero):
         for fila in self.tablero:
@@ -181,7 +183,12 @@ class Tablero(spyral.View):
         if self.ACTIVADO:
             if (ubicacion.distance(self.ACTIVADO))==1.0:
                 ANTERIOR = self.tablero[self.ACTIVADO.y][self.ACTIVADO.x]
-                CANDIDATO = self.tablero[ubicacion.y][ubicacion.x]
+                try:
+                    CANDIDATO = self.tablero[ubicacion.y][ubicacion.x]
+                except IndexError:
+                    self.intentos += 1
+                    self.desactivar()
+                    return
                 if "Nexo" in CANDIDATO.__class__.__name__:
                     if CANDIDATO.visible:
                         return
@@ -192,6 +199,7 @@ class Tablero(spyral.View):
                     self.ACTIVADO = ubicacion
                     self.camino.append(ubicacion)
                 else:
+                    self.intentos += 1
                     if "Nexo" in ANTERIOR.__class__.__name__:
                         ANTERIOR.ir_a(ubicacion)
                     INICIAL = self.tablero[self.ACTIVADO_INICIAL.y][self.ACTIVADO_INICIAL.x]
@@ -593,7 +601,11 @@ class Bloque (spyral.Sprite):
 
 
 class Escena(spyral.Scene):
-    def __init__(self, topic=topic_dir):
+
+    MUTE = False
+    gameview = False
+
+    def __init__(self, topic=topic_dir, gameview=False):
 
         spyral.Scene.__init__(self, SIZE)
 
@@ -616,6 +628,24 @@ class Escena(spyral.Scene):
         self.tablero = Tablero(self, topic, mapa=mapa1)
 
         spyral.event.register("system.quit", spyral.director.pop, scene=self)
+        spyral.event.register("Tablero.score", self.score)
+
+        if gameview:
+            Escena.gameview = gameview
+
+    def mute(self, value):
+        Escena.MUTE = value
+
+    def score(self):
+        if self.tablero.intentos==5:
+            puntos = 1000
+        elif 5<self.tablero.intentos<10:
+            puntos = 500
+        elif self.tablero.intentos>10:
+            puntos = 100
+
+        Escena.gameview.update_score(puntos)
+
 
 def QuadraticOutTuple(start=(0, 0), finish=(0, 0)):
     """

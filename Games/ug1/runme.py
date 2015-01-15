@@ -122,7 +122,10 @@ class Escena(spyral.Scene):
         spyral.event.register("system.quit", spyral.director.pop, scene=self)
         spyral.event.register("director.scene.enter", self.l.llover, scene=self)
         spyral.event.register("input.keyboard.down.esc", self.endgame, scene=self)
+        spyral.event.register("Tablero.score", self.score)
 
+    def score(self):
+        Intro.gameview.update_score(self.tablero.ganadas * 100)
 
     def endgame(self):
         spyral.director.replace(Finale(self.topic))
@@ -178,6 +181,7 @@ class Tablero(spyral.Sprite):
         self.hit_snd = pygame.mixer.Sound(gamedir("sonidos/Pickup_Coin.wav"))
 
     def reset(self):
+        spyral.event.queue("Tablero.score")
         self.ganadas = self.ganadas + 1
         self.palabra_anterior = self.palabra
         while self.palabra_anterior == self.palabra:
@@ -225,9 +229,11 @@ class Tablero(spyral.Sprite):
             self.acertadas = self.acertadas + respuesta
 
         if respuesta in self.palabra:
-            self.hit_snd.play()
+            if not Intro.MUTE:
+                self.hit_snd.play()
         else:
-            self.blup_snd.play()
+            if not Intro.MUTE:
+                self.blup_snd.play()
 
         self.mostrar(self.palabra, self.acertadas)
 
@@ -309,10 +315,11 @@ class Lluvia(spyral.Sprite):
         self.llover()
 
     def llover(self):
-        self.alarm_snd.play()
+        if not Intro.MUTE:
+            self.alarm_snd.play()
         p = spyral.Animation("y",
             spyral.easing.CubicIn(0, self.scene.height - 75),
-            duration=2 * len(self.scene.tablero.palabra) + 3)
+            duration=10 * len(self.scene.tablero.palabra) + 3)
         self.animate(p)
 
     def finalizar(self):
@@ -349,7 +356,8 @@ class Lluvia(spyral.Sprite):
 
 
     def sonar_explosion(self):
-        self.explotar_snd.play()
+        if not Intro.MUTE:
+            self.explotar_snd.play()
 
 class Visualizador(spyral.Sprite):
 
@@ -718,7 +726,10 @@ class Finale(spyral.Scene):
 
 class Intro(spyral.Scene):
 
-    def __init__(self, topic=topic_dir):
+    MUTE = False
+    gameview = False
+
+    def __init__(self, topic=topic_dir, gameview=False):
         spyral.Scene.__init__(self, SIZE)
 
         global topic_dir
@@ -738,6 +749,12 @@ class Intro(spyral.Scene):
         spyral.event.register("system.quit", spyral.director.pop, scene=self)
         spyral.event.register("input.keyboard.down.space", self.goplay, scene=self)
         spyral.event.register("director.scene.enter", self.intro0, scene=self)
+
+        if gameview:
+            Intro.gameview = gameview
+
+    def mute(self, value):
+        Intro.MUTE = value
 
     def goplay(self):
         spyral.director.replace(Escena(self.topic))

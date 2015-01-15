@@ -617,6 +617,10 @@ class Escena(spyral.Scene):
 
         spyral.event.register("system.quit", spyral.director.pop, scene=self)
 
+    def mute(self, value):
+        Escena.MUTE = value
+
+
 # Tomado de Spyral
 class DelayAnimation(spyral.Animation):
     """

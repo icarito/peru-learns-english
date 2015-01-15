@@ -128,7 +128,7 @@ class FlashCardView(gtk.EventBox):
         metadata = os.path.join(topic, "topic.ini")
         parser.read(metadata)
 
-        self.cabecera.titulo.set_text(parser.get('topic', 'title'))
+        self.cabecera.titulo.set_text("Topic: " + parser.get('topic', 'title'))
 
         self.derecha.run()
         self.topic = topic
@@ -171,7 +171,7 @@ class Cabecera(gtk.EventBox):
 
         self.titulo = gtk.Label("Título")
         self.titulo.set_property("justify", gtk.JUSTIFY_CENTER)
-        self.titulo.modify_font(pango.FontDescription("DejaVu Sans 18"))
+        self.titulo.modify_font(pango.FontDescription("DejaVu Sans Bold 20"))
         self.titulo.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
 
         self.subtitulo = gtk.Image()
