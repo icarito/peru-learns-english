@@ -34,6 +34,7 @@ from JAMediaImagenes.ImagePlayer import ImagePlayer
 from Globales import COLORES
 from Globales import get_vocabulario
 from Globales import decir
+from Globales import guardar
 
 
 class FlashCardView(gtk.EventBox):
@@ -48,7 +49,7 @@ class FlashCardView(gtk.EventBox):
         self.topic = False
         self.vocabulario = []
         self.imagenplayer = False
-        self.index_select = 1
+        self.index_select = 0
 
         tabla = gtk.Table(rows=10, columns=5, homogeneous=True)
         tabla.set_property("column-spacing", 5)
@@ -79,13 +80,19 @@ class FlashCardView(gtk.EventBox):
         """
         Continúa con siguiente palabra del vocabulario cargado.
         """
-        # FIXME: Persistir datos según respuesta y self.vocabulario[self.index_select]
-        # FIXME: Tomar indice según persistencia
+        r = 0
+        if respuesta == 1:
+            r = 5
+        elif respuesta == 2:
+            r = 3
+        elif respuesta == 3:
+            r = 0
+        guardar(self.topic, self.vocabulario[self.index_select][0], r)
         if self.index_select < len(self.vocabulario) - 1:
             self.index_select += 1
+            gobject.timeout_add(500, self.__load, self.index_select)
         else:
-            self.index_select = 1
-        gobject.timeout_add(500, self.__load, self.index_select)
+            print "FIXME: No hay mas flashcards para hoy", self.__siguiente
 
     def __load(self, index):
         """
@@ -131,13 +138,16 @@ class FlashCardView(gtk.EventBox):
         self.cabecera.titulo.set_text("Topic: " + parser.get('topic', 'title'))
 
         self.derecha.run()
-        self.topic = topic
-        csvfile = os.path.join(topic, "vocabulario.csv")
-        self.vocabulario = get_vocabulario(csvfile)
+        vocabulario = get_vocabulario(topic)
         self.show()
         # FIXME: Tomar indice según persistencia
-        self.index_select = 1
-        gobject.timeout_add(500, self.__load, self.index_select)
+        if vocabulario:
+            self.vocabulario = vocabulario
+            self.topic = topic
+            self.index_select = 0
+            gobject.timeout_add(500, self.__load, self.index_select)
+        else:
+            print "FIXME: No hay nada para hacer", self.run
 
 
 class FlashCard(gtk.EventBox):

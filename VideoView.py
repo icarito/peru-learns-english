@@ -229,10 +229,10 @@ class FlashCardsPreview(gtk.EventBox):
     def load(self, topic):
         self.stop()
         self.topic = topic
-        csvfile = os.path.join(topic, "vocabulario.csv")
-        self.vocabulario = get_vocabulario(csvfile)
-        self.index_select = 1
-        self.__run_secuencia()
-        if not self.control:
-            self.control = gobject.timeout_add(3000, self.__run_secuencia)
+        print "FIXME: hay que modificar esto:", self.load
+        #self.vocabulario = get_vocabulario(self.topic)
+        #self.index_select = 1
+        #self.__run_secuencia()
+        #if not self.control:
+        #    self.control = gobject.timeout_add(3000, self.__run_secuencia)
         return False
