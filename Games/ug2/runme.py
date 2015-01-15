@@ -91,15 +91,16 @@ class Tablero(spyral.View):
         margin = (700 - (140 * 5)) / 2
 
         self.pos = (margin, margin)
-
         self.layers = ["abajo", "arriba", "primer"]
+
+        self.cursor = Cursor(self)
 
         self.tablero = mapa
 
         self.palabras = obtener_set(topic)
-        self.cursor = Cursor(self)
-        self.camino = []
+        self.topic = topic
 
+        self.camino = []
         self.ACTIVADO = False
         self.mov_anterior = None
         self.intentos = 0
@@ -124,7 +125,45 @@ class Tablero(spyral.View):
         spyral.event.register("Tablero.activar", self.activar)
         spyral.event.register("Tablero.movimiento", self.movimiento)
 
+    def reset(self, mapa):
+        self.palabras = obtener_set(self.topic)
+
+        Bloque.RENDERED = None
+        self.camino = []
+        self.ACTIVADO = False
+        self.mov_anterior = None
+        self.intentos = 0
+
+        nexos = []
+        bloques = []
+        for fila in self.tablero:
+            for item in fila:
+                if item.__class__.__name__=="Nexo":
+                    item.reset()
+                    nexos.append(item)
+                else:
+                    bloques.append(item)
+
+        for row in range(len(mapa)):
+            for col in range(len(mapa[row])):
+                tablero = mapa[row][col]
+                if tablero:
+                    palabra = self.palabras[tablero-1][0]
+                    archivo = self.palabras[tablero-1][1]
+                    bloque = bloques.pop()
+                    bloque.reset( row, col, COLOR=tablero-1,
+                                    PALABRA=palabra, ARCHIVO=archivo)
+                    bloque.iopen()
+                    self.tablero[row][col] = bloque
+                else:
+                    nexo = nexos.pop()
+                    nexo.reset(row, col)
+                    self.tablero[row][col] = nexo
+
+
     def activar(self, ubicacion):
+        if self.ACTIVADO:
+            self.desactivar()
         self.ACTIVADO = ubicacion
         self.ACTIVADO_INICIAL = ubicacion
         #print "Activado: "+str(ubicacion)
@@ -165,6 +204,7 @@ class Tablero(spyral.View):
             self.win()
 
     def win(self):
+        Bloque.RENDERED = []
         spyral.event.queue("Bloque.final")
         spyral.event.queue("Tablero.score")
 
@@ -203,7 +243,7 @@ class Tablero(spyral.View):
                     if "Nexo" in ANTERIOR.__class__.__name__:
                         ANTERIOR.ir_a(ubicacion)
                     INICIAL = self.tablero[self.ACTIVADO_INICIAL.y][self.ACTIVADO_INICIAL.x]
-                    if CANDIDATO.COLOR==INICIAL.COLOR:
+                    if CANDIDATO.COLOR==INICIAL.COLOR and (CANDIDATO is not INICIAL):
                         self.match(INICIAL, CANDIDATO)
                     elif CANDIDATO==INICIAL:
                         return
@@ -254,7 +294,11 @@ class Nexo (spyral.Sprite):
 
         self.visible = False
 
-    def reset(self):
+    def reset(self, row=None, col=None):
+        if row is not None and col is not None:
+            self.pos = (col * 140 + 70, row * 140 + 70)
+            self.ROW = row
+            self.COL = col
         self.vengo_de = None
         self.visible = False
 
@@ -450,6 +494,29 @@ class Bloque (spyral.Sprite):
     def __repr__(self):
         return "Bloque en (" + str(self.ROW) + "," + str(self.COL) + ")"
 
+    def reset(self, row, col, COLOR=4, PALABRA="error", ARCHIVO=None):
+        self.pos = (col * 140 + 70, row * 140 + 70)
+        self.ROW = row
+        self.COL = col
+
+        self.COLOR = COLOR
+        self.BGCOLOR = COLOR
+        self.oculto = False
+
+        self.mode = "PALABRA"
+        if Bloque.RENDERED and (PALABRA in Bloque.RENDERED):
+            self.mode = "TARJETA"
+        elif not Bloque.RENDERED:
+            Bloque.RENDERED = [ PALABRA ]
+        else:
+            Bloque.RENDERED.append( PALABRA )
+
+        self.PALABRA = PALABRA
+        self.ARCHIVO = ARCHIVO
+        self.MATCH = False
+
+        self.init_animations()
+
     def match(self, camino):
         self.oculto = True
         self.abierto = False
@@ -554,6 +621,7 @@ class Bloque (spyral.Sprite):
                     self.iclose()
                 else:
                     self.iopen()
+                    self.scene.tablero.desactivar()
                 event = spyral.event.Event(ubicacion=spyral.Vec2D(self.COL, self.ROW))
                 spyral.event.queue("Tablero.movimiento", event)
             else:
@@ -573,11 +641,11 @@ class Bloque (spyral.Sprite):
         #self.blink()
 
         # ESCAPAR
-        self.escape_animation = spyral.Animation("pos", QuadraticOutTuple(self.pos, self.lado_mas_cercano()), 3)
-        try:
-            self.animate (self.escape_animation)
-        except:
-            pass
+        #self.escape_animation = spyral.Animation("pos", QuadraticOutTuple(self.pos, self.lado_mas_cercano()), 3)
+        #try:
+        #    self.animate (self.escape_animation)
+        #except:
+        #    pass
 
     def iopen(self, unless=None):
         if (not unless==self) and (not self.MATCH):
@@ -614,6 +682,7 @@ class Escena(spyral.Scene):
 
     MUTE = False
     gameview = False
+    n = 0
 
     def __init__(self, topic=topic_dir, gameview=False):
 
@@ -628,18 +697,83 @@ class Escena(spyral.Scene):
 
         self.background = img
 
-        mapa1 = [
-            [0, 0, 0, 1, 2],
+        self.mapas = []
+        self.mapas.append(
+            [[1, 0, 0, 0, 2],
+            [3, 0, 0, 4, 0],
+            [0, 1, 2, 5, 0],
+            [0, 0, 3, 0, 0],
+            [5, 0, 0, 0, 4]]
+            )
+        self.mapas.append(
+            [[0, 0, 0, 1, 2],
             [0, 1, 3, 0, 0],
             [0, 0 ,0, 0, 0],
             [3, 4, 0, 0, 2],
             [5, 0, 5, 0, 4]]
-
-        self.tablero = Tablero(self, topic, mapa=mapa1)
+            )
+        self.mapas.append(
+            [[0, 0, 0, 0, 1],
+            [2, 3, 0, 2, 0],
+            [0, 4, 0, 0, 0],
+            [0, 3, 0, 1, 5],
+            [0, 4, 5, 0, 0]]
+            )
+        self.mapas.append(
+            [[1, 2, 3, 0, 3],
+            [0, 0, 2, 4, 0],
+            [0, 5, 0, 0, 0],
+            [0, 0, 1, 0, 0],
+            [5, 0, 0, 0, 4]]
+            )
+        self.mapas.append(
+            [[0, 0, 1, 2, 0],
+            [0, 0, 3, 4, 0],
+            [0, 0, 5, 0, 0],
+            [1, 0, 0, 4, 0],
+            [3, 0, 0, 5, 2]]
+            )
+        self.mapas.append(
+            [[1, 0, 0, 0, 2],
+            [0, 3, 2, 1, 0],
+            [0, 4, 0, 0, 0],
+            [0, 0, 5, 0, 0],
+            [3, 0, 0, 4, 5]]
+            )
+        self.mapas.append([
+            [1, 0, 2, 0, 0],
+            [3, 0, 0, 1, 0],
+            [0, 4, 2, 0, 0],
+            [0, 0, 0, 0, 4],
+            [0, 3, 5, 0, 5]]
+            )
+        self.mapas.append([
+            [0, 0, 0, 0, 1],
+            [0, 2, 3, 4, 0],
+            [4, 0, 0, 1, 0],
+            [2, 0, 0, 3, 5],
+            [5, 0, 0, 0, 0]]
+            )
+        self.mapas.append([
+            [0, 0, 0, 1, 2],
+            [0, 3, 0, 0, 0],
+            [0, 0, 0, 4, 5],
+            [1, 3, 2, 0, 0],
+            [4, 0, 0, 0, 5]]
+            )
+        self.mapas.append([
+            [1, 0, 0, 0, 0],
+            [2, 3, 0, 3, 1],
+            [0, 4, 0, 0, 0],
+            [0, 0, 0, 2, 4],
+            [5, 0, 0, 0, 5]]
+            )
+        self.tablero = Tablero(self, topic, mapa=self.mapas[Escena.n])
 
         spyral.event.register("system.quit", spyral.director.pop, scene=self)
         spyral.event.register("Tablero.score", self.score)
 
+        self.puntos = 0
         if gameview:
             Escena.gameview = gameview
 
@@ -653,8 +787,15 @@ class Escena(spyral.Scene):
             puntos = 500
         elif self.tablero.intentos>10:
             puntos = 100
+        self.puntos += puntos
 
-        Escena.gameview.update_score(puntos)
+        Escena.n += 1
+        if Escena.n > (len(self.mapas)-1):
+            Escena.n = 0
+        self.tablero.reset(self.mapas[Escena.n])
+
+        if Escena.gameview:
+            Escena.gameview.update_score(self.puntos)
 
 
 def QuadraticOutTuple(start=(0, 0), finish=(0, 0)):
