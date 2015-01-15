@@ -136,8 +136,7 @@ class Menu(gtk.Menu):
     def __init__(self):
         gtk.Menu.__init__(self)
 
-        self.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
-        self.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
+        self.modify_bg(gtk.STATE_NORMAL, COLORES["menu"])
 
         topics = os.path.join(BASE_PATH, "Topics")
         for arch in sorted(os.listdir(topics)):
@@ -151,6 +150,7 @@ class Menu(gtk.Menu):
 
             boton = gtk.Label(title)
             boton.modify_font(pango.FontDescription("DejaVu Sans Bold 16"))
+            boton.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
             boton.set_padding(xpad=20, ypad=20)
             item.add(boton)
             item.connect("activate", self.__emit_accion_menu, arch)

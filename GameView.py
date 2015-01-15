@@ -62,7 +62,7 @@ class GameMenu(gtk.EventBox):
         for butt in self.ug1, self.ug2, self.ug3:
             butt.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
             butt.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
-            butt.child.modify_font(pango.FontDescription("DejaVu Sans Bold 16"))
+            butt.child.modify_font(pango.FontDescription("DejaVu Sans Bold 12"))
             align = gtk.Alignment(0.5, 0.5, 0.3, 0.2)
             align.add(butt)
             self.hbox.pack_start(align)
@@ -138,7 +138,7 @@ class GameView(gtk.EventBox):
 
         self.score_label = gtk.Label("SCORE\n0")
         self.score_label.set_property("justify", gtk.JUSTIFY_RIGHT)
-        self.score_label.modify_font(pango.FontDescription("DejaVu Sans Mono 30"))
+        self.score_label.modify_font(pango.FontDescription("DejaVu Sans Mono 22"))
         self.score_label.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
         self.score_label.set_padding(xpad=30, ypad=30)
         vbox.add(self.score_label)

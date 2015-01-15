@@ -302,7 +302,7 @@ class Lluvia(spyral.Sprite):
         self.scale = 2
 
         self.explotar_snd = pygame.mixer.Sound(gamedir("sonidos/Explosion.wav"))
-        self.alarm_snd = pygame.mixer.Sound(gamedir("sonidos/ambient_alarm1.wav"))
+        self.alarm_snd = pygame.mixer.Sound(gamedir("sonidos/missile_alarm.ogg"))
 
     def reset(self):
         self.x = self.scene.width / 2 + random.randint(0, 600) - 300

@@ -42,7 +42,7 @@ class InstructionsView(gtk.EventBox):
         self.set_border_width(4)
 
         es_tit = gtk.Label(u"¡Bienvenidos!")
-        es_tit.modify_font(pango.FontDescription("DejaVu Sans Bold 36"))
+        es_tit.modify_font(pango.FontDescription("DejaVu Sans Bold 22"))
         es_tit.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
 
         es_body = gtk.Label("Peru Learns English (PLE) es un sistema para involucrar a jóvenes en la adquisición de vocabulario, apelando a estímulos con escenas audiovisuales cinemáticas así como a videojuegos divertidos.")
@@ -51,7 +51,7 @@ class InstructionsView(gtk.EventBox):
         es_body2.set_line_wrap(True)
 
         en_tit = gtk.Label(u"Welcome!")
-        en_tit.modify_font(pango.FontDescription("DejaVu Sans Bold 36"))
+        en_tit.modify_font(pango.FontDescription("DejaVu Sans Bold 22"))
         en_tit.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
 
         en_body = gtk.Label("Peru Learns English (PLE) is a system for engaging young people in the acquisition of vocabulary, by means of appealing to multi-sensory stimuli in audiovisual cinematic scenes as well as fun videogames.")
@@ -60,7 +60,7 @@ class InstructionsView(gtk.EventBox):
         en_body2.set_line_wrap(True)
 
         for label in es_body, es_body2, en_body, en_body2:
-            label.modify_font(pango.FontDescription("DejaVu Sans 12"))
+            label.modify_font(pango.FontDescription("DejaVu Sans 8"))
 
         tabla = gtk.Table(rows=4, columns=2, homogeneous=True)
         tabla.attach(es_tit, 0, 1, 0, 1)

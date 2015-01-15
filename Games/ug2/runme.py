@@ -335,6 +335,16 @@ class Cursor (spyral.Sprite):
         spyral.event.register ("input.keyboard.down.down", self.down)
         spyral.event.register ("input.keyboard.down.right", self.right)
 
+        spyral.event.register("input.keyboard.down.keypad_2", self.down)
+        spyral.event.register("input.keyboard.down.keypad_8", self.up)
+        spyral.event.register("input.keyboard.down.keypad_4", self.left)
+        spyral.event.register("input.keyboard.down.keypad_6", self.right)
+
+        spyral.event.register("input.keyboard.down.keypad_3", self.click)
+        spyral.event.register("input.keyboard.down.keypad_9", self.click)
+        spyral.event.register("input.keyboard.down.keypad_7", self.click)
+        spyral.event.register("input.keyboard.down.keypad_1", self.click)
+
         spyral.event.register ("input.keyboard.down.space", self.click)
         spyral.event.register ("input.keyboard.down.return", self.click)
 
