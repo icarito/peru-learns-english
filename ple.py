@@ -96,6 +96,8 @@ class Main(gtk.Window):
         self.gamemenu.gameview.connect("video", self.__play_video)
         self.videoview.connect("flashcards", self.__play_flashcards)
         self.videoview.connect("game", self.__play_game)
+        self.instructionsview.connect("credits", self.__play_credits)
+        self.instructionsview.connect("start", self.__show_menu)
         self.connect("delete-event", self.__salir)
 
         self.toolbar.buttons[0].set_active(True)
@@ -110,6 +112,15 @@ class Main(gtk.Window):
 
     def __play_video(self, widget, topic):
         self.__switch(False, "Topics", topic)
+
+    def __play_credits(self, widget):
+        self.__switch(False, "Credits")
+        self.toolbar.buttons[0].set_active(False)
+
+    def __show_menu(self, widget):
+        self.toolbar.menubutton.popup()
+        self.toolbar.menubutton.set_active(True)
+        self.toolbar.buttons[0].set_active(False)
 
     def __switch(self, widget, label, data=False):
         map(ocultar, self.vbox.get_children()[1:])
