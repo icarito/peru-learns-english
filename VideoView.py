@@ -94,8 +94,6 @@ class VideoView(gtk.EventBox):
     def __force_unfull(self, widget):
         if self.full:
             self.set_full(False)
-        self.videoplayer.stop()
-        self.videoplayer.load(os.path.join(self.topic, "video.ogv"))
         self.videoplayer.pause()
 
     def __emit_game(self, widget, event):
@@ -122,6 +120,9 @@ class VideoView(gtk.EventBox):
             tabla.set_property("row-spacing", 0)
             self.videoplayer.show()
             self.full = True
+
+        self.videoplayer.stop()
+        self.videoplayer.load(os.path.join(self.topic, "video.ogv"))
 
     def stop(self):
         self.videoplayer.stop()
