@@ -122,9 +122,9 @@ TEXT = [
 
 FONT = "Monospace"
 TAM = 40
-RED = 0
-GREEN = 0
-BLUE = 0
+RED = 255
+GREEN = 255
+BLUE = 255
 
 
 class CreditsView(gtk.EventBox):
@@ -134,7 +134,7 @@ class CreditsView(gtk.EventBox):
         gtk.EventBox.__init__(self)
 
         self.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
-        self.set_border_width(15)
+        self.set_border_width(10)
 
         self.visor = Visor()
 
@@ -156,7 +156,7 @@ class Visor(gtk.DrawingArea):
 
         gtk.DrawingArea.__init__(self)
 
-        self.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
+        self.modify_bg(gtk.STATE_NORMAL, COLORES["text"])
 
         self.posy = 300
         self.update = False
@@ -235,7 +235,7 @@ class Visor(gtk.DrawingArea):
         cr = self.get_property("window").cairo_create()
         rect = self.get_allocation()
 
-        cr.set_source_rgb(255, 255, 255)
+        cr.set_source_rgb(0, 0, 0)
         cr.paint()
 
         y = self.posy
@@ -247,11 +247,11 @@ class Visor(gtk.DrawingArea):
 
             w = self._dict[key].get("width", 0)
             h = self._dict[key].get("height", 0)
-            if self._dict[key]["text"] == "Peru Learns English" or \
-                self._dict[key]["text"] == "===================":
-                cr.move_to(rect.width / 2 - w / 2, y)
-            else:
-                cr.move_to(10, y)
+            #if self._dict[key]["text"] == "Peru Learns English" or \
+            #    self._dict[key]["text"] == "===================":
+            cr.move_to(rect.width / 2 - w / 2, y)
+            #else:
+            #    cr.move_to(10, y)
 
             if self._dict[key]["text"] != "HHH" and y > 0 and y < rect.height:
                 cr.show_text(self._dict[key]["text"])
