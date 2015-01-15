@@ -30,7 +30,7 @@ from VideoPlayer.VideoPlayer import VideoPlayer
 from JAMediaImagenes.ImagePlayer import ImagePlayer
 
 from Globales import COLORES
-from Globales import get_vocabulario
+from Globales import get_flashcards_previews
 
 
 class VideoView(gtk.EventBox):
@@ -57,7 +57,7 @@ class VideoView(gtk.EventBox):
         tabla.set_border_width(8)
 
         self.titulo = gtk.Label("Título")
-        self.titulo.modify_font(pango.FontDescription("DejaVu Sans 18"))
+        self.titulo.modify_font(pango.FontDescription("DejaVu Sans Bold 20"))
         self.titulo.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
         self.videoplayer = VideoPlayer()
 
@@ -70,6 +70,7 @@ class VideoView(gtk.EventBox):
         tabla.attach(self.links, 0, 2, 9, 10)
 
         flashcards = gtk.Button()
+        flashcards.set_relief(gtk.RELIEF_NONE)
         imagen = gtk.Image()
         imagen.set_from_file("Imagenes/flashcards.png")
         flashcards.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
@@ -87,17 +88,21 @@ class VideoView(gtk.EventBox):
 
         flashcards.connect("clicked", self.__emit_flashcards)
         self.imagen_juego.connect("button-press-event", self.__emit_game)
-        self.videoplayer.connect("full", self.__set_full)
+        self.videoplayer.connect("full", self.set_full)
         self.videoplayer.connect("endfile", self.__force_unfull)
 
     def __force_unfull(self, widget):
         if self.full:
-            self.__set_full(False)
-        self.videoplayer.stop()
-        self.videoplayer.load(os.path.join(self.topic, "video.ogv"))
+            self.set_full(False)
         self.videoplayer.pause()
 
-    def __set_full(self, widget):
+    def __emit_game(self, widget, event):
+        self.emit("game", self.topic)
+
+    def __emit_flashcards(self, widget):
+        self.emit("flashcards", self.topic)
+
+    def set_full(self, widget):
         tabla = self.get_child()
         for child in tabla.children():
             child.hide()
@@ -116,11 +121,8 @@ class VideoView(gtk.EventBox):
             self.videoplayer.show()
             self.full = True
 
-    def __emit_game(self, widget, event):
-        self.emit("game", self.topic)
-
-    def __emit_flashcards(self, widget):
-        self.emit("flashcards", self.topic)
+        self.videoplayer.stop()
+        self.videoplayer.load(os.path.join(self.topic, "video.ogv"))
 
     def stop(self):
         self.videoplayer.stop()
@@ -142,11 +144,11 @@ class VideoView(gtk.EventBox):
         metadata = os.path.join(topic, "topic.ini")
         parser.read(metadata)
 
-        self.titulo.set_text(parser.get('topic', 'title'))
+        self.titulo.set_text("Topic: " + parser.get('topic', 'title'))
         self.links.set_uri(parser.get('topic', 'link'))
         self.links.set_label(parser.get('topic', 'link'))
         self.full = False
-        self.__set_full(False)
+        self.set_full(False)
 
 
 class GameImage(gtk.DrawingArea):
@@ -186,7 +188,7 @@ class FlashCardsPreview(gtk.EventBox):
         self.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
 
         self.vocabulario = []
-        self.index_select = 1
+        self.index_select = 0
         self.imagenplayer = False
         self.path = False
         self.control = False
@@ -216,7 +218,7 @@ class FlashCardsPreview(gtk.EventBox):
         if self.index_select < len(self.vocabulario) - 1:
             self.index_select += 1
         else:
-            self.index_select = 1
+            self.index_select = 0
         return True
 
     def stop(self):
@@ -228,9 +230,8 @@ class FlashCardsPreview(gtk.EventBox):
     def load(self, topic):
         self.stop()
         self.topic = topic
-        csvfile = os.path.join(topic, "vocabulario.csv")
-        self.vocabulario = get_vocabulario(csvfile)
-        self.index_select = 1
+        self.vocabulario = get_flashcards_previews(self.topic)
+        self.index_select = 0
         self.__run_secuencia()
         if not self.control:
             self.control = gobject.timeout_add(3000, self.__run_secuencia)

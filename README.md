@@ -62,15 +62,20 @@ Attribution  of Works / Reconocimiento de Obras
 * Golden Menu - © 2013 - Janna - Public Domain
 * Asteroid - © 2014 - GGo - CC BY 3.0
 * Small Objects & Generic Background - Lanea Zimmerman (AKA Sharm) - CC BY-SA 3.0
-* Peru_Machu_Picchu_Sunrise.jpg - © 2007 Flamurai - CC BY 2.0 tomadade [Wikipedia](http://wikipedia.org/).
+* Peru_Machu_Picchu_Sunrise.jpg - © 2007 Flamurai - CC BY 2.0 tomada de [Wikipedia](http://wikipedia.org/).
 * [OpenGameArt.Org](http://opengameart.org/).
 
+#### Tipografías
+
+* Logotipos y títulos elaborados en *Decade*, de "Anthem Type" (Joey Nelson)
 
 ### Music and Sound Efects / Música y Efectos de Sonido ###
 
 
 
-#### Biblioteca para Videojuegos: 
+#### Biblioteca para Videojuegos ### 
 
-["Spyral"](http://platipy.org/) © 2014 Robert Deaton, Austin Bart GPLv2.1 
+* ["Spyral"](http://platipy.org/) © 2014 Robert Deaton, Austin Bart GPLv2.1 
+
+
 

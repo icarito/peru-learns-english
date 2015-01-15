@@ -30,6 +30,7 @@ from Toolbar import Toolbar
 from Globales import COLORES
 from VideoView import VideoView
 from FlashCardView import FlashCardView
+from GameView import GameMenu
 from GameView import GameView
 from InstructionsView import InstructionsView
 from CreditsView import CreditsView
@@ -78,8 +79,8 @@ class Main(gtk.Window):
         self.flashcards = FlashCardView()
         self.vbox.pack_start(self.flashcards, True, True, 0)
 
-        self.gameview = GameView()
-        self.vbox.pack_start(self.gameview, True, True, 0)
+        self.gamemenu = GameMenu()
+        self.vbox.pack_start(self.gamemenu, True, True, 0)
 
         self.instructionsview = InstructionsView()
         self.vbox.pack_start(self.instructionsview, True, True, 0)
@@ -92,13 +93,20 @@ class Main(gtk.Window):
 
         self.toolbar.connect("activar", self.__switch)
         self.toolbar.connect("video", self.__play_video)
+        self.gamemenu.gameview.connect("video", self.__game_return_to_video)
         self.videoview.connect("flashcards", self.__play_flashcards)
         self.videoview.connect("game", self.__play_game)
+        self.instructionsview.connect("credits", self.__play_credits)
+        self.instructionsview.connect("start", self.__show_menu)
         self.connect("delete-event", self.__salir)
 
         self.toolbar.buttons[0].set_active(True)
 
         self.__switch(False, "Instructions", None)
+
+    def __game_return_to_video(self, widget, topic):
+        self.__play_video(widget, topic)
+        self.videoview.set_full(False)
 
     def __play_game(self, widget, topic):
         self.__switch(False, "game", topic)
@@ -108,6 +116,15 @@ class Main(gtk.Window):
 
     def __play_video(self, widget, topic):
         self.__switch(False, "Topics", topic)
+
+    def __play_credits(self, widget):
+        self.__switch(False, "Credits")
+        self.toolbar.buttons[0].set_active(False)
+
+    def __show_menu(self, widget):
+        self.toolbar.menubutton.popup()
+        self.toolbar.menubutton.set_active(True)
+        self.toolbar.buttons[0].set_active(False)
 
     def __switch(self, widget, label, data=False):
         map(ocultar, self.vbox.get_children()[1:])
@@ -120,7 +137,7 @@ class Main(gtk.Window):
         elif label == "flashcards":
             self.flashcards.run(data)
         elif label == "game":
-            self.gameview.run(data)
+            self.gamemenu.run(data)
         return False
 
     def __salir(self, widget=None, senial=None):

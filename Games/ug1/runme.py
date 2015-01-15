@@ -33,6 +33,7 @@ import spyral
 import random
 import csv
 import collections
+pygame.mixer.init()
 
 SIZE = (700, 700)
 TILE = (64, 64)
@@ -121,7 +122,10 @@ class Escena(spyral.Scene):
         spyral.event.register("system.quit", spyral.director.pop, scene=self)
         spyral.event.register("director.scene.enter", self.l.llover, scene=self)
         spyral.event.register("input.keyboard.down.esc", self.endgame, scene=self)
+        spyral.event.register("Tablero.score", self.score)
 
+    def score(self):
+        Intro.gameview.update_score(self.tablero.ganadas * 100)
 
     def endgame(self):
         spyral.director.replace(Finale(self.topic))
@@ -173,7 +177,11 @@ class Tablero(spyral.Sprite):
         spyral.event.register("input.keyboard.down.*", self.procesar_tecla, scene=self.scene)
         spyral.event.register("Tablero.reset.animation.end", self.reset, scene=self.scene)
 
+        self.blup_snd = pygame.mixer.Sound(gamedir("sonidos/Randomize3.wav"))
+        self.hit_snd = pygame.mixer.Sound(gamedir("sonidos/Pickup_Coin.wav"))
+
     def reset(self):
+        spyral.event.queue("Tablero.score")
         self.ganadas = self.ganadas + 1
         self.palabra_anterior = self.palabra
         while self.palabra_anterior == self.palabra:
@@ -189,7 +197,7 @@ class Tablero(spyral.Sprite):
         self.image = self.font.render(text)
         self.text = text
 
-    def mostrar(self, frase, acertadas):
+    def mostrar(self, frase, acertadas, letra=None):
         total = 0
         estado = ""
         for letra in frase:
@@ -214,10 +222,18 @@ class Tablero(spyral.Sprite):
         if not 0 < key < 255:
             return
 
+
         respuesta = chr(key)
 
         if respuesta not in self.acertadas:
             self.acertadas = self.acertadas + respuesta
+
+        if respuesta in self.palabra:
+            if not Intro.MUTE:
+                self.hit_snd.play()
+        else:
+            if not Intro.MUTE:
+                self.blup_snd.play()
 
         self.mostrar(self.palabra, self.acertadas)
 
@@ -282,7 +298,11 @@ class Lluvia(spyral.Sprite):
                 (explosion_size, explosion_size)))
 
         spyral.event.register("Lluvia.y.animation.end", self.finalizar, scene=self.scene)
+        spyral.event.register("Lluvia.demora.animation.end", self.sonar_explosion)
         self.scale = 2
+
+        self.explotar_snd = pygame.mixer.Sound(gamedir("sonidos/Explosion.wav"))
+        self.alarm_snd = pygame.mixer.Sound(gamedir("sonidos/missile_alarm.ogg"))
 
     def reset(self):
         self.x = self.scene.width / 2 + random.randint(0, 600) - 300
@@ -295,9 +315,11 @@ class Lluvia(spyral.Sprite):
         self.llover()
 
     def llover(self):
+        if not Intro.MUTE:
+            self.alarm_snd.play()
         p = spyral.Animation("y",
             spyral.easing.CubicIn(0, self.scene.height - 75),
-            duration=2 * len(self.scene.tablero.palabra) + 3)
+            duration=10 * len(self.scene.tablero.palabra) + 3)
         self.animate(p)
 
     def finalizar(self):
@@ -328,6 +350,14 @@ class Lluvia(spyral.Sprite):
         self.stop_all_animations()
         self.animate(n)
 
+        d = DelayAnimation(wait)
+        d.property="demora"
+        self.animate(d)
+
+
+    def sonar_explosion(self):
+        if not Intro.MUTE:
+            self.explotar_snd.play()
 
 class Visualizador(spyral.Sprite):
 
@@ -696,7 +726,10 @@ class Finale(spyral.Scene):
 
 class Intro(spyral.Scene):
 
-    def __init__(self, topic=topic_dir):
+    MUTE = False
+    gameview = False
+
+    def __init__(self, topic=topic_dir, gameview=False):
         spyral.Scene.__init__(self, SIZE)
 
         global topic_dir
@@ -716,6 +749,12 @@ class Intro(spyral.Scene):
         spyral.event.register("system.quit", spyral.director.pop, scene=self)
         spyral.event.register("input.keyboard.down.space", self.goplay, scene=self)
         spyral.event.register("director.scene.enter", self.intro0, scene=self)
+
+        if gameview:
+            Intro.gameview = gameview
+
+    def mute(self, value):
+        Intro.MUTE = value
 
     def goplay(self):
         spyral.director.replace(Escena(self.topic))
