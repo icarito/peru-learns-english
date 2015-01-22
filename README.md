@@ -7,7 +7,6 @@ Peru Learns English (PLE) is a system for engaging young people in the acquisiti
 
 A simplified [spaced repetition tool](http://en.wikipedia.org/wiki/Spaced_repetition) is provided, that is able to measure progress and eventually provide feedback to the learner. Spaced repetition is demonstrably [1] effective at helping engaged students to memorize vocabulary.
 
-
 PLE is being designed and put together by the SomosAzucar R&D Team in collaboration with specialists from the Ministry of Education of Peru.
 
 ### Español ###
@@ -32,8 +31,8 @@ Credits / Créditos
 ### Code / Código ###
 
 * Interfase © 2014-2015 Flavio Danesse <fdanesse@gmail.com> Uruguay - GPLv2+
-* Videojuego 1 © 2014-2015 Sebastian Silva <sebastian@fuentelibre.org> Peru - GPLv3
-* Videojuego 2 © 2014-2015 Sebastian Silva <sebastian@fuentelibre.org> Peru - GPLv3
+* Videojuego 1 © 2014-2015 Sebastian Silva <sebastian@fuentelibre.org> Peru - GPLv2+
+* Videojuego 2 © 2014-2015 Sebastian Silva <sebastian@fuentelibre.org> Peru - GPLv2+
 * popupmenubutton.py - Copyright 2008-2011 Zuza Software Foundation South Africa - GPLv2+
 
 ### User Experience Design / Diseño de Experiencia de Usuario ###
@@ -49,8 +48,8 @@ Attribution  of Works / Reconocimiento de Obras
 
 ### Videos and Images / Videos e Imágenes ###
 
-* "Bunny Bonita, Feelings” © 2008-2013- Ministerio de Educación Nacional República de Colombia coproducido con T&T Teaching and Tutoring y Faldita Films - CC BY-NC 
-* "Bunny Bonita, Family” © 2008-2013 - Ministerio de Educación Nacional República de Colombia coproducido con T&T Teaching and Tutoring y Faldita Films - CC BY-NC 
+* "Bunny Bonita, Feelings” © 2008-2013- Ministerio de Educación Nacional República de Colombia coproducido con T&T Teaching and Tutoring y Faldita Films - CC BY-NC
+* "Bunny Bonita, Family” © 2008-2013 - Ministerio de Educación Nacional República de Colombia coproducido con T&T Teaching and Tutoring y Faldita Films - CC BY-NC
 * “Trish the Fish” © 2013-2015 - Art4Apps (files database) created by ET4D - CC BY-SA
 * "Pete the Athlete" © 2013-2015 - Art4Apps (files database) created by ET4D - CC BY-SA
 * “A Shell at the Shore” © 2013-2015 - Art4Apps (files database) created by ET4D - CC BY-SA
@@ -73,9 +72,6 @@ Attribution  of Works / Reconocimiento de Obras
 
 
 
-#### Biblioteca para Videojuegos ### 
+#### Biblioteca para Videojuegos ###
 
-* ["Spyral"](http://platipy.org/) © 2014 Robert Deaton, Austin Bart GPLv2.1 
-
-
-
+* ["Spyral"](http://platipy.org/) © 2014 Robert Deaton, Austin Bart GPLv2.1
