@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="5" height="5" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="platformtree" tilewidth="32" tileheight="32">
+  <image source="canopy/platformtree.png" width="64" height="128"/>
+ </tileset>
+ <tileset firstgid="9" name="canopy_south" tilewidth="32" tileheight="32">
+  <image source="canopy/canopy_south.png" width="512" height="544"/>
+ </tileset>
+ <tileset firstgid="281" name="canopy_north" tilewidth="32" tileheight="32">
+  <image source="canopy/canopy_north.png" width="512" height="544"/>
+ </tileset>
+ <tileset firstgid="553" name="canopy_east" tilewidth="32" tileheight="32">
+  <image source="canopy/canopy_east.png" width="1056" height="512"/>
+ </tileset>
+ <tileset firstgid="1081" name="canopy_west" tilewidth="32" tileheight="32">
+  <image source="canopy/canopy_west.png" width="1056" height="512"/>
+ </tileset>
+ <layer name="north" width="5" height="5" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJxjYICAFYwMGIBaYgCsAwNO
+  </data>
+ </layer>
+ <layer name="go-north" width="5" height="5" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJxjYCANaDBiiq0gIAYAJcEBfA==
+  </data>
+ </layer>
+ <layer name="south" width="5" height="5" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJxjYICAHQyYgFpiALtEA5k=
+  </data>
+ </layer>
+ <layer name="south2" width="5" height="5" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJxjYIAACwZMQC0xADlEARk=
+  </data>
+ </layer>
+ <layer name="go-south2" width="5" height="5" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJxjYICAHQyYgFgxQgAAm6QCKQ==
+  </data>
+ </layer>
+ <layer name="go-south" width="5" height="5" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJxjYIAACwZMgE2MHAAAJEQAcQ==
+  </data>
+ </layer>
+ <layer name="east" width="5" height="5" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJxjYCAOnGPCxMQCANOaBBE=
+  </data>
+ </layer>
+ <layer name="go-east" width="5" height="5" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJxjYCAOnGOC4M1MRGpAAgCDYgJW
+  </data>
+ </layer>
+ <layer name="west" width="5" height="5" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJxjYCAOcLJhYmIBAA+CAEw=
+  </data>
+ </layer>
+ <layer name="go-west" width="5" height="5">
+  <data encoding="base64" compression="zlib">
+   eJxjYCANHGZhYOBkg2BiAQAuJADm
+  </data>
+ </layer>
+ <layer name="east-north" width="5" height="5" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJxjYICAf0wMGOAuFrGlQDFONggmFgAAwloCpQ==
+  </data>
+ </layer>
+ <layer name="east-south" width="5" height="5" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJxjYCANmAExJxsEw8BSJuzqYAAAKBoBMg==
+  </data>
+ </layer>
+ <layer name="east-south2" width="5" height="5" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJxjYCAN2DJhiplhUbcUSR0AG8ABHQ==
+  </data>
+ </layer>
+ <layer name="west-south" width="5" height="5" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJxjYCAOWLFCMDawlAlTzAyJDQA0TAFc
+  </data>
+ </layer>
+ <layer name="west-south2" width="5" height="5" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJxjYCAOvGaG4E0smHJmWNQvZUKwAZ+8A3A=
+  </data>
+ </layer>
+ <layer name="north-east" width="5" height="5" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJxjYICAHQyYAJvYUiYGBmUWCCYWAACmKgJm
+  </data>
+ </layer>
+ <layer name="north-east2" width="5" height="5" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJxjYIAAMwZMgE1sKRMDgzILBBMLAFLiAWI=
+  </data>
+ </layer>
+ <layer name="north-west" width="5" height="5" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJxjYIAAMQZMgCzGyQbBzmxYFBIAACQKAJQ=
+  </data>
+ </layer>
+ <layer name="north-west2" width="5" height="5" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJxjYIAAMwZMgE1sKRMWQQIAAETmARQ=
+  </data>
+ </layer>
+ <layer name="south-west" width="5" height="5" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJxjYCAOcLIxMNgC8R9WTDkdZkwxExYGBlMWCBsAUPAB9A==
+  </data>
+ </layer>
+ <layer name="south-east" width="5" height="5" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJxjYCAN2DIxMBixQDAM6DBjqjMByptC1QAAKssBTA==
+  </data>
+ </layer>
+</map>
