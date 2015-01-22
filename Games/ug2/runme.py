@@ -386,7 +386,7 @@ class Cursor (spyral.Sprite):
 
         self.anchor = "center"
         self.layer = "primer"
-        self.image = spyral.Image(filename=gamedir("imagenes/hud/square-01-whole.png"))
+        self.image = spyral.Image(filename=gamedir("imagenes/square-01-whole.png"))
         self.scale = 0.5
 
         spyral.event.register ("input.keyboard.down.left", self.left)
