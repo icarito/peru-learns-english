@@ -83,11 +83,17 @@ def __read_cvs(topic):
     return vocabulario[1:]
 
 
-def guardar(topic, palabra, respuesta):
+def guardar(_dict, topic, palabra, respuesta):
     dirpath = os.path.join(os.environ["HOME"], ".Ple")
     if not os.path.exists(dirpath):
         os.mkdir(dirpath)
-    filepath = os.path.join(dirpath, os.path.basename(topic))
+    userpath = os.path.join(dirpath,
+        "%s %s" % (_dict["Nombre"], _dict["Apellido"]))
+    if not os.path.exists(userpath):
+        os.mkdir(userpath)
+        upath = os.path.join(userpath, "User")
+        __set_dict(upath, _dict)
+    filepath = os.path.join(userpath, os.path.basename(topic))
 
     fecha = str(datetime.date.today())
     _dict = __get_dict(filepath)
@@ -111,14 +117,20 @@ def get_flashcards_previews(topic):
     return __read_cvs(topic)
 
 
-def get_vocabulario(topic):
+def get_vocabulario(topic, _dict):
     vocabulario = __read_cvs(topic)
 
     # Cargar Persistencia
     dirpath = os.path.join(os.environ["HOME"], ".Ple")
     if not os.path.exists(dirpath):
         os.mkdir(dirpath)
-    filepath = os.path.join(dirpath, os.path.basename(topic))
+    userpath = os.path.join(dirpath,
+        "%s %s" % (_dict["Nombre"], _dict["Apellido"]))
+    if not os.path.exists(userpath):
+        os.mkdir(userpath)
+        upath = os.path.join(userpath, "User")
+        __set_dict(upath, _dict)
+    filepath = os.path.join(userpath, os.path.basename(topic))
     _dict = __get_dict(filepath)
 
     # Verificar Fechas

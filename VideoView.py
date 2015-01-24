@@ -37,7 +37,7 @@ class VideoView(gtk.EventBox):
 
     __gsignals__ = {
     "flashcards": (gobject.SIGNAL_RUN_FIRST,
-        gobject.TYPE_NONE, (gobject.TYPE_STRING, )),
+        gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT, )),
     "game": (gobject.SIGNAL_RUN_FIRST,
         gobject.TYPE_NONE, (gobject.TYPE_STRING, ))}
 
@@ -100,7 +100,11 @@ class VideoView(gtk.EventBox):
         self.emit("game", self.topic)
 
     def __emit_flashcards(self, widget):
-        self.emit("flashcards", self.topic)
+        dialog = DialogLogin(self.get_toplevel())
+        ret = dialog.run()
+        dialog.destroy()
+        if ret == gtk.RESPONSE_ACCEPT:
+            self.emit("flashcards", (self.topic, {"Nombre": "Andres", "Apellido": "Rodriguez", "edad": 8, "Escuela": "N° 35", "Grado": "4°"}))
 
     def set_full(self, widget):
         tabla = self.get_child()
@@ -236,3 +240,16 @@ class FlashCardsPreview(gtk.EventBox):
         if not self.control:
             self.control = gobject.timeout_add(3000, self.__run_secuencia)
         return False
+
+
+class DialogLogin(gtk.Dialog):
+
+    def __init__(self, parent_window=None):
+
+        gtk.Dialog.__init__(self, title="Loging", parent=parent_window,
+            buttons= ("OK", gtk.RESPONSE_ACCEPT,
+            "Cancelar", gtk.RESPONSE_CANCEL))
+
+        # self.set_decorated(False)
+        self.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
+        self.set_border_width(15)
