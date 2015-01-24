@@ -31,6 +31,10 @@ from JAMediaImagenes.ImagePlayer import ImagePlayer
 
 from Globales import COLORES
 from Globales import get_flashcards_previews
+from Globales import get_user_dict
+
+GRADOS = ["1°", "2°", "3°", "4°", "5°", "6°"]
+EDADES = range(5, 21, 1)
 
 
 class VideoView(gtk.EventBox):
@@ -104,7 +108,7 @@ class VideoView(gtk.EventBox):
         ret = dialog.run()
         dialog.destroy()
         if ret == gtk.RESPONSE_ACCEPT:
-            self.emit("flashcards", (self.topic, {"Nombre": "Andres", "Apellido": "Rodriguez", "edad": 8, "Escuela": "N° 35", "Grado": "4°"}))
+            self.emit("flashcards", (self.topic, {"Nombre": "Andres", "Apellido": "Rodriguez", "Edad": "8", "Escuela": "N° 35", "Grado": "4°"}))
 
     def set_full(self, widget):
         tabla = self.get_child()
@@ -253,3 +257,150 @@ class DialogLogin(gtk.Dialog):
         # self.set_decorated(False)
         self.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
         self.set_border_width(15)
+
+        dirpath = os.path.join(os.environ["HOME"], ".Ple")
+        users = []
+        if os.path.exists(dirpath):
+            for arch in sorted(os.listdir(dirpath)):
+                newpath = os.path.join(dirpath, arch)
+                if os.path.isdir(newpath):
+                    users.append(os.path.basename(newpath))
+
+        self.frame1 = Frame1(users)
+        self.frame2 = Frame2()
+        self.frame1.connect("user", self.__user_selected)
+        self.vbox.pack_start(self.frame1, False, False, 0)
+        self.vbox.pack_start(self.frame2, False, False, 0)
+        self.vbox.show_all()
+
+        if users:
+            self.frame1.show_all()
+            self.frame2.set_sensitive(False)
+        else:
+            self.frame1.hide()
+            self.frame2.set_sensitive(True)
+
+    def __user_selected(self, frame1, user):
+        self.frame2.set_user(user)
+
+
+class Frame1(gtk.Frame):
+
+    __gsignals__ = {
+    "user": (gobject.SIGNAL_RUN_FIRST,
+        gobject.TYPE_NONE, (gobject.TYPE_STRING, ))}
+
+    def __init__(self, users):
+
+        gtk.Frame.__init__(self)
+
+        self.set_border_width(4)
+        self.modify_bg(0, COLORES["window"])
+        self.set_label(" Selecciona tu Usuario ")
+        self.get_property("label-widget").modify_bg(0, COLORES["window"])
+        self.set_label_align(0.5, 1.0)
+
+        box = gtk.HBox()
+        self.combo = gtk.combo_box_new_text()
+        self.combo.connect('changed', self.__changed)
+        button = gtk.Button("Crear Nuevo...")
+        box.pack_start(self.combo, False, False, 5)
+        box.pack_end(button, False, False, 5)
+
+        event = gtk.EventBox()
+        event.modify_bg(0, COLORES["window"])
+        event.set_border_width(4)
+        event.add(box)
+
+        for user in users:
+            self.combo.append_text(user)
+
+        self.add(event)
+        self.connect("realize", self.__realized)
+        self.show_all()
+
+    def __realized(self, frame):
+        self.combo.set_active(0)
+
+    def __changed(self, widget):
+        self.emit("user", widget.get_active_text())
+
+
+class Frame2(gtk.Frame):
+
+    def __init__(self):
+
+        gtk.Frame.__init__(self)
+
+        self.set_border_width(4)
+        self.modify_bg(0, COLORES["window"])
+        self.set_label(" Datos de Usuario ")
+        self.get_property("label-widget").modify_bg(0, COLORES["window"])
+        self.set_label_align(0.5, 1.0)
+
+        tabla = gtk.Table(rows=5, columns=2, homogeneous=True)
+        tabla.set_property("column-spacing", 5)
+        tabla.set_property("row-spacing", 5)
+
+        label = gtk.Label("Nombre:")
+        tabla.attach(label, 0, 1, 0, 1)
+        self.nombre = gtk.Entry()
+        tabla.attach(self.nombre, 1, 2, 0, 1)
+
+        label = gtk.Label("Apellido:")
+        tabla.attach(label, 0, 1, 1, 2)
+        self.apellido = gtk.Entry()
+        tabla.attach(self.apellido, 1, 2, 1, 2)
+
+        label = gtk.Label("Escuela:")
+        tabla.attach(label, 0, 1, 2, 3)
+        self.escuela = gtk.Entry()
+        tabla.attach(self.escuela, 1, 2, 2, 3)
+
+        label = gtk.Label("Grado:")
+        tabla.attach(label, 0, 1, 3, 4)
+        self.grado = gtk.combo_box_new_text()
+        for g in GRADOS:
+            self.grado.append_text(g)
+        tabla.attach(self.grado, 1, 2, 3, 4)
+
+        label = gtk.Label("Edad:")
+        tabla.attach(label, 0, 1, 4, 5)
+        self.edad = gtk.combo_box_new_text()
+        for e in EDADES:
+            self.edad.append_text(str(e))
+        tabla.attach(self.edad, 1, 2, 4, 5)
+
+        event = gtk.EventBox()
+        event.modify_bg(0, COLORES["window"])
+        event.set_border_width(4)
+        event.add(tabla)
+
+        self.add(event)
+        self.show_all()
+
+    def set_user(self, user):
+        _dict = get_user_dict(user)
+        self.nombre.set_text(_dict.get("Nombre", ""))
+        self.apellido.set_text(_dict.get("Apellido", ""))
+        self.escuela.set_text(_dict.get("Escuela", ""))
+
+        model = self.grado.get_model()
+        item = model.get_iter_first()
+        grado = _dict.get("Grado", "")
+        while item:
+            valor = model.get_value(item, 0)
+            if valor == grado:
+                self.grado.set_active_iter(item)
+                break
+            item = model.iter_next(item)
+
+        model = self.edad.get_model()
+        item = model.get_iter_first()
+        edad = _dict.get("Edad", "")
+        while item:
+            valor = model.get_value(item, 0)
+            if valor == edad:
+                self.edad.set_active_iter(item)
+                break
+            item = model.iter_next(item)

@@ -83,6 +83,12 @@ def __read_cvs(topic):
     return vocabulario[1:]
 
 
+def get_user_dict(user):
+    dirpath = os.path.join(os.environ["HOME"], ".Ple")
+    userpath = os.path.join(dirpath, user, "User")
+    return __get_dict(userpath)
+
+
 def guardar(_dict, topic, palabra, respuesta):
     dirpath = os.path.join(os.environ["HOME"], ".Ple")
     if not os.path.exists(dirpath):
