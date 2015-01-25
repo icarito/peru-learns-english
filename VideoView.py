@@ -106,9 +106,10 @@ class VideoView(gtk.EventBox):
     def __emit_flashcards(self, widget):
         dialog = DialogLogin(self.get_toplevel())
         ret = dialog.run()
-        dialog.destroy()
         if ret == gtk.RESPONSE_ACCEPT:
-            self.emit("flashcards", (self.topic, {"Nombre": "Andres", "Apellido": "Rodriguez", "Edad": "8", "Escuela": "N° 35", "Grado": "4°"}))
+            datos = dialog.get_user_dict()
+            self.emit("flashcards", (self.topic, datos))
+        dialog.destroy()
 
     def set_full(self, widget):
         tabla = self.get_child()
@@ -269,6 +270,8 @@ class DialogLogin(gtk.Dialog):
         self.frame1 = Frame1(users)
         self.frame2 = Frame2()
         self.frame1.connect("user", self.__user_selected)
+        self.frame1.connect("new-user", self.__new_user)
+        self.frame2.connect("activar", self.__activar_ok)
         self.vbox.pack_start(self.frame1, False, False, 0)
         self.vbox.pack_start(self.frame2, False, False, 0)
         self.vbox.show_all()
@@ -279,17 +282,52 @@ class DialogLogin(gtk.Dialog):
         else:
             self.frame1.hide()
             self.frame2.set_sensitive(True)
+            self.action_area.get_children()[1].set_sensitive(False)
+
+    def __new_user(self, frame1):
+        self.frame1.hide()
+        self.frame2.set_sensitive(True)
+        self.frame1.combo.set_active(-1)
+        self.frame2.nombre.set_text("")
+        self.frame2.apellido.set_text("")
+        self.frame2.escuela.set_text("")
+        self.frame2.grado.set_active(-1)
+        self.frame2.edad.set_active(-1)
 
     def __user_selected(self, frame1, user):
-        self.frame2.set_user(user)
+        if user:
+            self.frame2.set_user(user)
+
+    def __activar_ok(self, widget, valor):
+        self.action_area.get_children()[1].set_sensitive(valor)
+
+    def get_user_dict(self):
+        _dict = {
+            "Nombre": "",
+            "Apellido": "",
+            "Edad": "",
+            "Escuela": "",
+             "Grado": ""}
+        user = self.frame1.combo.get_active_text()
+        if user:
+            _dict = get_user_dict(user)
+        else:
+            _dict["Nombre"] = self.frame2.nombre.get_text()
+            _dict["Apellido"] = self.frame2.apellido.get_text()
+            _dict["Escuela"] = self.frame2.escuela.get_text()
+            _dict["Grado"] = self.frame2.grado.get_active_text()
+            _dict["Edad"] = self.frame2.edad.get_active_text()
+        return _dict
 
 
 class Frame1(gtk.Frame):
 
     __gsignals__ = {
     "user": (gobject.SIGNAL_RUN_FIRST,
-        gobject.TYPE_NONE, (gobject.TYPE_STRING, ))}
-
+        gobject.TYPE_NONE, (gobject.TYPE_STRING, )),
+    "new-user": (gobject.SIGNAL_RUN_FIRST,
+        gobject.TYPE_NONE, [])
+        }
     def __init__(self, users):
 
         gtk.Frame.__init__(self)
@@ -304,6 +342,7 @@ class Frame1(gtk.Frame):
         self.combo = gtk.combo_box_new_text()
         self.combo.connect('changed', self.__changed)
         button = gtk.Button("Crear Nuevo...")
+        button.connect("clicked", self.__new_user)
         box.pack_start(self.combo, False, False, 5)
         box.pack_end(button, False, False, 5)
 
@@ -319,6 +358,9 @@ class Frame1(gtk.Frame):
         self.connect("realize", self.__realized)
         self.show_all()
 
+    def __new_user(self, button):
+        self.emit("new-user")
+
     def __realized(self, frame):
         self.combo.set_active(0)
 
@@ -327,6 +369,11 @@ class Frame1(gtk.Frame):
 
 
 class Frame2(gtk.Frame):
+
+    __gsignals__ = {
+    "activar": (gobject.SIGNAL_RUN_FIRST,
+        gobject.TYPE_NONE, (gobject.TYPE_BOOLEAN, ))
+        }
 
     def __init__(self):
 
@@ -345,21 +392,25 @@ class Frame2(gtk.Frame):
         label = gtk.Label("Nombre:")
         tabla.attach(label, 0, 1, 0, 1)
         self.nombre = gtk.Entry()
+        self.nombre.connect("changed", self.__update_data)
         tabla.attach(self.nombre, 1, 2, 0, 1)
 
         label = gtk.Label("Apellido:")
         tabla.attach(label, 0, 1, 1, 2)
         self.apellido = gtk.Entry()
+        self.apellido.connect("changed", self.__update_data)
         tabla.attach(self.apellido, 1, 2, 1, 2)
 
         label = gtk.Label("Escuela:")
         tabla.attach(label, 0, 1, 2, 3)
         self.escuela = gtk.Entry()
+        self.escuela.connect("changed", self.__update_data)
         tabla.attach(self.escuela, 1, 2, 2, 3)
 
         label = gtk.Label("Grado:")
         tabla.attach(label, 0, 1, 3, 4)
         self.grado = gtk.combo_box_new_text()
+        self.grado.connect("changed", self.__update_data)
         for g in GRADOS:
             self.grado.append_text(g)
         tabla.attach(self.grado, 1, 2, 3, 4)
@@ -367,6 +418,7 @@ class Frame2(gtk.Frame):
         label = gtk.Label("Edad:")
         tabla.attach(label, 0, 1, 4, 5)
         self.edad = gtk.combo_box_new_text()
+        self.edad.connect("changed", self.__update_data)
         for e in EDADES:
             self.edad.append_text(str(e))
         tabla.attach(self.edad, 1, 2, 4, 5)
@@ -378,6 +430,17 @@ class Frame2(gtk.Frame):
 
         self.add(event)
         self.show_all()
+
+    def __update_data(self, widget):
+        nombre = self.nombre.get_text()
+        apellido = self.apellido.get_text()
+        escuela = self.escuela.get_text()
+        grado = self.grado.get_active_text()
+        edad = self.edad.get_active_text()
+        if nombre and apellido and escuela and grado and edad:
+            self.emit("activar", True)
+        else:
+            self.emit("activar", False)
 
     def set_user(self, user):
         _dict = get_user_dict(user)
