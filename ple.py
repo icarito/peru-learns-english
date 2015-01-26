@@ -111,8 +111,8 @@ class Main(gtk.Window):
     def __play_game(self, widget, topic):
         self.__switch(False, "game", topic)
 
-    def __play_flashcards(self, widget, topic):
-        self.__switch(False, "flashcards", topic)
+    def __play_flashcards(self, widget, data):
+        self.__switch(False, "flashcards", data)
 
     def __play_video(self, widget, topic):
         self.__switch(False, "Topics", topic)

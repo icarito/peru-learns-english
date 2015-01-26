@@ -38,7 +38,9 @@ from Globales import COLORES
 import gobject
 
 class GameMenu(gtk.EventBox):
+
     def __init__(self):
+
         gtk.EventBox.__init__(self)
 
         vb = gtk.VBox()

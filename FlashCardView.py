@@ -46,6 +46,7 @@ class FlashCardView(gtk.EventBox):
         self.modify_bg(gtk.STATE_NORMAL, COLORES["contenido"])
         self.set_border_width(4)
 
+        self.user = False
         self.topic = False
         self.vocabulario = []
         self.imagenplayer = False
@@ -87,7 +88,7 @@ class FlashCardView(gtk.EventBox):
             r = 3
         elif respuesta == 3:
             r = 0
-        guardar(self.topic, self.vocabulario[self.index_select][0], r)
+        guardar(self.user, self.topic, self.vocabulario[self.index_select][0], r)
         if self.index_select < len(self.vocabulario) - 1:
             self.index_select += 1
             gobject.timeout_add(500, self.__load, self.index_select)
@@ -134,11 +135,13 @@ class FlashCardView(gtk.EventBox):
             del(self.imagenplayer)
             self.imagenplayer = False
 
-    def run(self, topic):
+    def run(self, data):
         """
         Carga Vocabulario, pone widgets a estado inicial y
         carga primera palabra.
         """
+        topic, _dict = data
+        self.user = _dict
         parser = SafeConfigParser()
         metadata = os.path.join(topic, "topic.ini")
         parser.read(metadata)
@@ -146,7 +149,7 @@ class FlashCardView(gtk.EventBox):
         self.cabecera.titulo.set_text("Topic: " + parser.get('topic', 'title'))
 
         self.derecha.run()
-        vocabulario = get_vocabulario(topic)
+        vocabulario = get_vocabulario(topic, _dict)
         self.show()
         if vocabulario:
             self.vocabulario = vocabulario
