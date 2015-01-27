@@ -20,6 +20,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import os
+import sys
 import commands
 import csv
 import gtk
@@ -27,6 +28,8 @@ import datetime
 import json
 import codecs
 from gtk import gdk
+import espeak
+
 
 COLORES = {
     "window": gdk.color_parse("#ffffff"),
@@ -157,11 +160,17 @@ def get_vocabulario(topic, _dict):
             ret.append(item)
     return ret
 
-
-def decir(pitch, speed, word_gap, voice, text):
+def decir_demorado(pitch, speed, word_gap, voice, text):
     wavpath = "/dev/shm/speak.wav"
-    commands.getoutput('espeak -p%s -s%s -g%s -w%s -v%s \"%s\"' % (
+    commands.getoutput('espeak -s%s -p%s -g%s -w%s -v%s \"%s\"' % (
         pitch, speed, word_gap, wavpath, voice, text))
     commands.getoutput(
         'gst-launch-0.10 playbin2 uri=file:///dev/shm/speak.wav')
-    return False
+
+def decir(pitch, speed, word_gap, voice, text):
+    global _audio
+    try:
+        _audio.speak(text, pitch, speed, voice)
+    except:
+        _audio = espeak.AudioGrab()
+        _audio.speak(text, pitch, speed, voice)

@@ -33,7 +33,7 @@ from JAMediaImagenes.ImagePlayer import ImagePlayer
 
 from Globales import COLORES
 from Globales import get_vocabulario
-from Globales import decir
+from Globales import decir, decir_demorado
 from Globales import guardar
 
 
@@ -75,7 +75,7 @@ class FlashCardView(gtk.EventBox):
     def __show_answer(self, widget):
         respuesta = self.vocabulario[self.index_select][1]
         self.derecha.label.set_text(respuesta)
-        gobject.idle_add(decir, 50, 170, 0, "en", respuesta)
+        decir(170, 50, 0, "en-gb", respuesta)
 
     def __siguiente(self, widget, respuesta):
         """
@@ -120,7 +120,7 @@ class FlashCardView(gtk.EventBox):
         return False
 
     def __activar(self):
-        decir(50, 170, 0, "en", "What is This?")
+        decir_demorado(170, 50, 0, "en", "What is This?")
         self.derecha.activar()
         self.cabecera.label2.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
         return False

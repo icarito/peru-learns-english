@@ -107,8 +107,8 @@ class VideoPlayer(gtk.EventBox):
 
         self.player.load(path)
         self.player.play()
-        self.player.set_volumen(volumen)
-        self.progress.volumen.set_value(volumen / 10)
+        #self.player.set_volumen(volumen)
+        #self.progress.volumen.set_value(volumen / 10)
         return False
 
     def stop(self):
