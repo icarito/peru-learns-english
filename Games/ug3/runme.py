@@ -27,9 +27,12 @@ def gamedir(archivo):
     return os.path.join(game_dir, archivo)
 
 sys.path.insert(1, gamedir("../../Lib/"))
+sys.path.insert(1, gamedir("../../"))
+
+from Globales import decir
+import gtk
 
 import pygame
-import pygame.gfxdraw
 import spyral
 from random import randrange, randint
 import csv
@@ -96,29 +99,62 @@ class CampodeEstrellas(spyral.Sprite):
     def __init__(self, scene):
         spyral.Sprite.__init__(self, scene)
 
-        self.num_stars = 512
-        self.max_depth = 32
+        self.num_stars = 256 
+        self.max_depth = 16 
 
         self.layer = "abajo"
+        self.speed = 0.2
 
         self.back_img = spyral.Image(filename=gamedir(
-            "imagenes/Crux-20100220.jpg")).scale(self.scene.size)
+            "imagenes/below_the_ocean_by_arghus-d4t62um_1.jpg")).scale(self.scene.size)
+        #self.back_img2 = spyral.Image(filename=gamedir(
+        #    "imagenes/below_the_ocean_by_arghus-d4t62um_2.jpg")).scale(self.scene.size)
+        #self.back_img3 = spyral.Image(filename=gamedir(
+        #    "imagenes/below_the_ocean_by_arghus-d4t62um_3.jpg")).scale(self.scene.size)
 
-        self.image = spyral.Image(size=(700,700)).fill((0,0,0))
+        #self.back_img = spyral.Image(size=(700,700)).fill((0,0,48))
         self.image = self.back_img.copy()
         self.init_stars()
+        self.init_animations()
 
         spyral.event.register("director.update", self.update)
         spyral.event.register("director.pre_update", self.predraw)
+
+    def init_animations(self):
+        self.top = 0.3
+        self.low = 0.03
+        self.slowdown_anim = spyral.Animation("speed",
+                                spyral.easing.CubicOut(self.top, self.low), duration=3)
+
+        self.speedup_anim = spyral.Animation("speed",
+                                spyral.easing.QuadraticOut(self.low, self.top), duration=3)
+
+    def speedup(self):
+        try:
+            self.animate(self.speedup_anim)
+        except ValueError:
+            self.stop_all_animations()
+            a = spyral.Animation("speed",
+                                spyral.easing.Linear(self.speed, self.top), duration=1)
+            self.animate(a)
+
+    def slowdown(self):
+        try:
+            self.animate(self.slowdown_anim)
+        except ValueError:
+            self.stop_all_animations()
+            a = spyral.Animation("speed",
+                                spyral.easing.Linear(self.speed, self.low), duration=1)
+            self.animate(a)
 
     def update(self):
         """ Move and draw the stars """
         origin_x = self.width / 2
         origin_y = self.height / 2
-        
+
         for star in self.stars:
             # The Z component is decreased on each frame.
-            star[2] -= 0.19
+            star[2] -= self.speed
 
             # If the star has past the screen (I mean Z<=0) then we
             # reposition it far away from the screen (Z=max_depth)
@@ -140,11 +176,7 @@ class CampodeEstrellas(spyral.Sprite):
             if 0 <= x < self.width and 0 <= y < self.height:
                 size = (1 - float(star[2]) / self.max_depth) * 5
                 shade = (1 - float(star[2]) / self.max_depth) * 255
-                #self.image.draw_circle((shade,shade,shade),(x,y),int(size))
-
-                pygame.gfxdraw.aacircle(self.image._surf, x, y, int(size), [shade/2]*3)
-                pygame.gfxdraw.filled_circle(self.image._surf, x, y, int(size), [shade]*3)
-
+                self.image.draw_circle((shade/2,shade/2,shade),(x,y),int(size))
 
     def predraw(self):
         #self.image.fill((0,0,0))
@@ -159,47 +191,12 @@ class CampodeEstrellas(spyral.Sprite):
             self.stars.append(star)
 
 
-class Tablero(spyral.View):
-    def __init__(self, scene, topic, mapa):
-        spyral.View.__init__(self, scene)
-
-        margin = (700 - (140 * 5)) / 2
-
-        self.pos = (margin, margin)
-
-        self.layers = ["abajo", "arriba", "primer"]
-
-        self.tablero = mapa
-
-        self.palabras = obtener_set(topic)
-        self.cursor = Cursor(self)
-        self.camino = []
-
-        self.ACTIVADO = False
-        self.mov_anterior = None
-
-        for row in range(len(self.tablero)):
-            for col in range(len(self.tablero[row])):
-                tablero = self.tablero[row][col]
-                if tablero:
-                    palabra = self.palabras[tablero-1][0]
-                    archivo = self.palabras[tablero-1][1]
-                    bloque = Bloque(self, row, col, COLOR=tablero-1,
-                                    PALABRA=palabra, ARCHIVO=archivo)
-                    self.tablero[row][col] = bloque
-                else:
-                    nexo = Nexo(self, row, col)
-                    self.tablero[row][col] = nexo
-
-
 class Bloque (spyral.Sprite):
-    # RENDERED lleva la cuenta para todos los bloques,
-    #          de que palabras ya salieron en pantalla.
-    RENDERED = None
 
     def __init__(self, scene, PALABRA="The Chakana Cross", ARCHIVO=None):
         # spritesheet color: yellow, green, orange, blue, brown
         spyral.Sprite.__init__(self, scene)
+
         self.layer = "arriba"
 
         self.PALABRA = PALABRA
@@ -207,22 +204,21 @@ class Bloque (spyral.Sprite):
         self.font = spyral.Font(font_path, 28, (0, 0, 0))
         self.line_height = self.font.linesize
 
-        self.mode = "PALABRA"
-        if Bloque.RENDERED and (PALABRA in Bloque.RENDERED):
-            self.mode = "TARJETA"
-        elif not Bloque.RENDERED:
-            Bloque.RENDERED = [ PALABRA ]
-        else:
-            Bloque.RENDERED.append( PALABRA )
+        self.mode = "TARJETA"
 
         self.anchor = "center"
 
-        self.margin = 2
+        self.margin = 15
         self.marco = spyral.Image(filename=gamedir("imagenes/marco_1.png"))
         self.image = self.marco
 
         self.scale = 0.91
         self.pos = spyral.Vec2D(scene.size)/2
+        self.showself()
+
+    def set_word(self, PALABRA, ARCHIVO):
+        self.PALABRA = PALABRA
+        self.ARCHIVO = ARCHIVO
         self.showself()
 
     def render_text(self, text):
@@ -249,7 +245,7 @@ class Bloque (spyral.Sprite):
     def render_image(self, image):
         try:
             nueva = spyral.Image(filename=image).scale((
-                self.width - self.margin, self.height - self.margin))
+                self.image.width - self.margin, self.image.height - self.margin))
         except ValueError, pygame.error:
             nueva = spyral.Image(size=(self.width - self.margin,
                 self.height - self.margin)).fill((255, 255, 255))
@@ -266,22 +262,100 @@ class Bloque (spyral.Sprite):
 
 
 class Nave (spyral.View):
-    def __init__(self, scene):
+    def __init__(self, scene, topic):
         spyral.View.__init__(self, scene)
-        
-        self.n = Bloque(self)
-        self.s = Bloque(self)
-        self.e = Bloque(self)
-        self.o = Bloque(self)
+
+        self.topic = topic
+        self.reset_words()
+
+        self.n = Bloque(self, *self.palabras[0])
+        self.n.pos += spyral.Vec2D(0, -150)
+
+        self.s = Bloque(self, *self.palabras[1])
+        self.s.pos += spyral.Vec2D(0, +150)
+
+        self.o = Bloque(self, *self.palabras[2])
+        self.o.pos += spyral.Vec2D(-150, 0)
+
+        self.e = Bloque(self, *self.palabras[3])
+        self.e.pos += spyral.Vec2D(+150, 0)
+
+        self.visible = False
+        self.estado = "reset"
+
+        self.init_animations()
+        spyral.event.register("input.keyboard.down.space", self.reset)
+
+        spyral.event.register("input.keyboard.down.down", self.control_s)
+        spyral.event.register("input.keyboard.down.up", self.control_n)
+        spyral.event.register("input.keyboard.down.left", self.control_o)
+        spyral.event.register("input.keyboard.down.right", self.control_e)
+
+        spyral.event.register("Bloque.wait.animation.end", self.clear)
+
+    def reset(self):
+        self.reset_words()
+        self.n.set_word(*self.palabras[0])
+        self.s.set_word(*self.palabras[1])
+        self.o.set_word(*self.palabras[2])
+        self.e.set_word(*self.palabras[3])
+        decir(170, 50, 0, "en-gb", self.e.PALABRA)
+        self.invade()
+
+    def reset_words(self):
+        self.palabras = obtener_set(self.topic)
+
+    def init_animations(self):
+        self.invasion_anim = spyral.Animation("scale", spyral.easing.QuadraticIn(0.1, 1), duration=15)
+        self.delay_anim = DelayAnimation(15)
+        self.delay_anim.property = "wait"
+
+    def invade(self):
+        if self.estado == "invade":
+            self.clear()
+
+        self.estado = "invade"
+
+        self.n.animate(self.invasion_anim)
+        self.e.animate(self.invasion_anim)
+        self.s.animate(self.invasion_anim)
+        self.o.animate(self.invasion_anim)
+
+        self.visible = True
+        self.scene.campo.slowdown()
+
+        self.o.stop_animation(self.delay_anim)
+        self.o.animate(self.delay_anim)
+
+    def clear(self):
+        self.estado = "reset"
+        for bloque in self.n,self.s,self.e,self.o:
+            bloque.stop_animation(self.invasion_anim)
+        self.o.stop_animation(self.delay_anim)
+        self.visible = False
+        self.scene.campo.speedup()
+
+    def control_n(self):
+        self.clear()
+
+    def control_s(self):
+        self.clear()
+
+    def control_e(self):
+        self.clear()
+
+    def control_o(self):
+        self.clear()
 
 class Escena(spyral.Scene):
-    def __init__(self, topic=topic_dir):
+    def __init__(self, topic=topic_dir, fake_gtk=False):
         spyral.Scene.__init__(self, SIZE)
 
         self.layers = ["abajo", "arriba", "primer"]
 
-        img = spyral.Image(filename=gamedir(
-            "imagenes/Crux-20100220.jpg")).scale(self.scene.size)
+        #img = spyral.Image(filename=gamedir(
+        #    "imagenes/Crux-20100220.jpg")).scale(self.scene.size)
+        img = spyral.Image(size=(700, 700))
 
         #n = pygame.Surface.convert_alpha(img._surf)
         #n.fill((64, 0, 0, 127))
@@ -289,16 +363,22 @@ class Escena(spyral.Scene):
 
         self.background = img
 
-        self.nave = Nave(self)
+        self.nave = Nave(self, topic)
         self.campo = CampodeEstrellas(self)
-        
+
         #self.tablero = Tablero(self, topic, mapa=MAPA1)
 
         spyral.event.register("system.quit", spyral.director.pop, scene=self)
 
+        if fake_gtk:
+            gtk.threads_init()
+            spyral.event.register("director.update", self.gtk_main_iteration)
+
     def mute(self, value):
         Escena.MUTE = value
 
+    def gtk_main_iteration(self):
+        gtk.main_iteration(False)
 
 # Tomado de Spyral
 class DelayAnimation(spyral.Animation):
@@ -316,7 +396,7 @@ class DelayAnimation(spyral.Animation):
         return {}
 
 def main():
-    spyral.director.push(Escena())
+    spyral.director.push(Escena(fake_gtk=True))
 
 if __name__ == "__main__":
     spyral.director.init(SIZE, fullscreen=False)
