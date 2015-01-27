@@ -75,7 +75,7 @@ class FlashCardView(gtk.EventBox):
     def __show_answer(self, widget):
         respuesta = self.vocabulario[self.index_select][1]
         self.derecha.label.set_text(respuesta)
-        decir(170, 50, 0, "en-gb", respuesta)
+        #decir(170, 50, 0, "en-gb", respuesta)
 
     def __siguiente(self, widget, respuesta):
         """
