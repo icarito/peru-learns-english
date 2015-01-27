@@ -96,7 +96,7 @@ class VideoPlayer(gtk.EventBox):
 
     def load(self, path):
         self.video_path = path
-        volumen = 1.0
+        volumen = 0.80
 
         xid = self.visor.get_property('window').xid
         self.player = JAMediaReproductor(xid)
@@ -107,7 +107,7 @@ class VideoPlayer(gtk.EventBox):
 
         self.player.load(path)
         self.player.play()
-        #self.player.set_volumen(volumen)
+        self.player.set_volumen(volumen)
         #self.progress.volumen.set_value(volumen / 10)
         return False
 
