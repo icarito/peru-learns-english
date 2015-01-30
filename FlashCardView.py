@@ -39,6 +39,10 @@ from Globales import guardar
 
 class FlashCardView(gtk.EventBox):
 
+    __gsignals__ = {
+    "video": (gobject.SIGNAL_RUN_FIRST,
+        gobject.TYPE_NONE, (gobject.TYPE_STRING, ))}
+
     def __init__(self):
 
         gtk.EventBox.__init__(self)
@@ -75,7 +79,7 @@ class FlashCardView(gtk.EventBox):
     def __show_answer(self, widget):
         respuesta = self.vocabulario[self.index_select][1]
         self.derecha.label.set_text(respuesta)
-        #decir(170, 50, 0, "en-gb", respuesta)
+        decir(50, 57, 0, "en-gb", respuesta)
 
     def __siguiente(self, widget, respuesta):
         """
@@ -93,19 +97,22 @@ class FlashCardView(gtk.EventBox):
             self.index_select += 1
             gobject.timeout_add(500, self.__load, self.index_select)
         else:
-            dialog = gtk.Dialog(parent=self.get_toplevel(),
-                buttons=("OK", gtk.RESPONSE_ACCEPT))
+            dialog = gtk.Dialog(title="Congratulations!",
+                                parent=self.get_toplevel(),
+                                buttons=("OK", gtk.RESPONSE_ACCEPT))
             dialog.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
             dialog.set_border_width(15)
-            label = gtk.Label("Tarea Concluida")
+            label = gtk.Label("Memorization task completed for today.")
             label.show()
             dialog.vbox.pack_start(label, True, True, 5)
+            decir(50, 57, 0, "en-gb", "Congratulations!")
             dialog.run()
             dialog.destroy()
+            self.emit("video", self.topic)
 
     def __load(self, index):
         """
-        Carga una nueva palabra del Bocabulario
+        Carga una nueva palabra del Vocabulario
         """
         path = os.path.join(self.topic, "Imagenes",
             "%s.png" % self.vocabulario[index][0])
@@ -157,15 +164,19 @@ class FlashCardView(gtk.EventBox):
             self.index_select = 0
             gobject.timeout_add(500, self.__load, self.index_select)
         else:
-            dialog = gtk.Dialog(parent=self.get_toplevel(),
+            self.topic = topic
+            dialog = gtk.Dialog(title="Come back tomorrow!",
+                parent=self.get_toplevel(),
                 buttons=("OK", gtk.RESPONSE_ACCEPT))
             dialog.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
             dialog.set_border_width(15)
-            label = gtk.Label("No Hay Tareas Programadas Para Hoy")
+            label = gtk.Label("You've memorized all flashcards for today.")
             label.show()
             dialog.vbox.pack_start(label, True, True, 5)
+            decir(50, 57, 0, "en-gb", "Come back tomorrow!")
             dialog.run()
             dialog.destroy()
+            self.emit("video", self.topic)
 
 
 class FlashCard(gtk.EventBox):

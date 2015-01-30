@@ -23,7 +23,6 @@ import espeak
 PITCH_MAX = 200
 RATE_MAX = 200
 
-
 class AudioGrabGst(espeak.BaseAudioGrab):
     def speak(self, text, pitch, rate, voice="en-gb"):
         # XXX workaround for http://bugs.sugarlabs.org/ticket/1801
@@ -34,8 +33,8 @@ class AudioGrabGst(espeak.BaseAudioGrab):
         self.make_pipeline('espeak name=espeak ! wavenc')
         src = self.pipeline.get_by_name('espeak')
 
-        pitch = int(pitch) - 120
-        rate = int(rate) - 120
+        #pitch = int(pitch) - 120
+        rate = int(rate) + 110
 
         logger.debug('pitch=%d rate=%d voice=%s text=%s' % (pitch, rate,
                 voice, text))

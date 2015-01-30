@@ -28,7 +28,7 @@ import datetime
 import json
 import codecs
 from gtk import gdk
-#import espeak
+import espeak
 
 
 COLORES = {
