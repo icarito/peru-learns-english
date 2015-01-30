@@ -21,11 +21,12 @@
 
 import os
 import sys
-installed_dir = os.path.abspath(os.path.dirname(__file__))
-sys.path.insert(1, os.path.join(installed_dir, "Lib/"))
-
+import gobject
 import gtk
 import pango
+
+installed_dir = os.path.abspath(os.path.dirname(__file__))
+sys.path.insert(1, os.path.join(installed_dir, "Lib/"))
 
 import sugargame2
 import sugargame2.canvas
@@ -35,7 +36,6 @@ import pygame
 from ConfigParser import SafeConfigParser
 from Globales import COLORES
 
-import gobject
 
 class GameMenu(gtk.EventBox):
 
@@ -64,7 +64,8 @@ class GameMenu(gtk.EventBox):
         for butt in self.ug1, self.ug2, self.ug3:
             butt.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
             butt.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
-            butt.child.modify_font(pango.FontDescription("DejaVu Sans Bold 12"))
+            butt.child.modify_font(pango.FontDescription(
+                "DejaVu Sans Bold 12"))
             align = gtk.Alignment(0.5, 0.5, 0.3, 0.2)
             align.add(butt)
             self.hbox.pack_start(align)
@@ -96,6 +97,7 @@ class GameMenu(gtk.EventBox):
         self.gameview.run(self.topic, index)
         self.hbox.hide()
         self.titulo.hide()
+
 
 class GameView(gtk.EventBox):
 
@@ -142,7 +144,8 @@ class GameView(gtk.EventBox):
 
         self.score_label = gtk.Label("SCORE\n0")
         self.score_label.set_property("justify", gtk.JUSTIFY_RIGHT)
-        self.score_label.modify_font(pango.FontDescription("DejaVu Sans Mono 22"))
+        self.score_label.modify_font(pango.FontDescription(
+            "DejaVu Sans Mono 22"))
         self.score_label.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
         self.score_label.set_padding(xpad=30, ypad=30)
         self.score_label.show()
@@ -186,9 +189,7 @@ class GameView(gtk.EventBox):
             iconfile = "Iconos/stock_volume-mute.svg"
             pygame.mixer.fadeout(300)
             self.pygamecanvas.grab_focus()
-        img = gtk.Image()
-        img.set_from_file(iconfile)
-        widget.set_image(img)
+        widget.get_image().set_from_file(iconfile)
 
     def __decolor(self, widget, event):
         widget.get_image().set_from_file("Imagenes/go_back_disabled.png")
