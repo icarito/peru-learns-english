@@ -88,6 +88,10 @@ class VideoPlayer(gtk.EventBox):
         if accion == "stop":
             if self.player:
                 self.player.stop()
+        elif accion == "stop_and_unfull":
+            if self.player:
+                self.player.stop()
+                self.emit("endfile")
         elif accion == "pausa-play":
             if self.player:
                 self.player.pause_play()

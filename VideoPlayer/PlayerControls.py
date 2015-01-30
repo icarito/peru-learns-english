@@ -58,7 +58,7 @@ class PlayerControls(gtk.EventBox):
         archivo = os.path.join(BASE_PATH, "Iconos", "stop.svg")
         self.stop.set_imagen(archivo=archivo, flip=False, rotacion=False)
         self.stop.set_tooltip_text("Detener Reproducción")
-        self.stop.connect("clicked", self.__emit_accion, "stop")
+        self.stop.connect("clicked", self.__emit_accion, "stop_and_unfull")
         vbox.pack_start(self.stop, False, True, 0)
 
         self.full = JAMediaToolButton(pixels=24)

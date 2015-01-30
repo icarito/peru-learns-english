@@ -21,6 +21,7 @@
 
 import os
 import gtk
+import gobject
 import sys
 
 installed_dir = os.path.abspath(os.path.dirname(__file__))
@@ -67,7 +68,7 @@ class Main(gtk.Window):
             height = gtk.gdk.screen_height() - 100
             self.set_geometry_hints(self, width, height, width, height)
         else:
-            self.maximize()
+            gobject.idle_add(self.maximize)
 
         self.vbox = gtk.VBox()
         self.toolbar = Toolbar()
@@ -96,6 +97,7 @@ class Main(gtk.Window):
         self.gamemenu.gameview.connect("video", self.__game_return_to_video)
         self.videoview.connect("flashcards", self.__play_flashcards)
         self.videoview.connect("game", self.__play_game)
+        self.flashcards.connect("video", self.__game_return_to_video)
         self.instructionsview.connect("credits", self.__play_credits)
         self.instructionsview.connect("start", self.__show_menu)
         self.connect("delete-event", self.__salir)
