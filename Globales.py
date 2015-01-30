@@ -160,12 +160,14 @@ def get_vocabulario(topic, _dict):
             ret.append(item)
     return ret
 
+
 def decir_demorado(pitch, speed, word_gap, voice, text):
     wavpath = "/dev/shm/speak.wav"
     commands.getoutput('espeak -s%s -p%s -g%s -w%s -v%s \"%s\"' % (
         pitch, speed, word_gap, wavpath, voice, text))
     commands.getoutput(
         'gst-launch-0.10 playbin2 uri=file:///dev/shm/speak.wav')
+
 
 def decir(pitch, speed, word_gap, voice, text):
     global _audio
