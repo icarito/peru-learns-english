@@ -29,6 +29,7 @@ def gamedir(archivo):
 sys.path.insert(1, gamedir("../../Lib/"))
 
 import pygame
+pygame.mixer.init()
 import spyral
 import random
 import csv
@@ -88,6 +89,49 @@ def obtener_set(topic):
         if nueva not in conjunto:
             conjunto.append(nueva)
     return conjunto
+
+
+class Texto(spyral.Sprite):
+
+    def __init__(self, scene, texto):
+        spyral.Sprite.__init__(self, scene)
+
+        self.anchor = 'center'
+        self.pos = spyral.Vec2D(scene.size) / 2
+        self.margen = 5
+        self.layer = "primer"
+
+        self.image = spyral.Image(filename=gamedir("images/Menu_2.png"))
+        #self.image.draw_rect(color=(128,128,128),
+        #        position=(0,0), size=(self.height,self.width))
+
+        font_path = gamedir("../fonts/DejaVuSans.ttf")
+        self.font = spyral.Font(font_path, 24, (0, 0, 0))
+        self.line_height = self.font.linesize
+
+        nueva = self.set_text(texto)
+        self.image.draw_image(nueva,
+            position=(self.margen / 2, 0), anchor="midleft")
+
+        self.scale = 1.3 
+
+    def set_text(self, text):
+        self._text = text
+        ancho_promedio = self.font.get_size("X")[0]
+        caracteres = (self.width - 2 * self.margen) / ancho_promedio
+        lineas = wrap(text, caracteres).splitlines()
+
+        altura = len(lineas) * self.line_height
+        bloque = spyral.Image(size=(self.width, altura))
+
+        ln = 0
+        for linea in lineas:
+            bloque.draw_image(image=self.font.render(linea),
+                position=(0, ln * self.line_height), anchor="midtop")
+            ln = ln + 1
+
+        return bloque
+
 
 class Tablero(spyral.View):
     def __init__(self, scene, topic, mapa):
@@ -387,7 +431,7 @@ class Cursor (spyral.Sprite):
         self.anchor = "center"
         self.layer = "primer"
         self.image = spyral.Image(filename=gamedir("imagenes/square-01-whole.png"))
-        self.scale = 0.5
+        #self.scale = 0.5
 
         spyral.event.register ("input.keyboard.down.left", self.left)
         spyral.event.register ("input.keyboard.down.up", self.up)
@@ -791,6 +835,9 @@ class Escena(spyral.Scene):
         self.puntos = 0
         if gameview:
             Escena.gameview = gameview
+
+        pygame.mixer.music.load(gamedir('musica/alien_ruins2.ogg'))
+        pygame.mixer.music.play(-1)
 
     def mute(self, value):
         Escena.MUTE = value

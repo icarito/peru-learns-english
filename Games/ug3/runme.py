@@ -1,4 +1,3 @@
-
 #!/bin/env python2
 # -*- coding: utf-8 -*-
 
@@ -21,6 +20,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import sys
 import os
+import math
 
 game_dir = os.path.abspath(os.path.dirname(__file__))
 def gamedir(archivo):
@@ -33,6 +33,7 @@ from Globales import decir
 import gtk
 
 import pygame
+pygame.mixer.init()
 import spyral
 from random import randrange, randint
 import csv
@@ -66,7 +67,7 @@ def wrap(text, length):
 
 
 font_path = gamedir("../fonts/DejaVuSans.ttf")
-topic_dir = gamedir("../../Topics/Topic_4/")
+topic_dir = gamedir("../../Topics/Topic_5/")
 
 
 def obtener_palabra(topic_dir):
@@ -95,6 +96,10 @@ def obtener_set(topic):
             conjunto.append(nueva)
     return conjunto
 
+def play(res):
+    if not Escena.MUTE:
+        res.play()
+
 class CampodeEstrellas(spyral.Sprite):
     def __init__(self, scene):
         spyral.Sprite.__init__(self, scene)
@@ -105,15 +110,19 @@ class CampodeEstrellas(spyral.Sprite):
         self.layer = "abajo"
         self.speed = 0.2
 
-        self.back_img = spyral.Image(filename=gamedir(
-            "imagenes/below_the_ocean_by_arghus-d4t62um_1.jpg")).scale(self.scene.size)
+        #self.back_img = spyral.Image(filename=gamedir(
+        #    "imagenes/below_the_ocean_by_arghus-d4t62um_1.jpg")).scale(self.scene.size)
         #self.back_img2 = spyral.Image(filename=gamedir(
         #    "imagenes/below_the_ocean_by_arghus-d4t62um_2.jpg")).scale(self.scene.size)
         #self.back_img3 = spyral.Image(filename=gamedir(
         #    "imagenes/below_the_ocean_by_arghus-d4t62um_3.jpg")).scale(self.scene.size)
 
-        #self.back_img = spyral.Image(size=(700,700)).fill((0,0,48))
-        self.image = self.back_img.copy()
+        self.offset = (0,0)
+
+        self.R = 0
+        self.G = 0
+        self.B = 48
+        self.image = spyral.Image(size=(700,700)).fill((self.R,self.G,self.B))
         self.init_stars()
         self.init_animations()
 
@@ -129,16 +138,60 @@ class CampodeEstrellas(spyral.Sprite):
         self.speedup_anim = spyral.Animation("speed",
                                 spyral.easing.QuadraticOut(self.low, self.top), duration=3)
 
+        self.turnred_anim = ( spyral.Animation("R", spyral.easing.QuadraticOut(0, 128), duration=5) & 
+                              spyral.Animation("G", spyral.easing.Linear(0, 96), duration=5) &
+                              spyral.Animation("B", spyral.easing.QuadraticOut(48, 0), duration=5))
+        self.turnred_anim.property = "turnred"
+
+        self.turnblue_anim = ( spyral.Animation("R", spyral.easing.Linear(128, 0), duration=3) & 
+                              spyral.Animation("G", spyral.easing.Linear(96, 0), duration=5) &
+                              spyral.Animation("B", spyral.easing.Linear(0, 48), duration=3))
+        self.turnblue_anim.property = "turnblue"
+
+        self.offset_anim = spyral.Animation("offset", spyral.easing.Arc((0,0), 50), duration=5) + \
+                            spyral.Animation("offset", spyral.easing.LinearTuple((50,0),(0,0)), duration=1)
+        self.offset_anim.property = "offset"
+        #self.offset_anim = spyral.Animation("offset", spyral.easing.Polar((0,0), 
+        #                            radius=lambda tetha: 50/(tetha+0.1)), duration=5)
+
+    def round(self):
+        self.animate(self.offset_anim)
+
     def speedup(self):
+        # EFECTO DE COLOR
+        try:
+            self.animate(self.turnblue_anim)
+        except ValueError:
+            self.stop_all_animations()
+            self.stop_all_animations()
+            a = ( spyral.Animation("R", spyral.easing.Linear(self.R, 0), duration=1) & 
+                  spyral.Animation("G", spyral.easing.Linear(self.G, 0), duration=1) &
+                  spyral.Animation("B", spyral.easing.Linear(self.B, 48), duration=1))
+            a.property = "turnblue"
+            self.animate(a)
+
+        # EFECTO DE VELOCIDAD
         try:
             self.animate(self.speedup_anim)
         except ValueError:
             self.stop_all_animations()
             a = spyral.Animation("speed",
-                                spyral.easing.Linear(self.speed, self.top), duration=1)
+                                spyral.easing.Linear(self.speed, self.top), duration=5)
             self.animate(a)
 
     def slowdown(self):
+        # EFECTO DE COLOR
+        try:
+            self.animate(self.turnred_anim)
+        except ValueError:
+            self.stop_all_animations()
+            self.stop_all_animations()
+            a = ( spyral.Animation("R", spyral.easing.Linear(self.R, 128), duration=3) & 
+                  spyral.Animation("G", spyral.easing.Linear(self.G, 96), duration=3) &
+                  spyral.Animation("B", spyral.easing.Linear(self.B, 0), duration=3))
+            a.property = "turnred"
+            self.animate(a)
+
         try:
             self.animate(self.slowdown_anim)
         except ValueError:
@@ -176,11 +229,11 @@ class CampodeEstrellas(spyral.Sprite):
             if 0 <= x < self.width and 0 <= y < self.height:
                 size = (1 - float(star[2]) / self.max_depth) * 5
                 shade = (1 - float(star[2]) / self.max_depth) * 255
-                self.image.draw_circle((shade/2,shade/2,shade),(x,y),int(size))
+                self.image.draw_circle((shade,shade,shade),(x,y),int(size))
 
     def predraw(self):
-        #self.image.fill((0,0,0))
-        self.image = self.back_img.copy()
+        self.image.fill((self.R,self.G,self.B))
+        #self.image = self.back_img.copy()
 
     def init_stars(self):
         """ Create the starfield """
@@ -212,7 +265,7 @@ class Bloque (spyral.Sprite):
         self.marco = spyral.Image(filename=gamedir("imagenes/marco_1.png"))
         self.image = self.marco
 
-        self.scale = 0.91
+        #self.scale = 1.2
         self.pos = spyral.Vec2D(scene.size)/2
         self.showself()
 
@@ -269,19 +322,22 @@ class Nave (spyral.View):
         self.reset_words()
 
         self.n = Bloque(self, *self.palabras[0])
-        self.n.pos += spyral.Vec2D(0, -150)
+        self.n.pos += spyral.Vec2D(0, -190)
 
         self.s = Bloque(self, *self.palabras[1])
-        self.s.pos += spyral.Vec2D(0, +150)
+        self.s.pos += spyral.Vec2D(0, +190)
 
         self.o = Bloque(self, *self.palabras[2])
-        self.o.pos += spyral.Vec2D(-150, 0)
+        self.o.pos += spyral.Vec2D(-190, 0)
 
         self.e = Bloque(self, *self.palabras[3])
-        self.e.pos += spyral.Vec2D(+150, 0)
+        self.e.pos += spyral.Vec2D(+190, 0)
+
+        self.direcciones = (self.n, self.s, self.e, self.o)
 
         self.visible = False
         self.estado = "reset"
+        self.elegida = None
 
         self.init_animations()
         spyral.event.register("input.keyboard.down.space", self.reset)
@@ -292,23 +348,78 @@ class Nave (spyral.View):
         spyral.event.register("input.keyboard.down.right", self.control_e)
 
         spyral.event.register("Bloque.wait.animation.end", self.clear)
+        spyral.event.register("Bloque.wait2.animation.end", self.repetir)
+        spyral.event.register("Bloque.wait3.animation.end", self.repetir2)
+
+        spyral.event.register("director.update", self.position_offset)
+
+    def position_offset(self):
+        self.pos = self.scene.campo.offset
+
+    def repetir(self):
+        PALABRA, ARCHIVO = self.palabras[self.elegida]
+        decir(70, 57, 0, "en-gb", PALABRA)
+
+    def repetir2(self, modifier=0):
+        PALABRA, ARCHIVO = self.palabras[self.elegida]
+        decir(100, 37, 0, "en-gb", PALABRA)
 
     def reset(self):
         self.reset_words()
-        self.n.set_word(*self.palabras[0])
-        self.s.set_word(*self.palabras[1])
-        self.o.set_word(*self.palabras[2])
-        self.e.set_word(*self.palabras[3])
-        decir(170, 50, 0, "en-gb", self.e.PALABRA)
+        teclas = ("up", "down", "right", "left")
+
+        if self.elegida is not None:
+            for index in range(0,4):
+                if index==self.elegida:
+                    spyral.event.unregister("input.keyboard.down." + teclas[index], self.gana)
+                else:
+                    spyral.event.unregister("input.keyboard.down." + teclas[index], self.pierde)
+
+        self.elegida = randint(0,3)
+        PALABRA, ARCHIVO = self.palabras[self.elegida]
+
+        for index in range(0,4):
+            self.direcciones[index].set_word(*self.palabras[index])
+            if index==self.elegida:
+                spyral.event.register("input.keyboard.down." + teclas[index], self.gana)
+            else:
+                spyral.event.register("input.keyboard.down." + teclas[index], self.pierde)
+
+        decir(50, 57, 0, "en-gb", PALABRA)
         self.invade()
+
+    def pierde(self):
+        print "PIERDE ",
+        print self.elegida
+
+    def gana(self):
+        self.o.stop_animation(self.delay2_anim)
+        self.o.stop_animation(self.delay3_anim)
+
+        print self.direcciones[self.elegida] 
+        print "GANA ",
+        print self.elegida
 
     def reset_words(self):
         self.palabras = obtener_set(self.topic)
 
     def init_animations(self):
-        self.invasion_anim = spyral.Animation("scale", spyral.easing.QuadraticIn(0.1, 1), duration=15)
+        ## TODO
+        ## self.invasion_anim_1 = spyral.Animation("scale", spyral.easing.QuadraticOut(0.1, 1), duration=15)
+        self.invasion_anim = spyral.Animation("angle", spyral.easing.Linear(0, math.pi * 2), duration=5) & \
+                             spyral.Animation("scale", spyral.easing.QuadraticOut(0.1, 1.2), duration=15)
+        ## self.invasion_anim = spyral.Animation("scale_x", spyral.easing.QuadraticOut(0, 0.9), duration=10)
+        ## self.invasion_anim = spyral.Animation("scale_y", spyral.easing.QuadraticOut(0, 0.9), duration=10)
+        self.invasion_anim.property = "invasion"
+
         self.delay_anim = DelayAnimation(15)
         self.delay_anim.property = "wait"
+
+        self.delay2_anim = DelayAnimation(3)
+        self.delay2_anim.property = "wait2"
+
+        self.delay3_anim = DelayAnimation(6)
+        self.delay3_anim.property = "wait3"
 
     def invade(self):
         if self.estado == "invade":
@@ -316,16 +427,19 @@ class Nave (spyral.View):
 
         self.estado = "invade"
 
-        self.n.animate(self.invasion_anim)
-        self.e.animate(self.invasion_anim)
-        self.s.animate(self.invasion_anim)
-        self.o.animate(self.invasion_anim)
+        direcciones = (self.n, self.s, self.e, self.o)
+
+        for bloque in direcciones:
+            bloque.animate(self.invasion_anim)
 
         self.visible = True
         self.scene.campo.slowdown()
 
         self.o.stop_animation(self.delay_anim)
         self.o.animate(self.delay_anim)
+        self.o.animate(self.delay2_anim)
+        self.o.animate(self.delay3_anim)
+        self.scene.campo.round()
 
     def clear(self):
         self.estado = "reset"
@@ -348,6 +462,8 @@ class Nave (spyral.View):
         self.clear()
 
 class Escena(spyral.Scene):
+    MUTE = False
+
     def __init__(self, topic=topic_dir, fake_gtk=False):
         spyral.Scene.__init__(self, SIZE)
 
@@ -369,6 +485,9 @@ class Escena(spyral.Scene):
         #self.tablero = Tablero(self, topic, mapa=MAPA1)
 
         spyral.event.register("system.quit", spyral.director.pop, scene=self)
+
+        pygame.mixer.music.load(gamedir('musica/ObservingTheStar.ogg'))
+        pygame.mixer.music.play(-1)
 
         if fake_gtk:
             gtk.threads_init()
