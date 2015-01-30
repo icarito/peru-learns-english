@@ -35,7 +35,7 @@ class VideoPlayer(gtk.EventBox):
     "full": (gobject.SIGNAL_RUN_LAST,
         gobject.TYPE_NONE, []),
     "endfile": (gobject.SIGNAL_RUN_LAST,
-        gobject.TYPE_NONE, []),}
+        gobject.TYPE_NONE, []), }
 
     def __init__(self):
 

@@ -20,7 +20,6 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import os
-import sys
 import commands
 import csv
 import gtk
@@ -30,6 +29,7 @@ import codecs
 from gtk import gdk
 import espeak
 
+BASE_PATH = os.path.dirname(__file__)
 
 COLORES = {
     "window": gdk.color_parse("#ffffff"),
@@ -176,3 +176,20 @@ def decir(pitch, speed, word_gap, voice, text):
     except:
         _audio = espeak.AudioGrab()
         _audio.speak(text, pitch, speed, voice)
+
+
+class Dialog(gtk.Dialog):
+
+    def __init__(self, title, parent, buttons, text):
+
+        gtk.Dialog.__init__(self, title=title, parent=parent, buttons=buttons)
+
+        self.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
+        self.set_border_width(15)
+        label = gtk.Label(text)
+        label.show()
+        self.vbox.pack_start(label, True, True, 5)
+        self.connect("realize", self.__realize)
+
+    def __realize(self, widget):
+        decir(50, 57, 0, "en-gb", self.get_title())

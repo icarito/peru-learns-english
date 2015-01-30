@@ -135,9 +135,6 @@ class JAMediaReproductor(gobject.GObject):
                 self.emit("loading-buffer", buf)
                 self.play()
 
-    def pause(self):
-        self.player.set_state(gst.STATE_PAUSED)
-
     def __new_handle(self, reset):
         if self.actualizador:
             gobject.source_remove(self.actualizador)
@@ -184,8 +181,9 @@ class JAMediaReproductor(gobject.GObject):
             direccion = "file://" + uri
             self.player.set_property("uri", direccion)
             suburi = os.path.join(os.path.dirname(uri), "subtitulos.srt")
-            self.player.set_property("suburi", "file://" + suburi)
-            self.player.set_property("subtitle-font-desc", "sans bold 18")
+            if os.path.exists(suburi):
+                self.player.set_property("suburi", "file://" + suburi)
+                self.player.set_property("subtitle-font-desc", "sans bold 18")
             self.progressbar = True
         else:
             if gst.uri_is_valid(uri):
@@ -213,3 +211,6 @@ class JAMediaReproductor(gobject.GObject):
 
     def get_volumen(self):
         return self.player.get_property('volume') * 10
+
+    def pause(self):
+        self.player.set_state(gst.STATE_PAUSED)
