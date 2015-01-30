@@ -55,7 +55,7 @@ class VideoView(gtk.EventBox):
         self.full = False
         self.topic = False
 
-        tabla = gtk.Table(rows=10, columns=3, homogeneous=True)
+        tabla = gtk.Table(rows=10, columns=5, homogeneous=True)
         tabla.set_property("column-spacing", 8)
         tabla.set_property("row-spacing", 8)
         tabla.set_border_width(8)
@@ -65,13 +65,8 @@ class VideoView(gtk.EventBox):
         self.titulo.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
         self.videoplayer = VideoPlayer()
 
-        self.links = gtk.LinkButton("http://pe.sugarlabs.org/", "Links")
-        self.links.modify_font(pango.FontDescription("DejaVu Sans 18"))
-        self.links.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
-
-        tabla.attach(self.titulo, 0, 2, 0, 1)
-        tabla.attach(self.videoplayer, 0, 2, 1, 9)
-        tabla.attach(self.links, 0, 2, 9, 10)
+        tabla.attach(self.titulo, 0, 5, 0, 1)
+        tabla.attach(self.videoplayer, 0, 3, 1, 10)
 
         flashcards = gtk.Button()
         flashcards.set_relief(gtk.RELIEF_NONE)
@@ -83,9 +78,9 @@ class VideoView(gtk.EventBox):
         self.imagen_juego = GameImage()
         self.flashcards_preview = FlashCardsPreview()
 
-        tabla.attach(self.imagen_juego, 2, 3, 1, 4)
-        tabla.attach(flashcards, 2, 3, 4, 6)
-        tabla.attach(self.flashcards_preview, 2, 3, 6, 10)
+        tabla.attach(self.imagen_juego, 3, 5, 1, 4)
+        tabla.attach(flashcards, 3, 5, 4, 6)
+        tabla.attach(self.flashcards_preview, 3, 5, 6, 10)
 
         self.add(tabla)
         self.show_all()
@@ -154,8 +149,6 @@ class VideoView(gtk.EventBox):
         parser.read(metadata)
 
         self.titulo.set_text("Topic: " + parser.get('topic', 'title'))
-        self.links.set_uri(parser.get('topic', 'link'))
-        self.links.set_label(parser.get('topic', 'link'))
         self.full = False
         self.set_full(False)
 
