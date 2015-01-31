@@ -101,10 +101,10 @@ class VideoView(gtk.EventBox):
     def __emit_flashcards(self, widget):
         dialog = DialogLogin(self.get_toplevel())
         ret = dialog.run()
+        dialog.destroy()
         if ret == gtk.RESPONSE_ACCEPT:
             datos = dialog.get_user_dict()
             self.emit("flashcards", (self.topic, datos))
-        dialog.destroy()
 
     def set_full(self, widget):
         tabla = self.get_child()
@@ -321,6 +321,7 @@ class Frame1(gtk.Frame):
     "new-user": (gobject.SIGNAL_RUN_FIRST,
         gobject.TYPE_NONE, [])
         }
+
     def __init__(self, users):
 
         gtk.Frame.__init__(self)

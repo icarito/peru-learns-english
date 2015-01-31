@@ -35,6 +35,7 @@ from Globales import COLORES
 from Globales import get_vocabulario
 from Globales import decir, decir_demorado
 from Globales import guardar
+from Globales import Dialog
 
 
 class FlashCardView(gtk.EventBox):
@@ -56,7 +57,7 @@ class FlashCardView(gtk.EventBox):
         self.imagenplayer = False
         self.index_select = 0
 
-        tabla = gtk.Table(rows=10, columns=5, homogeneous=True)
+        tabla = gtk.Table(rows=11, columns=5, homogeneous=True)
         tabla.set_property("column-spacing", 5)
         tabla.set_property("row-spacing", 5)
         tabla.set_border_width(4)
@@ -65,10 +66,12 @@ class FlashCardView(gtk.EventBox):
         self.flashcard = FlashCard()
 
         tabla.attach(self.cabecera, 0, 3, 0, 2)
-        tabla.attach(self.flashcard, 0, 3, 2, 10)
+        tabla.attach(self.flashcard, 0, 3, 2, 11)
 
         self.derecha = Derecha()
         tabla.attach(self.derecha, 3, 5, 2, 10)
+        self.statuslabel = gtk.Label("Flashcard 0 of 0")
+        tabla.attach(self.statuslabel, 3, 5, 10, 11)
 
         self.add(tabla)
         self.show_all()
@@ -92,20 +95,15 @@ class FlashCardView(gtk.EventBox):
             r = 3
         elif respuesta == 3:
             r = 0
-        guardar(self.user, self.topic, self.vocabulario[self.index_select][0], r)
+        guardar(self.user, self.topic,
+            self.vocabulario[self.index_select][0], r)
         if self.index_select < len(self.vocabulario) - 1:
             self.index_select += 1
             gobject.timeout_add(500, self.__load, self.index_select)
         else:
-            dialog = gtk.Dialog(title="Congratulations!",
-                                parent=self.get_toplevel(),
-                                buttons=("OK", gtk.RESPONSE_ACCEPT))
-            dialog.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
-            dialog.set_border_width(15)
-            label = gtk.Label("Memorization task completed for today.")
-            label.show()
-            dialog.vbox.pack_start(label, True, True, 5)
-            decir(50, 57, 0, "en-gb", "Congratulations!")
+            dialog = Dialog("Congratulations!", self.get_toplevel(),
+                ("OK", gtk.RESPONSE_ACCEPT),
+                "Memorization task completed for today.")
             dialog.run()
             dialog.destroy()
             self.emit("video", self.topic)
@@ -130,6 +128,8 @@ class FlashCardView(gtk.EventBox):
         decir_demorado(170, 50, 0, "en", "What is This?")
         self.derecha.activar()
         self.cabecera.label2.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
+        self.statuslabel.set_text("Flashcard %i of %i" % (
+            self.index_select + 1, len(self.vocabulario)))
         return False
 
     def stop(self):
@@ -157,6 +157,8 @@ class FlashCardView(gtk.EventBox):
 
         self.derecha.run()
         vocabulario = get_vocabulario(topic, _dict)
+        if len(vocabulario) > 14:
+            vocabulario = vocabulario[:15]
         self.show()
         if vocabulario:
             self.vocabulario = vocabulario
@@ -165,15 +167,9 @@ class FlashCardView(gtk.EventBox):
             gobject.timeout_add(500, self.__load, self.index_select)
         else:
             self.topic = topic
-            dialog = gtk.Dialog(title="Come back tomorrow!",
-                parent=self.get_toplevel(),
-                buttons=("OK", gtk.RESPONSE_ACCEPT))
-            dialog.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
-            dialog.set_border_width(15)
-            label = gtk.Label("You've memorized all flashcards for today.")
-            label.show()
-            dialog.vbox.pack_start(label, True, True, 5)
-            decir(50, 57, 0, "en-gb", "Come back tomorrow!")
+            dialog = Dialog("Come back tomorrow!", self.get_toplevel(),
+                ("OK", gtk.RESPONSE_ACCEPT),
+                "You've memorized all flashcards for today.")
             dialog.run()
             dialog.destroy()
             self.emit("video", self.topic)
