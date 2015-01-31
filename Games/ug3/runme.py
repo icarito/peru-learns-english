@@ -21,6 +21,7 @@
 import sys
 import os
 import math
+import time
 
 game_dir = os.path.abspath(os.path.dirname(__file__))
 def gamedir(archivo):
@@ -104,11 +105,13 @@ class CampodeEstrellas(spyral.Sprite):
     def __init__(self, scene):
         spyral.Sprite.__init__(self, scene)
 
-        self.num_stars = 256 
-        self.max_depth = 16 
+        self.num_stars = 256
+        self.max_depth = 16
 
         self.layer = "abajo"
         self.speed = 0.2
+        self.pos = spyral.Vec2D(scene.size)/2
+        self.anchor = "center"
 
         #self.back_img = spyral.Image(filename=gamedir(
         #    "imagenes/below_the_ocean_by_arghus-d4t62um_1.jpg")).scale(self.scene.size)
@@ -122,12 +125,24 @@ class CampodeEstrellas(spyral.Sprite):
         self.R = 0
         self.G = 0
         self.B = 48
-        self.image = spyral.Image(size=(700,700)).fill((self.R,self.G,self.B))
+        self.image = spyral.Image(size=(500,500)).fill((self.R,self.G,self.B))
         self.init_stars()
         self.init_animations()
 
         spyral.event.register("director.update", self.update)
         spyral.event.register("director.pre_update", self.predraw)
+
+        self.delay = DelayAnimation(3)
+        self.delay.property="demora"
+        self.animate(self.delay)
+
+        spyral.event.register("CampodeEstrellas.demora.animation.end", self.spawn)
+
+    def defered_spawn(self):
+        self.animate(self.delay)
+
+    def spawn(self):
+        self.scene.nave.reset()
 
     def init_animations(self):
         self.top = 0.3
@@ -138,20 +153,21 @@ class CampodeEstrellas(spyral.Sprite):
         self.speedup_anim = spyral.Animation("speed",
                                 spyral.easing.QuadraticOut(self.low, self.top), duration=3)
 
-        self.turnred_anim = ( spyral.Animation("R", spyral.easing.QuadraticOut(0, 128), duration=5) & 
-                              spyral.Animation("G", spyral.easing.Linear(0, 96), duration=5) &
-                              spyral.Animation("B", spyral.easing.QuadraticOut(48, 0), duration=5))
+        self.turnred_anim = (
+                              (spyral.Animation("G", spyral.easing.Linear(0, 32), duration=5) &
+                              spyral.Animation("B", spyral.easing.QuadraticOut(48, 0), duration=3)) +
+                              spyral.Animation("R", spyral.easing.QuadraticOut(0, 128), duration=3))
         self.turnred_anim.property = "turnred"
 
-        self.turnblue_anim = ( spyral.Animation("R", spyral.easing.Linear(128, 0), duration=3) & 
-                              spyral.Animation("G", spyral.easing.Linear(96, 0), duration=5) &
+        self.turnblue_anim = ( spyral.Animation("R", spyral.easing.Linear(128, 0), duration=3) &
+                              spyral.Animation("G", spyral.easing.Linear(32, 0), duration=5) &
                               spyral.Animation("B", spyral.easing.Linear(0, 48), duration=3))
         self.turnblue_anim.property = "turnblue"
 
         self.offset_anim = spyral.Animation("offset", spyral.easing.Arc((0,0), 50), duration=5) + \
                             spyral.Animation("offset", spyral.easing.LinearTuple((50,0),(0,0)), duration=1)
         self.offset_anim.property = "offset"
-        #self.offset_anim = spyral.Animation("offset", spyral.easing.Polar((0,0), 
+        #self.offset_anim = spyral.Animation("offset", spyral.easing.Polar((0,0),
         #                            radius=lambda tetha: 50/(tetha+0.1)), duration=5)
 
     def round(self):
@@ -164,7 +180,7 @@ class CampodeEstrellas(spyral.Sprite):
         except ValueError:
             self.stop_all_animations()
             self.stop_all_animations()
-            a = ( spyral.Animation("R", spyral.easing.Linear(self.R, 0), duration=1) & 
+            a = ( spyral.Animation("R", spyral.easing.Linear(self.R, 0), duration=1) &
                   spyral.Animation("G", spyral.easing.Linear(self.G, 0), duration=1) &
                   spyral.Animation("B", spyral.easing.Linear(self.B, 48), duration=1))
             a.property = "turnblue"
@@ -186,9 +202,10 @@ class CampodeEstrellas(spyral.Sprite):
         except ValueError:
             self.stop_all_animations()
             self.stop_all_animations()
-            a = ( spyral.Animation("R", spyral.easing.Linear(self.R, 128), duration=3) & 
-                  spyral.Animation("G", spyral.easing.Linear(self.G, 96), duration=3) &
+            a = ( spyral.Animation("R", spyral.easing.Linear(self.R, 128), duration=3) &
+                  spyral.Animation("G", spyral.easing.Linear(self.G, 32), duration=3) &
                   spyral.Animation("B", spyral.easing.Linear(self.B, 0), duration=3))
+
             a.property = "turnred"
             self.animate(a)
 
@@ -340,7 +357,6 @@ class Nave (spyral.View):
         self.elegida = None
 
         self.init_animations()
-        spyral.event.register("input.keyboard.down.space", self.reset)
 
         spyral.event.register("input.keyboard.down.down", self.control_s)
         spyral.event.register("input.keyboard.down.up", self.control_n)
@@ -351,9 +367,9 @@ class Nave (spyral.View):
         spyral.event.register("Bloque.wait2.animation.end", self.repetir)
         spyral.event.register("Bloque.wait3.animation.end", self.repetir2)
 
-        spyral.event.register("director.update", self.position_offset)
+        spyral.event.register("director.update", self.update)
 
-    def position_offset(self):
+    def update(self):
         self.pos = self.scene.campo.offset
 
     def repetir(self):
@@ -389,16 +405,27 @@ class Nave (spyral.View):
         self.invade()
 
     def pierde(self):
+        self.o.stop_animation(self.delay2_anim)
+        self.o.stop_animation(self.delay3_anim)
+
+        self.scene.campo.defered_spawn()
+
         print "PIERDE ",
         print self.elegida
 
     def gana(self):
+        self.scene.campo.defered_spawn()
+
         self.o.stop_animation(self.delay2_anim)
         self.o.stop_animation(self.delay3_anim)
 
-        print self.direcciones[self.elegida] 
-        print "GANA ",
-        print self.elegida
+        acertado = self.direcciones[self.elegida]
+
+        recompensa = 200
+
+        self.scene.puntos += recompensa
+        if Escena.gameview:
+            Escena.gameview.update_score(self.scene.puntos)
 
     def reset_words(self):
         self.palabras = obtener_set(self.topic)
@@ -441,9 +468,11 @@ class Nave (spyral.View):
         self.o.animate(self.delay3_anim)
         self.scene.campo.round()
 
-    def clear(self):
+    def clear(self, acertada=None):
         self.estado = "reset"
         for bloque in self.n,self.s,self.e,self.o:
+            if bloque==acertada:
+                print bloque
             bloque.stop_animation(self.invasion_anim)
         self.o.stop_animation(self.delay_anim)
         self.visible = False
@@ -463,15 +492,17 @@ class Nave (spyral.View):
 
 class Escena(spyral.Scene):
     MUTE = False
+    gameview = False
 
-    def __init__(self, topic=topic_dir, fake_gtk=False):
+    def __init__(self, topic=topic_dir, fake_gtk=False, gameview=False):
         spyral.Scene.__init__(self, SIZE)
 
         self.layers = ["abajo", "arriba", "primer"]
+        self.puntos = 0
 
-        #img = spyral.Image(filename=gamedir(
-        #    "imagenes/Crux-20100220.jpg")).scale(self.scene.size)
-        img = spyral.Image(size=(700, 700))
+        img = spyral.Image(filename=gamedir(
+            "imagenes/Crux-20100220.jpg")).scale(self.scene.size)
+        #img = spyral.Image(size=(700, 700))
 
         #n = pygame.Surface.convert_alpha(img._surf)
         #n.fill((64, 0, 0, 127))
@@ -489,11 +520,19 @@ class Escena(spyral.Scene):
         pygame.mixer.music.load(gamedir('musica/ObservingTheStar.ogg'))
         pygame.mixer.music.play(-1)
 
+        if gameview:
+            Escena.gameview = gameview
+
         if fake_gtk:
             gtk.threads_init()
             spyral.event.register("director.update", self.gtk_main_iteration)
 
     def mute(self, value):
+        if value==True:
+            pygame.mixer.music.pause()
+        else:
+            pygame.mixer.music.play()
+
         Escena.MUTE = value
 
     def gtk_main_iteration(self):

@@ -95,6 +95,7 @@ class Main(gtk.Window):
         self.toolbar.connect("activar", self.__switch)
         self.toolbar.connect("video", self.__play_video)
         self.gamemenu.gameview.connect("video", self.__game_return_to_video)
+        self.gamemenu.connect("video", self.__game_return_to_video)
         self.videoview.connect("flashcards", self.__play_flashcards)
         self.videoview.connect("game", self.__play_game)
         self.flashcards.connect("video", self.__game_return_to_video)

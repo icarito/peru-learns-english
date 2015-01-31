@@ -216,7 +216,7 @@ class ControlVolumen(gtk.VolumeButton):
         self.connect("value-changed", self.__value_changed)
         self.show_all()
 
-        self.set_value(0.1)
+        self.set_value(0.9)
 
     def __value_changed(self, widget, valor):
         """

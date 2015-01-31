@@ -111,6 +111,7 @@ class Escena(spyral.Scene):
             "images/Peru_Machu_Picchu_Sunrise.jpg")).scale(self.scene.size)
 
         self.img = self.img_orig.copy()
+        self.puntaje = 0
 
         n = pygame.Surface.convert_alpha(self.img._surf)
         # red at 50%
@@ -142,9 +143,26 @@ class Escena(spyral.Scene):
             pass
 
     def endgame(self):
-        #spyral.director.replace(Finale(self.topic))
-        #spyral.director.run(sugar=True)
-        self.the_question = Dialogo(self, "Play again?")
+        #self.scene.background = self.scene.img_orig
+        spyral.event.unregister("Tablero.reset.animation.end", self.scene.tablero.reset)
+        self.scene.tablero.visible = False
+        spyral.event.unregister("Lluvia.y.animation.end", self.scene.l.finalizar)
+        spyral.event.unregister("Lluvia.demora.animation.end", self.scene.l.sonar_explosion)
+        self.scene.l.stop_all_animations()
+        self.scene.l.stop_all_animations()
+        self.scene.l.visible = False
+        self.scene.v.set_text("GAME OVER")
+        self.scene.v.stop_all_animations()
+        self.scene.j.set_mirame()
+        spyral.event.unregister("input.keyboard.down.esc", self.endgame)
+        self.the_question = Dialogo(self, "Play again?", self.the_question_click)
+        spyral.event.unregister("input.keyboard.down.*", self.tablero.procesar_tecla)
+        #self.scene.j.set_deambular()
+
+    def the_question_click(self, pos):
+        if self.the_question.collide_point(pos):
+            self.the_question.goplay()
+
 
 class Terraza(spyral.Sprite):
 
@@ -355,12 +373,7 @@ class Lluvia(spyral.Sprite):
                 self.explotar()
                 self.scene.terraza.temblar()
                 self.scene.j.set_caer()
-
-                spyral.event.register("input.keyboard.down.*",
-                    self.scene.endgame, scene=self.scene)
-
-                spyral.event.register("input.mouse.down.*",
-                    self.scene.endgame, scene=self.scene)
+                self.scene.endgame()
             else:
                 self.scene.background = self.scene.img_orig
                 self.visible = False
@@ -564,7 +577,10 @@ class Jugador(spyral.Sprite):
         c = a & b
         c.property = "deambular"
         self.estado = "caminando"
-        self.animate(c)
+        try:
+            self.animate(c)
+        except ValueError:
+            pass
 
 
     def set_caminar_x(self, x, disparar=False):
@@ -630,7 +646,7 @@ class Jugador(spyral.Sprite):
 
 class Dialogo(spyral.Sprite):
 
-    def __init__(self, scene, texto):
+    def __init__(self, scene, texto, callback):
         spyral.Sprite.__init__(self, scene)
 
         self.anchor = 'center'
@@ -649,6 +665,14 @@ class Dialogo(spyral.Sprite):
         nueva = self.set_text(texto)
         self.image.draw_image(nueva,
             position=(self.margen / 2, -17), anchor="midleft")
+
+        spyral.event.register("input.mouse.down.left", callback)
+        spyral.event.register("input.keyboard.down.return", self.goplay)
+        spyral.event.register("input.keyboard.down.y", self.goplay)
+
+    def goplay(self):
+        spyral.director.replace(Escena(self.scene.topic))
+        spyral.director.run(sugar=True)
 
     def set_text(self, text):
         self._text = text
@@ -692,7 +716,7 @@ class Texto(spyral.Sprite):
         self.image.draw_image(nueva,
             position=(self.margen / 2, 0), anchor="midleft")
 
-        self.scale = 1.3 
+        self.scale = 1.3
 
     def set_text(self, text):
         self._text = text
@@ -729,40 +753,6 @@ class Camino(spyral.Sprite):
         self.animate(m)
 
 
-class Finale(spyral.Scene):
-
-    def __init__(self, topic=None):
-        spyral.Scene.__init__(self, SIZE)
-
-        self.layers = ["abajo", "abajo2", "arriba", "primer"]
-
-        self.topic = topic
-        img = spyral.Image(filename=gamedir(
-            "images/Peru_Machu_Picchu_Sunrise.jpg")).scale(self.size)
-        self.background = img
-
-        self.j = Jugador(self)
-        self.j.set_mirame()
-        self.the_question = Dialogo(self, "Play again?")
-
-        self.terraza = Terraza(self)
-        spyral.event.register("system.quit", spyral.director.pop, scene=self)
-
-        #spyral.event.register("input.keyboard.down.esc", spyral.director.pop)
-        #spyral.event.register("input.keyboard.down.n", spyral.director.pop)
-        spyral.event.register("input.keyboard.down.return", self.goplay, scene=self)
-        spyral.event.register("input.keyboard.down.y", self.goplay, scene=self)
-        spyral.event.register("input.mouse.down.left", self.click, scene=self)
-
-    def click(self, pos):
-        if self.the_question.collide_point(pos):
-            self.goplay()
-
-    def goplay(self):
-        spyral.director.replace(Escena(self.topic))
-        spyral.director.run(sugar=True)
-
-
 class Intro(spyral.Scene):
 
     MUTE = False
@@ -796,6 +786,11 @@ class Intro(spyral.Scene):
             Intro.gameview = gameview
 
     def mute(self, value):
+        if value==True:
+            pygame.mixer.music.pause()
+        else:
+            pygame.mixer.music.play()
+            
         Intro.MUTE = value
 
     def goplay(self):

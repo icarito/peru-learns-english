@@ -183,9 +183,6 @@ class JAMediaReproductor(gobject.GObject):
         if os.path.exists(uri):
             direccion = "file://" + uri
             self.player.set_property("uri", direccion)
-            suburi = os.path.join(os.path.dirname(uri), "subtitulos.srt")
-            self.player.set_property("suburi", "file://" + suburi)
-            self.player.set_property("subtitle-font-desc", "sans bold 18")
             self.progressbar = True
         else:
             if gst.uri_is_valid(uri):

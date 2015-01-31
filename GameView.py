@@ -39,6 +39,10 @@ import gobject
 
 class GameMenu(gtk.EventBox):
 
+    __gsignals__ = {
+    "video": (gobject.SIGNAL_RUN_FIRST,
+        gobject.TYPE_NONE, (gobject.TYPE_STRING, ))}
+
     def __init__(self):
 
         gtk.EventBox.__init__(self)
@@ -48,11 +52,26 @@ class GameMenu(gtk.EventBox):
         self.modify_bg(gtk.STATE_NORMAL, COLORES["contenido"])
         self.set_border_width(4)
 
-        self.hbox = gtk.HBox()
+        self.inside_vb = gtk.VBox()
 
         self.ug1 = gtk.Button("Hello Asteroids")
         self.ug2 = gtk.Button("Reforestation Circuit")
-        self.ug3 = gtk.Button("The Chakana Cross")
+        self.ug3 = gtk.Button("Southern Cross")
+
+        butt = gtk.Button()
+        img = gtk.Image()
+        img.set_from_file("Imagenes/go_back_disabled.png")
+        butt.set_relief(gtk.RELIEF_NONE)
+        butt.set_image(img)
+        butt.set_label("")
+        butt.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
+        butt.connect("clicked", self.__emit_video)
+        butt.connect("enter-notify-event", self.__color)
+        butt.connect("leave-notify-event", self.__decolor)
+        img.show()
+        butt.show()
+        self.back = gtk.Alignment(1, 1, 0, 0)
+        self.back.add(butt)
 
         self.titulo = gtk.Label("Título")
         self.titulo.set_property("justify", gtk.JUSTIFY_CENTER)
@@ -67,12 +86,14 @@ class GameMenu(gtk.EventBox):
             butt.child.modify_font(pango.FontDescription("DejaVu Sans Bold 12"))
             align = gtk.Alignment(0.5, 0.5, 0.3, 0.2)
             align.add(butt)
-            self.hbox.pack_start(align)
+            self.inside_vb.add(align)
             butt.connect("clicked", self.start_game, index)
             index += 1
 
+        self.inside_vb.add(self.back)
+
         vb.pack_start(self.titulo, expand=False, fill=False)
-        vb.add(self.hbox)
+        vb.add(self.inside_vb)
 
         self.gameview = GameView()
         vb.pack_end(self.gameview, True, True, 0)
@@ -94,8 +115,18 @@ class GameMenu(gtk.EventBox):
 
     def start_game(self, widget, index):
         self.gameview.run(self.topic, index)
-        self.hbox.hide()
+        self.inside_vb.hide()
         self.titulo.hide()
+
+    def __decolor(self, widget, event):
+        widget.get_image().set_from_file("Imagenes/go_back_disabled.png")
+
+    def __color(self, widget, event):
+        widget.get_image().set_from_file("Imagenes/go_back.png")
+
+    def __emit_video(self, widget):
+        self.emit("video", self.topic)
+
 
 class GameView(gtk.EventBox):
 
@@ -159,6 +190,7 @@ class GameView(gtk.EventBox):
         img.show()
         butt.show()
         butt.connect("toggled", self.update_volume)
+        self.volbtn = butt
 
         vbox.add(butt)
         grupo3.add(vbox)
@@ -250,7 +282,7 @@ class GameView(gtk.EventBox):
         self.pygamecanvas.set_size_request(self.lado, self.lado)
         spyral.director.init((self.lado, self.lado),
             fullscreen=False, max_fps=30)
-        self.game = Escena(self.topic)
+        self.game = Escena(self.topic, gameview=self)
         spyral.director.push(self.game)
         if self.pump:
             gobject.source_remove(self.pump)
@@ -281,6 +313,9 @@ class GameView(gtk.EventBox):
         self.hide()
 
     def run(self, topic, game):
+        self.update_score(0)
+        self.volbtn.set_active(False)
+        self.volbtn.get_image().set_from_file("Iconos/stock_volume-max.svg")
         if game==0:
             gamestart=self.__run_game_1
         elif game==1:

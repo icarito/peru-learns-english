@@ -244,9 +244,9 @@ class DialogLogin(gtk.Dialog):
 
     def __init__(self, parent_window=None):
 
-        gtk.Dialog.__init__(self, title="Loging", parent=parent_window,
+        gtk.Dialog.__init__(self, title="Identify yourself", parent=parent_window,
             buttons= ("OK", gtk.RESPONSE_ACCEPT,
-            "Cancelar", gtk.RESPONSE_CANCEL))
+            "Cancel", gtk.RESPONSE_CANCEL))
 
         # self.set_decorated(False)
         self.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
@@ -327,14 +327,14 @@ class Frame1(gtk.Frame):
 
         self.set_border_width(4)
         self.modify_bg(0, COLORES["window"])
-        self.set_label(" Selecciona tu Usuario ")
+        self.set_label(" Are you ...")
         self.get_property("label-widget").modify_bg(0, COLORES["window"])
         self.set_label_align(0.5, 1.0)
 
         box = gtk.HBox()
         self.combo = gtk.combo_box_new_text()
         self.combo.connect('changed', self.__changed)
-        button = gtk.Button("Crear Nuevo...")
+        button = gtk.Button("new user.")
         button.connect("clicked", self.__new_user)
         box.pack_start(self.combo, False, False, 5)
         box.pack_end(button, False, False, 5)

@@ -113,7 +113,7 @@ class Texto(spyral.Sprite):
         self.image.draw_image(nueva,
             position=(self.margen / 2, 0), anchor="midleft")
 
-        self.scale = 1.3 
+        self.scale = 1.3
 
     def set_text(self, text):
         self._text = text
@@ -175,7 +175,7 @@ class Tablero(spyral.View):
         spyral.event.register("Tablero.movimiento", self.movimiento)
 
         self.activar_snd = pygame.mixer.Sound(gamedir("sonidos/Retro_Game_Sounds_SFX_162.ogg"))
-        self.match_snd = pygame.mixer.Sound(gamedir("sonidos/Powerup.wav"))
+        self.match_snd = pygame.mixer.Sound(gamedir("sonidos/Powerup.ogg"))
         self.desactivar_snd = pygame.mixer.Sound(gamedir("sonidos/Randomize2.wav"))
         self.win_snd = pygame.mixer.Sound(gamedir("sonidos/Retro_Game_Sounds_SFX_161.ogg"))
 
@@ -310,7 +310,8 @@ class Tablero(spyral.View):
                         self.desactivar()
 
     def handle_motion(self, pos):
-        self.scene.tablero.cursor.pos = pos
+        #self.scene.tablero.cursor.pos = pos
+        self.scene.tablero.cursor.visible = False
         if self.ACTIVADO:
             from_pos = (pos - self.scene.tablero.pos) / spyral.Vec2D(140,140)
             ubicacion = spyral.Vec2D(int(from_pos.x), int(from_pos.y))
@@ -393,6 +394,10 @@ class Nexo (spyral.Sprite):
         except pygame.error:
             pass
 
+        #self.scale = 1.77
+
+        #self.image.draw_rect( (255,0,0), (0,0), (self.image.width-2, self.image.height-2), 2)
+
     def venir_de(self, ubicacion):
         self.visible = True
 
@@ -408,6 +413,11 @@ class Nexo (spyral.Sprite):
                 self.image = self.gowest
             elif direccion == (+1, 0):
                 self.image = self.goeast
+
+            #self.scale = 1.77
+
+            #self.image.draw_rect ((255,0,0), (0,0), (self.image.width-2, self.image.height-2), 2)
+
 
     def check_click(self, pos):
         if self.collide_point(pos):
@@ -454,6 +464,7 @@ class Cursor (spyral.Sprite):
         self.desplaz_anim = None
 
         self.update()
+        self.visible = False
 
     def click(self):
         event = spyral.event.Event(pos=self.pos)
@@ -476,6 +487,7 @@ class Cursor (spyral.Sprite):
         self.update()
 
     def update(self):
+        self.visible = True
         newpos = self.ubicacion * spyral.Vec2D(140, 140) + spyral.Vec2D(70, 70)
 
         if self.desplaz_anim:
@@ -651,10 +663,10 @@ class Bloque (spyral.Sprite):
     def lado_mas_cercano(self):
         x = self.x
         y = self.y
-        izq = spyral.Vec2D(0 - self.width/2, y)
-        der = spyral.Vec2D(self.scene.width + self.width/2, y)
-        arr = spyral.Vec2D(x, 0 - self.height/2)
-        aba = spyral.Vec2D(x, self.scene.height + self.height/2)
+        izq = spyral.Vec2D(0 - self.width, y)
+        der = spyral.Vec2D(self.scene.width + self.width, y)
+        arr = spyral.Vec2D(x, 0 - self.height)
+        aba = spyral.Vec2D(x, self.scene.height + self.height)
 
         punto = spyral.Vec2D(x,y)
 
@@ -755,6 +767,7 @@ class Escena(spyral.Scene):
         #img._surf.blit(n, (0, 0))
 
         self.background = img
+        self.puntos = 0
 
         self.mapas = []
         self.mapas.append(
@@ -840,6 +853,11 @@ class Escena(spyral.Scene):
         pygame.mixer.music.play(-1)
 
     def mute(self, value):
+        if value==True:
+            pygame.mixer.music.pause()
+        else:
+            pygame.mixer.music.play()
+            
         Escena.MUTE = value
 
     def score(self):
