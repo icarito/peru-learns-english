@@ -4,17 +4,19 @@
 from distutils.core import setup
 from glob import glob
 
-from datafiles import data_files
+#from datafiles import data_files
+import mkdatafiles
+data_files = mkdatafiles.get_data_files()
 	
 setup(
 	name = "Peru_Learns_English",
-	version = "0.2.1",
+	version = "0.3",
 	author = "SomosAzucar",
 	author_email = "laura@somosazucar.org",
-	url = "",
+	url = "http://pe.sugarlabs.org/ir/Peru%20Learns%20English",
 	license = "GPL3",
 
-	scripts = ["peru_learns_english_run", "peru_learns_english_uninstall"],
+	scripts = ["peru_learns_english", "peru_learns_english_uninstall"],
 
         data_files = data_files
 	#py_modules = ["enfoli"],

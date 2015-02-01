@@ -2,7 +2,7 @@
 Encoding=UTF-8
 Name=Peru Learns English
 Comment=
-Exec=/usr/bin/peru_learns_english_run
+Exec=/usr/bin/peru_learns_english
 Terminal=false
 Type=Application
 Icon=/usr/local/share/peru-learns-english/Iconos/icono.svg

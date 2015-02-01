@@ -269,6 +269,12 @@ class DialogLogin(gtk.Dialog):
         self.vbox.pack_start(self.frame2, False, False, 0)
         self.vbox.show_all()
 
+        width, height = self.size_request()
+        screen = gtk.gdk.Screen()
+        x = screen.get_width() - width - 50
+        y = (screen.get_height() - height) / 2
+        self.move(x,y)
+
         if users:
             self.frame1.show_all()
             self.frame2.set_sensitive(False)

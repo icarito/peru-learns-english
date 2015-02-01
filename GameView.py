@@ -212,7 +212,8 @@ class GameView(gtk.EventBox):
 
     def update_volume(self, widget):
         if not widget.get_active():
-            self.game.mute(False)
+            if self.game:
+                self.game.mute(False)
             iconfile = "Iconos/stock_volume-max.svg"
             self.pygamecanvas.grab_focus()
         else:

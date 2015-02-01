@@ -8,3 +8,5 @@ recursive-include Iconos *
 recursive-include VideoPlayer *
 recursive-include JAMediaImagenes *
 global-exclude *.pyc *.pyo
+include COPYING
+include README.md

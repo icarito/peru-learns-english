@@ -125,7 +125,7 @@ class CampodeEstrellas(spyral.Sprite):
         self.R = 0
         self.G = 0
         self.B = 48
-        self.image = spyral.Image(size=(500,500)).fill((self.R,self.G,self.B))
+        self.image = spyral.Image(size=(700,700)).fill((self.R,self.G,self.B))
         self.init_stars()
         self.init_animations()
 
@@ -500,9 +500,9 @@ class Escena(spyral.Scene):
         self.layers = ["abajo", "arriba", "primer"]
         self.puntos = 0
 
-        img = spyral.Image(filename=gamedir(
-            "imagenes/Crux-20100220.jpg")).scale(self.scene.size)
-        #img = spyral.Image(size=(700, 700))
+        #img = spyral.Image(filename=gamedir(
+        #    "imagenes/Crux-20100220.jpg")).scale(self.scene.size)
+        img = spyral.Image(size=(700, 700))
 
         #n = pygame.Surface.convert_alpha(img._surf)
         #n.fill((64, 0, 0, 127))
