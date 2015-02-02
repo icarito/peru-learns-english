@@ -8,6 +8,11 @@ _tick = 0
 _max_fps = 30
 _max_ups = 30
 
+class NullScene(spyral.Scene):
+    def __init__(self, size):
+        spyral.Scene.__init__(self, size)
+        self.background = spyral.Image(size=size)
+
 def quit():
     """
     Cleanly quits out of spyral by emptying the stack.
@@ -131,7 +136,9 @@ def pop():
         scene = _stack[-1]
         spyral.event.handle('director.scene.enter', scene=scene)
     else:
-        exit(0)
+        scene = NullScene((600,600))
+        _stack.append(scene)
+        #exit(0)
     pygame.event.get()
 
 def push(scene):

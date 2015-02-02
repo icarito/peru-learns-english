@@ -36,7 +36,6 @@ import pygame
 from ConfigParser import SafeConfigParser
 from Globales import COLORES
 
-
 class GameMenu(gtk.EventBox):
 
     __gsignals__ = {
@@ -115,9 +114,9 @@ class GameMenu(gtk.EventBox):
         self.gameview.hide()
 
     def start_game(self, widget, index):
-        self.gameview.run(self.topic, index)
         self.inside_vb.hide()
         self.titulo.hide()
+        self.gameview.run(self.topic, index)
 
     def __decolor(self, widget, event):
         widget.get_image().set_from_file("Imagenes/go_back_disabled.png")
@@ -144,9 +143,9 @@ class GameView(gtk.EventBox):
 
         self.game = False
         self.pump = False
+        self.firstrun = True
 
         self.pygamecanvas = sugargame2.canvas.PygameCanvas(self)
-
 
         grupo1 = gtk.Alignment(0.5, 1, 0, 0)
         separador = gtk.HSeparator()
@@ -242,6 +241,7 @@ class GameView(gtk.EventBox):
 
         rect = self.get_allocation()
         self.lado = min(rect.width-8, rect.height-8)
+        print self.lado
         self.pygamecanvas.set_size_request(self.lado, self.lado)
         spyral.director.init((self.lado, self.lado),
             fullscreen=False, max_fps=30)
@@ -261,6 +261,7 @@ class GameView(gtk.EventBox):
 
         rect = self.get_allocation()
         self.lado = min(rect.width-8, rect.height-8)
+        print self.lado
         self.pygamecanvas.set_size_request(self.lado, self.lado)
         spyral.director.init((self.lado, self.lado),
             fullscreen=False, max_fps=30)
@@ -280,6 +281,7 @@ class GameView(gtk.EventBox):
 
         rect = self.get_allocation()
         self.lado = min(rect.width-8, rect.height-8)
+        print self.lado
         self.pygamecanvas.set_size_request(self.lado, self.lado)
         spyral.director.init((self.lado, self.lado),
             fullscreen=False, max_fps=30)
@@ -303,27 +305,26 @@ class GameView(gtk.EventBox):
             gobject.source_remove(self.pump)
             self.pump = False
         if self.game:
-            try:
-                pygame.event.clear()
-                spyral.quit()
-                del(self.game)
-            except spyral.exceptions.GameEndException, pygame.error:
-                pass
-            finally:
-                self.game = False
+            pygame.mixer.music.stop()
+            spyral.director.pop()
+            self.game = False
         self.hide()
 
     def run(self, topic, game):
         self.update_score(0)
         self.volbtn.set_active(False)
         self.volbtn.get_image().set_from_file("Iconos/stock_volume-max.svg")
+        self.topic = topic
+        self.pygamecanvas.grab_focus()
+        self.show()
         if game==0:
             gamestart=self.__run_game_1
         elif game==1:
             gamestart=self.__run_game_2
         elif game==2:
             gamestart=self.__run_game_3
-        self.topic = topic
-        self.pygamecanvas.run_pygame(gamestart)
-        self.pygamecanvas.grab_focus()
-        self.show()
+        if self.firstrun:
+            self.firstrun = False
+            gobject.idle_add(self.pygamecanvas.run_pygame(gamestart))
+        else:
+            gobject.idle_add(gamestart())
