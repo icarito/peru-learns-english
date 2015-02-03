@@ -113,14 +113,7 @@ class CampodeEstrellas(spyral.Sprite):
         self.pos = spyral.Vec2D(scene.size)/2
         self.anchor = "center"
 
-        #self.back_img = spyral.Image(filename=gamedir(
-        #    "imagenes/below_the_ocean_by_arghus-d4t62um_1.jpg")).scale(self.scene.size)
-        #self.back_img2 = spyral.Image(filename=gamedir(
-        #    "imagenes/below_the_ocean_by_arghus-d4t62um_2.jpg")).scale(self.scene.size)
-        #self.back_img3 = spyral.Image(filename=gamedir(
-        #    "imagenes/below_the_ocean_by_arghus-d4t62um_3.jpg")).scale(self.scene.size)
-
-        self.offset = (0,0)
+        self.ESTADO = "bigbang"
 
         self.R = 0
         self.G = 0
@@ -134,15 +127,26 @@ class CampodeEstrellas(spyral.Sprite):
 
         self.delay = DelayAnimation(3)
         self.delay.property="demora"
-        self.animate(self.delay)
+        self.defered_spawn()
 
         spyral.event.register("CampodeEstrellas.demora.animation.end", self.spawn)
 
+        #spyral.event.register("CampodeEstrellas.speed.animation.end", self.endhandler)
+        #spyral.event.register("CampodeEstrellas.turnblue.animation.end", self.endhandler)
+        #spyral.event.register("CampodeEstrellas.turnred.animation.end", self.endhandler)
+
+    def endhandler(self):
+        print "SIII"
+        print self.G
+
     def defered_spawn(self):
-        self.animate(self.delay)
+        if not self.ESTADO=="volando":
+            self.animate(self.delay)
+            self.ESTADO = "volando"
 
     def spawn(self):
         self.scene.nave.reset()
+        self.ESTADO = "emergencia"
 
     def init_animations(self):
         self.top = 0.3
@@ -164,14 +168,6 @@ class CampodeEstrellas(spyral.Sprite):
                               spyral.Animation("B", spyral.easing.Linear(0, 48), duration=3))
         self.turnblue_anim.property = "turnblue"
 
-        self.offset_anim = spyral.Animation("offset", spyral.easing.Arc((0,0), 50), duration=5) + \
-                            spyral.Animation("offset", spyral.easing.LinearTuple((50,0),(0,0)), duration=1)
-        self.offset_anim.property = "offset"
-        #self.offset_anim = spyral.Animation("offset", spyral.easing.Polar((0,0),
-        #                            radius=lambda tetha: 50/(tetha+0.1)), duration=5)
-
-    def round(self):
-        self.animate(self.offset_anim)
 
     def speedup(self):
         # EFECTO DE COLOR
@@ -209,13 +205,12 @@ class CampodeEstrellas(spyral.Sprite):
             a.property = "turnred"
             self.animate(a)
 
-        try:
-            self.animate(self.slowdown_anim)
-        except ValueError:
-            self.stop_all_animations()
-            a = spyral.Animation("speed",
-                                spyral.easing.Linear(self.speed, self.low), duration=1)
-            self.animate(a)
+        #try:
+        self.animate(self.slowdown_anim)
+        #except ValueError:
+        #    a = spyral.Animation("speed",
+        #                        spyral.easing.Linear(self.speed, self.low), duration=1)
+        #    self.animate(a)
 
     def update(self):
         """ Move and draw the stars """
@@ -353,24 +348,23 @@ class Nave (spyral.View):
         self.direcciones = (self.n, self.s, self.e, self.o)
 
         self.visible = False
-        self.estado = "reset"
         self.elegida = None
 
         self.init_animations()
 
-        spyral.event.register("input.keyboard.down.down", self.control_s)
-        spyral.event.register("input.keyboard.down.up", self.control_n)
-        spyral.event.register("input.keyboard.down.left", self.control_o)
-        spyral.event.register("input.keyboard.down.right", self.control_e)
+        #spyral.event.register("input.keyboard.down.down", self.control_s)
+        #spyral.event.register("input.keyboard.down.up", self.control_n)
+        #spyral.event.register("input.keyboard.down.left", self.control_o)
+        #spyral.event.register("input.keyboard.down.right", self.control_e)
 
-        spyral.event.register("Bloque.wait.animation.end", self.clear)
-        spyral.event.register("Bloque.wait2.animation.end", self.repetir)
-        spyral.event.register("Bloque.wait3.animation.end", self.repetir2)
+        spyral.event.register("TimeMaster.wait.animation.end", self.clear)
+        spyral.event.register("TimeMaster.wait2.animation.end", self.repetir)
+        spyral.event.register("TimeMaster.wait3.animation.end", self.repetir2)
 
         spyral.event.register("director.update", self.update)
 
     def update(self):
-        self.pos = self.scene.campo.offset
+        self.pos = self.scene.T.offset
 
     def repetir(self):
         PALABRA, ARCHIVO = self.palabras[self.elegida]
@@ -382,31 +376,34 @@ class Nave (spyral.View):
 
     def reset(self):
         self.reset_words()
-        teclas = ("up", "down", "right", "left")
-
-        if self.elegida is not None:
-            for index in range(0,4):
-                if index==self.elegida:
-                    spyral.event.unregister("input.keyboard.down." + teclas[index], self.gana)
-                else:
-                    spyral.event.unregister("input.keyboard.down." + teclas[index], self.pierde)
 
         self.elegida = randint(0,3)
         PALABRA, ARCHIVO = self.palabras[self.elegida]
 
+        teclas = ("up", "down", "right", "left")
+        teclas2 = ("keypad_8", "keypad_2", "keypad_6", "keypad_4")
+        teclas3 = ("keypad_9", "keypad_3", "keypad_1", "keypad_7")
+
+        print "IN"
         for index in range(0,4):
             self.direcciones[index].set_word(*self.palabras[index])
             if index==self.elegida:
                 spyral.event.register("input.keyboard.down." + teclas[index], self.gana)
+                spyral.event.register("input.keyboard.down." + teclas2[index], self.gana)
+                spyral.event.register("input.keyboard.down." + teclas3[index], self.gana)
             else:
                 spyral.event.register("input.keyboard.down." + teclas[index], self.pierde)
+                spyral.event.register("input.keyboard.down." + teclas2[index], self.pierde)
+                spyral.event.register("input.keyboard.down." + teclas3[index], self.pierde)
 
         decir(50, 57, 0, "en-gb", PALABRA)
         self.invade()
 
     def pierde(self):
-        self.o.stop_animation(self.delay2_anim)
-        self.o.stop_animation(self.delay3_anim)
+        spyral.event.unregister("TimeMaster.wait.animation.end", self.clear)
+        self.clear()
+        self.scene.T.stop_animation(self.delay2_anim)
+        self.scene.T.stop_animation(self.delay3_anim)
 
         self.scene.campo.defered_spawn()
 
@@ -414,10 +411,10 @@ class Nave (spyral.View):
         print self.elegida
 
     def gana(self):
-        self.scene.campo.defered_spawn()
-
-        self.o.stop_animation(self.delay2_anim)
-        self.o.stop_animation(self.delay3_anim)
+        spyral.event.unregister("TimeMaster.wait.animation.end", self.clear)
+        self.clear()
+        self.scene.T.stop_animation(self.delay2_anim)
+        self.scene.T.stop_animation(self.delay3_anim)
 
         acertado = self.direcciones[self.elegida]
 
@@ -426,6 +423,11 @@ class Nave (spyral.View):
         self.scene.puntos += recompensa
         if Escena.gameview:
             Escena.gameview.update_score(self.scene.puntos)
+
+        print "GANA ",
+        print self.elegida
+
+        self.scene.campo.defered_spawn()
 
     def reset_words(self):
         self.palabras = obtener_set(self.topic)
@@ -449,11 +451,6 @@ class Nave (spyral.View):
         self.delay3_anim.property = "wait3"
 
     def invade(self):
-        if self.estado == "invade":
-            self.clear()
-
-        self.estado = "invade"
-
         direcciones = (self.n, self.s, self.e, self.o)
 
         for bloque in direcciones:
@@ -462,33 +459,66 @@ class Nave (spyral.View):
         self.visible = True
         self.scene.campo.slowdown()
 
-        self.o.stop_animation(self.delay_anim)
-        self.o.animate(self.delay_anim)
-        self.o.animate(self.delay2_anim)
-        self.o.animate(self.delay3_anim)
-        self.scene.campo.round()
+        self.scene.T.stop_animation(self.delay_anim)
+        self.scene.T.animate(self.delay_anim)
+        self.scene.T.animate(self.delay2_anim)
+        self.scene.T.animate(self.delay3_anim)
+        self.scene.T.round()
 
     def clear(self, acertada=None):
-        self.estado = "reset"
+        self.scene.T.stop_round()
         for bloque in self.n,self.s,self.e,self.o:
             if bloque==acertada:
                 print bloque
             bloque.stop_animation(self.invasion_anim)
-        self.o.stop_animation(self.delay_anim)
+        self.scene.T.stop_animation(self.delay_anim)
         self.visible = False
         self.scene.campo.speedup()
 
-    def control_n(self):
-        self.clear()
+        teclas = ("up", "down", "right", "left")
+        teclas2 = ("keypad_8", "keypad_2", "keypad_6", "keypad_4")
+        teclas3 = ("keypad_9", "keypad_3", "keypad_1", "keypad_7")
 
-    def control_s(self):
-        self.clear()
+        if self.elegida is not None:
+            print "OUT"
+            for index in range(0,4):
+                if index==self.elegida:
+                    spyral.event.unregister("input.keyboard.down." + teclas2[index], self.gana)
+                    spyral.event.unregister("input.keyboard.down." + teclas3[index], self.gana)
+                    spyral.event.unregister("input.keyboard.down." + teclas[index], self.gana)
+                else:
+                    spyral.event.unregister("input.keyboard.down." + teclas2[index], self.pierde)
+                    spyral.event.unregister("input.keyboard.down." + teclas3[index], self.pierde)
+                    spyral.event.unregister("input.keyboard.down." + teclas[index], self.pierde)
 
-    def control_e(self):
-        self.clear()
+class TimeMaster(spyral.Sprite):
+    def __init__(self, scene):
+        spyral.Sprite.__init__(self, scene)
 
-    def control_o(self):
-        self.clear()
+        self.ESTADO = "bigbang"
+
+        self.image = spyral.Image(size=(1,1))
+        self.pos = (-1,-1)
+
+        self.offset = (0,0)
+
+        self.offset_anim = spyral.Animation("offset", spyral.easing.Arc((0,0), 50), duration=5) + \
+                            spyral.Animation("offset", spyral.easing.LinearTuple((50,0),(0,0)), duration=1)
+        self.offset_anim.property = "offset"
+
+        spyral.event.register("TimeMaster.offset.animation.end", self.endhandler)
+
+    def endhandler(self):
+        self.ESTADO = "quieto"
+
+    def round(self):
+        if not self.ESTADO=="rodando":
+            self.animate(self.offset_anim)
+            self.ESTADO = "rodando"
+
+    def stop_round(self):
+        if self.ESTADO=="rodando":
+            self.stop_animation(self.offset_anim)
 
 class Escena(spyral.Scene):
     MUTE = False
@@ -497,6 +527,7 @@ class Escena(spyral.Scene):
     def __init__(self, topic=topic_dir, fake_gtk=False, gameview=False):
         spyral.Scene.__init__(self, SIZE)
 
+        self.T = TimeMaster(self)
         self.layers = ["abajo", "arriba", "primer"]
         self.puntos = 0
 
