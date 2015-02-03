@@ -83,6 +83,11 @@ def obtener_palabra(topic_dir=topic_dir):
 
     return palabra, palabra_png
 
+def reset_vocabulario():
+    global VOCABULARIO, CANT_PALABRAS
+    VOCABULARIO = []
+    CANT_PALABRAS = 0
+
 
 # Tomado de Spyral
 class DelayAnimation(spyral.Animation):
@@ -761,6 +766,8 @@ class Intro(spyral.Scene):
     def __init__(self, topic=topic_dir, gameview=False):
         spyral.Scene.__init__(self, SIZE)
 
+        reset_vocabulario()
+
         global topic_dir
         topic_dir = topic
         self.topic = topic
@@ -790,7 +797,7 @@ class Intro(spyral.Scene):
             pygame.mixer.music.pause()
         else:
             pygame.mixer.music.play()
-            
+
         Intro.MUTE = value
 
     def goplay(self):

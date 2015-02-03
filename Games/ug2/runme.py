@@ -64,23 +64,33 @@ font_path = gamedir("../fonts/DejaVuSans.ttf")
 topic_dir = gamedir("../../Topics/Topic_4/")
 
 
-def obtener_palabra(topic_dir):
-    archivo = os.path.join(topic_dir, "vocabulario.csv")
-    tabla = csv.DictReader(file(archivo))
-    lista = []
-    for linea in tabla:
-        uid = linea["id"]
-        palabra_png = os.path.join(topic_dir, "Imagenes", uid + '.png')
-        #if os.path.exists(palabra_png):
-        lista.append(linea)
+VOCABULARIO = []
+CANT_PALABRAS = 0
 
-    indice = random.randint(0, len(lista) - 1)
+def obtener_palabra(topic_dir=topic_dir):
+    global VOCABULARIO, CANT_PALABRAS
 
-    palabra = lista[indice]["term"]
-    uid = lista[indice]["id"]
+    if not VOCABULARIO:
+        archivo = os.path.join(topic_dir, "vocabulario.csv")
+        tabla = csv.DictReader(file(archivo))
+        for linea in tabla:
+            VOCABULARIO.append(linea)
+        CANT_PALABRAS = len(VOCABULARIO)
+
+    indice = random.randint(0, len(VOCABULARIO) - 1)
+
+    palabra = VOCABULARIO[indice]["term"]
+    uid = VOCABULARIO[indice]["id"]
     palabra_png = os.path.join(topic_dir, "Imagenes", uid + '.png')
 
+    VOCABULARIO.pop(indice)
+
     return palabra, palabra_png
+
+def reset_vocabulario():
+    global VOCABULARIO, CANT_PALABRAS
+    VOCABULARIO = []
+    CANT_PALABRAS = 0
 
 def obtener_set(topic):
     conjunto = list()
@@ -759,6 +769,8 @@ class Escena(spyral.Scene):
 
         spyral.Scene.__init__(self, SIZE)
 
+        reset_vocabulario()
+
         img = spyral.Image(filename=gamedir(
             "imagenes/Fazenda_Colorada.jpg")).scale(self.scene.size)
 
@@ -857,7 +869,7 @@ class Escena(spyral.Scene):
             pygame.mixer.music.pause()
         else:
             pygame.mixer.music.play()
-            
+
         Escena.MUTE = value
 
     def score(self):

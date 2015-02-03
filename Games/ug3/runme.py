@@ -22,6 +22,7 @@ import sys
 import os
 import math
 import time
+import random
 
 game_dir = os.path.abspath(os.path.dirname(__file__))
 def gamedir(archivo):
@@ -70,24 +71,33 @@ def wrap(text, length):
 font_path = gamedir("../fonts/DejaVuSans.ttf")
 topic_dir = gamedir("../../Topics/Topic_5/")
 
+VOCABULARIO = []
+CANT_PALABRAS = 0
 
-def obtener_palabra(topic_dir):
-    archivo = os.path.join(topic_dir, "vocabulario.csv")
-    tabla = csv.DictReader(file(archivo))
-    lista = []
-    for linea in tabla:
-        uid = linea["id"]
-        palabra_png = os.path.join(topic_dir, "Imagenes", uid + '.png')
-        #if os.path.exists(palabra_png):
-        lista.append(linea)
+def obtener_palabra(topic_dir=topic_dir):
+    global VOCABULARIO, CANT_PALABRAS
 
-    indice = randint(0, len(lista) - 1)
+    if not VOCABULARIO:
+        archivo = os.path.join(topic_dir, "vocabulario.csv")
+        tabla = csv.DictReader(file(archivo))
+        for linea in tabla:
+            VOCABULARIO.append(linea)
+        CANT_PALABRAS = len(VOCABULARIO)
 
-    palabra = lista[indice]["term"]
-    uid = lista[indice]["id"]
+    indice = random.randint(0, len(VOCABULARIO) - 1)
+
+    palabra = VOCABULARIO[indice]["term"]
+    uid = VOCABULARIO[indice]["id"]
     palabra_png = os.path.join(topic_dir, "Imagenes", uid + '.png')
 
+    VOCABULARIO.pop(indice)
+
     return palabra, palabra_png
+
+def reset_vocabulario():
+    global VOCABULARIO, CANT_PALABRAS
+    VOCABULARIO = []
+    CANT_PALABRAS = 0
 
 def obtener_set(topic):
     conjunto = list()
@@ -125,19 +135,11 @@ class CampodeEstrellas(spyral.Sprite):
         spyral.event.register("director.update", self.update)
         spyral.event.register("director.pre_update", self.predraw)
 
-        self.delay = DelayAnimation(3)
+        self.delay = DelayAnimation(5)
         self.delay.property="demora"
         self.defered_spawn()
 
         spyral.event.register("CampodeEstrellas.demora.animation.end", self.spawn)
-
-        #spyral.event.register("CampodeEstrellas.speed.animation.end", self.endhandler)
-        #spyral.event.register("CampodeEstrellas.turnblue.animation.end", self.endhandler)
-        #spyral.event.register("CampodeEstrellas.turnred.animation.end", self.endhandler)
-
-    def endhandler(self):
-        print "SIII"
-        print self.G
 
     def defered_spawn(self):
         if not self.ESTADO=="volando":
@@ -163,24 +165,25 @@ class CampodeEstrellas(spyral.Sprite):
                               spyral.Animation("R", spyral.easing.QuadraticOut(0, 128), duration=3))
         self.turnred_anim.property = "turnred"
 
-        self.turnblue_anim = ( spyral.Animation("R", spyral.easing.Linear(128, 0), duration=3) &
+        self.turnblue_anim = ( spyral.Animation("R", spyral.easing.Linear(192, 0), duration=3) &
                               spyral.Animation("G", spyral.easing.Linear(32, 0), duration=5) &
                               spyral.Animation("B", spyral.easing.Linear(0, 48), duration=3))
         self.turnblue_anim.property = "turnblue"
 
+        self.turnblue_alt_anim = ( spyral.Animation("R", spyral.easing.Linear(128, 0), duration=2) & 
+                  spyral.Animation("G", spyral.easing.Linear(192, 0), duration=3) &
+                  spyral.Animation("B", spyral.easing.Linear(128, 48), duration=2))
+        self.turnblue_alt_anim.property = "turnblue"
 
-    def speedup(self):
+    def speedup(self, result):
         # EFECTO DE COLOR
-        try:
+        self.stop_all_animations()
+        self.stop_all_animations()
+        if result:
+            self.animate(self.turnblue_alt_anim)
+        else:
             self.animate(self.turnblue_anim)
-        except ValueError:
-            self.stop_all_animations()
-            self.stop_all_animations()
-            a = ( spyral.Animation("R", spyral.easing.Linear(self.R, 0), duration=1) &
-                  spyral.Animation("G", spyral.easing.Linear(self.G, 0), duration=1) &
-                  spyral.Animation("B", spyral.easing.Linear(self.B, 48), duration=1))
-            a.property = "turnblue"
-            self.animate(a)
+
 
         # EFECTO DE VELOCIDAD
         try:
@@ -205,12 +208,13 @@ class CampodeEstrellas(spyral.Sprite):
             a.property = "turnred"
             self.animate(a)
 
-        #try:
-        self.animate(self.slowdown_anim)
-        #except ValueError:
-        #    a = spyral.Animation("speed",
-        #                        spyral.easing.Linear(self.speed, self.low), duration=1)
-        #    self.animate(a)
+        try:
+            self.animate(self.slowdown_anim)
+        except ValueError:
+            self.stop_all_animations()
+            a = spyral.Animation("speed",
+                                spyral.easing.Linear(self.speed, self.low), duration=1)
+            self.animate(a)
 
     def update(self):
         """ Move and draw the stars """
@@ -330,6 +334,8 @@ class Nave (spyral.View):
     def __init__(self, scene, topic):
         spyral.View.__init__(self, scene)
 
+        self.result = None
+
         self.topic = topic
         self.reset_words()
 
@@ -352,11 +358,6 @@ class Nave (spyral.View):
 
         self.init_animations()
 
-        #spyral.event.register("input.keyboard.down.down", self.control_s)
-        #spyral.event.register("input.keyboard.down.up", self.control_n)
-        #spyral.event.register("input.keyboard.down.left", self.control_o)
-        #spyral.event.register("input.keyboard.down.right", self.control_e)
-
         spyral.event.register("TimeMaster.wait.animation.end", self.clear)
         spyral.event.register("TimeMaster.wait2.animation.end", self.repetir)
         spyral.event.register("TimeMaster.wait3.animation.end", self.repetir2)
@@ -368,11 +369,20 @@ class Nave (spyral.View):
 
     def repetir(self):
         PALABRA, ARCHIVO = self.palabras[self.elegida]
-        decir(70, 57, 0, "en-gb", PALABRA)
+        print "R1", self.result
+        if self.result==None:
+            decir(70, 57, 0, "en-gb", PALABRA)
 
     def repetir2(self, modifier=0):
         PALABRA, ARCHIVO = self.palabras[self.elegida]
-        decir(100, 37, 0, "en-gb", PALABRA)
+        print "R2", self.result
+        if self.result==None:
+            decir(100, 37, 0, "en-gb", PALABRA)
+        elif self.result==True:
+            decir(100, 37, 0, "en-gb", "correct!")
+        elif self.result==False:
+            decir(50, 57, 0, "en-gb", "wrong!")
+        self.result = None
 
     def reset(self):
         self.reset_words()
@@ -384,7 +394,6 @@ class Nave (spyral.View):
         teclas2 = ("keypad_8", "keypad_2", "keypad_6", "keypad_4")
         teclas3 = ("keypad_9", "keypad_3", "keypad_1", "keypad_7")
 
-        print "IN"
         for index in range(0,4):
             self.direcciones[index].set_word(*self.palabras[index])
             if index==self.elegida:
@@ -400,34 +409,32 @@ class Nave (spyral.View):
         self.invade()
 
     def pierde(self):
+        self.result = False
         spyral.event.unregister("TimeMaster.wait.animation.end", self.clear)
         self.clear()
+        spyral.event.register("TimeMaster.wait.animation.end", self.clear)
         self.scene.T.stop_animation(self.delay2_anim)
         self.scene.T.stop_animation(self.delay3_anim)
 
-        self.scene.campo.defered_spawn()
-
-        print "PIERDE ",
-        print self.elegida
-
-    def gana(self):
-        spyral.event.unregister("TimeMaster.wait.animation.end", self.clear)
-        self.clear()
-        self.scene.T.stop_animation(self.delay2_anim)
-        self.scene.T.stop_animation(self.delay3_anim)
-
-        acertado = self.direcciones[self.elegida]
-
-        recompensa = 200
-
-        self.scene.puntos += recompensa
+        castigo = -50
+        self.scene.puntos += castigo
         if Escena.gameview:
             Escena.gameview.update_score(self.scene.puntos)
 
-        print "GANA ",
-        print self.elegida
+    def gana(self):
+        self.result = True
+        spyral.event.unregister("TimeMaster.wait.animation.end", self.clear)
+        self.clear()
+        spyral.event.register("TimeMaster.wait.animation.end", self.clear)
+        self.scene.T.stop_animation(self.delay2_anim)
+        self.scene.T.stop_animation(self.delay3_anim)
 
-        self.scene.campo.defered_spawn()
+        #acertado = self.direcciones[self.elegida]
+
+        recompensa = 200
+        self.scene.puntos += recompensa
+        if Escena.gameview:
+            Escena.gameview.update_score(self.scene.puntos)
 
     def reset_words(self):
         self.palabras = obtener_set(self.topic)
@@ -473,14 +480,15 @@ class Nave (spyral.View):
             bloque.stop_animation(self.invasion_anim)
         self.scene.T.stop_animation(self.delay_anim)
         self.visible = False
-        self.scene.campo.speedup()
+        
+        self.scene.campo.speedup(self.result)
+        self.scene.campo.defered_spawn()
 
         teclas = ("up", "down", "right", "left")
         teclas2 = ("keypad_8", "keypad_2", "keypad_6", "keypad_4")
         teclas3 = ("keypad_9", "keypad_3", "keypad_1", "keypad_7")
 
         if self.elegida is not None:
-            print "OUT"
             for index in range(0,4):
                 if index==self.elegida:
                     spyral.event.unregister("input.keyboard.down." + teclas2[index], self.gana)
@@ -526,6 +534,8 @@ class Escena(spyral.Scene):
 
     def __init__(self, topic=topic_dir, fake_gtk=False, gameview=False):
         spyral.Scene.__init__(self, SIZE)
+
+        reset_vocabulario()
 
         self.T = TimeMaster(self)
         self.layers = ["abajo", "arriba", "primer"]
