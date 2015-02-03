@@ -164,7 +164,7 @@ class GameView(gtk.EventBox):
         butt.set_image(img)
         butt.set_label("")
         butt.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
-        butt.connect("clicked", self.__emit_video)
+        butt.connect("clicked", self.__reset_menu)
         butt.connect("enter-notify-event", self.__color)
         butt.connect("leave-notify-event", self.__decolor)
         img.show()
@@ -228,8 +228,10 @@ class GameView(gtk.EventBox):
     def __color(self, widget, event):
         widget.get_image().set_from_file("Imagenes/go_back.png")
 
-    def __emit_video(self, widget):
-        self.emit("video", self.topic)
+    def __reset_menu(self, widget):
+        self.stop()
+        self.parent.show_all()
+        self.hide()
 
     def __reescalar(self, widget, event):
         if self.game:
