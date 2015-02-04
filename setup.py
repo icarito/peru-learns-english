@@ -7,7 +7,8 @@ from glob import glob
 #from datafiles import data_files
 import mkdatafiles
 data_files = mkdatafiles.get_data_files()
-	
+data_files.append(("/usr/share/applications/", ["Peru_Learns_English.desktop"]))
+
 setup(
 	name = "Peru_Learns_English",
 	version = "0.3",
