@@ -1,22 +1,21 @@
-id,term
-angry,angry
-artisan,artisan
-artist,artist
-book,book
-bored,bored
-candle,candle
-chair,chair
-electrician,electrician
-engineer,engineer
-farmer,farmer
-happy,happy
-mechanic,mechanic
-music,music
-nurse,nurse
-pilot,pilot
-sad,sad
-scream,scream
-smile,smile
-surprised,surprised
-teacher,teacher
-veterinarian,veterinarian
+id,term,preg_alt,resp_alt
+angry,angry,"How is she feeling?","she is feeling angry."
+artisan,artisan,"What does he do?","He is an artisan."
+artist,artist,"What does he do?","He is an artist."
+book,book,,"This is a book."
+bored,bored,"How is she feeling?","She is feeling bored."
+candle,candle,,"This is a candle."
+chair,chair,,"This is a chair."
+electrician,electrician,"What does he do?","He is an electrician."
+engineer,engineer,"What does he do?","He is an engineer."
+farmer,farmer,"What does he do?","He is a farmer."
+happy,happy,"How is she feeling?","She's feeling happy."
+mechanic,mechanic,"What does he do?","He is a mechanic."
+music,music,"What is this?","It's music."
+nurse,nurse,"What does she do?","She is a nurse."
+pilot,pilot,"What does he do?","He is a pilot."
+sad,sad,"How is she feeling?","She's feeling sad."
+scream,"to scream","What is she doing?","She is screaming."
+smile,"to smile","What is she doing?","She is smiling."
+surprised,surprised,"How is she feeling?","She is feeling surprised."
+teacher,teacher,"What does she do?","She is a teacher."

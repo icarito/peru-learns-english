@@ -80,8 +80,10 @@ class FlashCardView(gtk.EventBox):
         self.derecha.connect("show_answer", self.__show_answer)
 
     def __show_answer(self, widget):
-        respuesta = self.vocabulario[self.index_select][1]
-        self.derecha.label.set_text(respuesta)
+        index = self.index_select
+        respuesta = self.vocabulario[index][3] if len(self.vocabulario[index]) > 3 else \
+                    self.vocabulario[index][1]
+        self.derecha.label.set_text(self.vocabulario[index][1])
         decir(50, 57, 0, "en-gb", respuesta)
 
     def __siguiente(self, widget, respuesta):
@@ -120,14 +122,18 @@ class FlashCardView(gtk.EventBox):
             self.imagenplayer = False
         self.imagenplayer = ImagePlayer(self.flashcard.drawing)
         self.imagenplayer.load(path)
-        self.cabecera.label2.modify_fg(gtk.STATE_NORMAL, COLORES["rojo"])
-        gobject.idle_add(self.__activar)
+        self.cabecera.question_label.modify_fg(gtk.STATE_NORMAL, COLORES["rojo"])
+        pregunta = self.vocabulario[index][2] if len(self.vocabulario[index]) > 2 else ""
+        if pregunta == "":
+            pregunta = "What is this?"
+        self.cabecera.question_label.set_text(pregunta)
+        gobject.idle_add(self.__activar, pregunta)
         return False
 
-    def __activar(self):
-        decir_demorado(170, 50, 0, "en", "What is This?")
+    def __activar(self, pregunta):
+        decir_demorado(170, 50, 0, "en", pregunta)
         self.derecha.activar()
-        self.cabecera.label2.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
+        self.cabecera.question_label.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
         self.statuslabel.set_text("Flashcard %i of %i" % (
             self.index_select + 1, len(self.vocabulario)))
         return False
@@ -200,27 +206,27 @@ class Cabecera(gtk.EventBox):
         self.modify_bg(gtk.STATE_NORMAL, COLORES["contenido"])
 
         tabla = gtk.Table(rows=2, columns=2, homogeneous=True)
-        tabla.set_property("column-spacing", 5)
-        tabla.set_property("row-spacing", 5)
+        tabla.set_property("column-spacing", 2)
+        tabla.set_property("row-spacing", 2)
         tabla.set_border_width(4)
 
         self.titulo = gtk.Label("Título")
         self.titulo.set_property("justify", gtk.JUSTIFY_CENTER)
-        self.titulo.modify_font(pango.FontDescription("DejaVu Sans Bold 20"))
+        self.titulo.modify_font(pango.FontDescription("DejaVu Sans Bold 16"))
         self.titulo.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
 
         self.subtitulo = gtk.Image()
         self.subtitulo.set_from_file("Imagenes/flashcards_disabled.png")
         self.subtitulo.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
 
-        self.label2 = gtk.Label("What is This?")
-        self.label2.set_property("justify", gtk.JUSTIFY_CENTER)
-        self.label2.modify_font(pango.FontDescription("DejaVu Sans 16"))
-        self.label2.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
+        self.question_label = gtk.Label("What is This?")
+        self.question_label.set_property("justify", gtk.JUSTIFY_CENTER)
+        self.question_label.modify_font(pango.FontDescription("DejaVu Sans 16"))
+        self.question_label.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
 
-        tabla.attach(self.titulo, 0, 2, 0, 1)
-        tabla.attach(self.subtitulo, 0, 1, 1, 2)
-        tabla.attach(self.label2, 1, 2, 1, 2)
+        tabla.attach(self.titulo, 1, 2, 0, 1)
+        tabla.attach(self.subtitulo, 0, 1, 0, 1)
+        tabla.attach(self.question_label, 0, 2, 1, 2)
 
         self.add(tabla)
         self.show_all()

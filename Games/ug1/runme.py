@@ -55,8 +55,6 @@ def wrap(text, length):
             lines.append(line)
     return '\n'.join(lines)
 
-
-
 font_path = gamedir("../fonts/DejaVuSans.ttf")
 topic_dir = gamedir("../../Topics/Topic_2/")
 
@@ -227,7 +225,7 @@ class Tablero(spyral.Sprite):
         while self.palabra_anterior == self.palabra:
             self.palabra, self.archivo_img = obtener_palabra(self.topic)
         self.text = self.palabra
-        self.acertadas = ""
+        self.acertadas = " "
         self.mostrar(self.palabra, self.acertadas)
         self.scene.l.reset()
         self.scene.v.reset()
