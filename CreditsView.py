@@ -19,6 +19,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import os
+import cairo
 import gtk
 import gobject
 
@@ -101,6 +103,8 @@ RED = 255
 GREEN = 255
 BLUE = 255
 
+BASE_PATH = os.path.dirname(__file__)
+
 
 class CreditsView(gtk.EventBox):
 
@@ -135,115 +139,32 @@ class Visor(gtk.DrawingArea):
 
         self.posy = 300
         self.update = False
-        self._dict = {}
+        self.imagen = False
 
         self.connect("expose-event", self.__expose)
         self.connect("realize", self.__realize)
         self.show_all()
 
     def __expose(self, widget, event):
-        self.new_handle(False)
-        self.__realize(False)
-        cr = self.get_property("window").cairo_create()
-        rect = self.get_allocation()
-        new_tam = TAM
-
-        for key in sorted(self._dict.keys()):
-            tam = self._dict[key].get("tam", TAM)
-            cr.select_font_face(self._dict[key].get("font", FONT))
-            cr.set_font_size(tam)
-            (x_bearing, y_bearing, width, height, x_advance, y_advance) = cr.text_extents(self._dict[key]["text"])
-            while width > rect.width:
-                tam -= 1
-                cr.set_font_size(tam)
-                (x_bearing, y_bearing, width, height, x_advance, y_advance) = cr.text_extents(self._dict[key]["text"])
-
-            if tam < new_tam:
-                new_tam = tam
-
-        for key in sorted(self._dict.keys()):
-            cr.select_font_face(self._dict[key].get("font", FONT))
-            cr.set_font_size(new_tam)
-            (x_bearing, y_bearing, width, height, x_advance, y_advance) = cr.text_extents(self._dict[key]["text"])
-
-            self._dict[key]["height"] = height + (y_bearing * -1)
-            self._dict[key]["width"] = width
-            self._dict[key]["tam"] = new_tam
-
         self.new_handle(True)
 
     def __realize(self, widget):
-        cr = self.get_property("window").cairo_create()
-
-        _dict = {}
-        cont = 0
-        for line in TEXT:
-            tam = TAM
-            cr.select_font_face(FONT)
-            cr.set_font_size(tam)
-
-            (x_bearing, y_bearing, width, height, x_advance, y_advance) = cr.text_extents(line)
-
-            titulos = [
-                "Peru Learns English / Perú Aprende Inglés",
-                "=========================================",
-                "Credits / Créditos",
-                "------------------",
-                "### User Experience Design / Diseño de Experiencia de Usuario ###",
-                "### Code / Código ###",
-                "### Videos and Images / Videos e Imágenes ###",
-                "Attribution  of Works / Reconocimiento de Obras",
-                "-----------------------------------------------",
-                ]
-            color = (RED, GREEN, BLUE)
-
-            if line in titulos:
-                color = (0, 0, 255)
-
-            _dict[cont] = {
-                "text": line,
-                "font": FONT,
-                "tam": tam,
-                "color": color,
-                "height": height + (y_bearing * -1),
-                "width": width,
-                }
-
-            cont += 1
-
-        self._dict = _dict.copy()
+        cr = self.window.cairo_create()
+        self.imagen = cairo.ImageSurface.create_from_png(os.path.join(
+            BASE_PATH, "Iconos", "creditos_ple.png"))
 
     def __handle(self):
+        cr = self.window.cairo_create()
+        x, y, w, h = self.get_allocation()
+        cr.rectangle (x, y, w, h)
+        ww = self.imagen.get_width()
+        hh = self.imagen.get_height()
+        x = w / 2 - ww / 2
+        cr.set_source_surface(self.imagen, x, self.posy)
+        cr.fill ()
         self.posy -= 1
-        cr = self.get_property("window").cairo_create()
-        rect = self.get_allocation()
-
-        cr.set_source_rgb(0, 0, 0)
-        cr.paint()
-
-        y = self.posy
-        for key in sorted(self._dict.keys()):
-            cr.select_font_face(self._dict[key].get("font", FONT))
-            cr.set_font_size(self._dict[key].get("tam", TAM))
-            r, g, b = self._dict[key].get("color", (RED, GREEN, BLUE))
-            cr.set_source_rgb(r, g, b)
-
-            w = self._dict[key].get("width", 0)
-            h = self._dict[key].get("height", 0)
-            #if self._dict[key]["text"] == "Peru Learns English" or \
-            #    self._dict[key]["text"] == "===================":
-            cr.move_to(rect.width / 2 - w / 2, y)
-            #else:
-            #    cr.move_to(10, y)
-
-            if self._dict[key]["text"] != "HHH" and y > 0 and y < rect.height:
-                cr.show_text(self._dict[key]["text"])
-
-            y += h
-
-        if y < 0:
-            self.posy = rect.height
-
+        if self.posy < -hh:
+            self.posy = h
         return True
 
     def new_handle(self, reset):
