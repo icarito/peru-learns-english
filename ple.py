@@ -120,6 +120,7 @@ class Main(gtk.Window):
     def __play_video(self, widget, topic):
         self.__switch(False, "Topics", topic)
         self.videoview.set_full(False)
+        self.videoview.videoplayer.pause()
 
     def __play_credits(self, widget):
         self.__switch(False, "Credits")
