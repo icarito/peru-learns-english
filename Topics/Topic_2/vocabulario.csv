@@ -1,27 +1,27 @@
-id,term
-blue,blue
-brown,brown
-call,call
-clean,clean
-draw,draw
-dream,dream
-drink,drink
-ear,ear
-eat,eat
-feet,feet
-finger,finger
-foot,foot
-hair,hair
-knee,knee
-leg,leg
-mother,mother
-mouth,mouth
-navel,navel
-nose,nose
-orange,orange
-pink,pink
-read,read
-red,red
-toe,toe
-white,white
-yellow,yellow
+id,term,preg_alt,resp_alt
+blue,blue,What color is this?,This is blue.
+brown,brown,What color is this?,This is brown.
+call,to call,What is he doing?,He is calling.
+wash,to wash,What is he doing?,He is washing.
+drawing,drawing,,This is a drawing.
+dream,to dream,What is he doing?,He is dreaming.
+drink,to drink,What is he doing?,He is drinking.
+ear,ear,,This is an ear.
+eat,eat,What is she doing?,She is eating
+feet,feet,,This are feet.
+finger,finger,,This is a finger.
+foot,foot,,This are feet.
+hair,hair,,This is hair.
+knee,knee,,This is a knee.
+leg,leg,,This is a leg.
+mother,mother,What is she?,She is a mother.
+mouth,mouth,,This is a mouth.
+navel,navel,,This is a navel.
+nose,nose,,This is a nose.
+orange,orange,What color is this?,This is orange.
+pink,pink,What color is this?,This is pink.
+read,to read,What is she doing?,She is reading.
+red,red,What color is this?,This is red.
+toe,toe,,This is a toe.
+white,white,What color is this?,This is white.
+yellow,yellow,What color is this?,This is yellow.

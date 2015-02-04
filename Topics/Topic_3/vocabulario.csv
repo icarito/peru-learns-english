@@ -1,21 +1,17 @@
-id,term
-athlete,athlete
-ball,ball
-canoe,canoe
-climb,climb
-dive,dive
-dry,dry
-family,family
-hike,hike
-jog,jog
-judo,judo
-jump,jump
-meal,meal
-medal,medal
-net,net
-night,night
-path,path
-race,race
-shower,shower
-skate,skate
-stretch,stretch
+id,term,preg_alt,resp_alt
+athlete,athlete,What does he do?,He is an athete.
+ball,ball,,This is a ball.
+canoe,canoe,,This is a canoe.
+climb,to climb,What is he doing?,He is climbing.
+dive,to dive,What is she doing?,She is diving.
+family,family,,This is a family.
+walk,to walk,What is she doing?,She is waking.
+jog,to jog,What is he doing?,He is joging.
+jump,to jump,What is he doing?,He is jumping.
+meal,meal,,This is a meal.
+medal,medal,,This is a medal.
+net,net,,This is a net.
+path,path,,This is a path.
+race,to race,What are they doing?,They are racing.
+skate,to skate,What is he doing?,He is skating.
+stretch,to stretch,What is she doing?,She is stretching.
