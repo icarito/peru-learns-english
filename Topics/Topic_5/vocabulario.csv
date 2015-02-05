@@ -1,22 +1,22 @@
-id,term
-cat,cat
-cow,cow
-crab,crab
-crocodile,crocodile
-dog,dog
-dolphin,dolphin
-dove,dove
-explore,explore
-feed,feed
-frog,frog
-jaguar,jaguar
-jellyfish,jellyfish
-left,left
-llama,llama
-mouse,mouse
-mud,mud
-nest,nest
-pelican,pelican
-right,right
-sheep,sheep
-turtle,turtle
+id,term,preg_alt,resp_alt
+cat,cat,,This is a cat.
+cow,cow,,This is a cow.
+crab,crab,,This is a crab.
+crocodile,crocodile,,This is a crocodile.
+dog,dog,,This is a dog.
+dolphin,dolphin,,This is a dolphin.
+dove,dove,,This is a dove.
+explore,to explore,What are they doing?,They are exploring.
+feed,to feed,What is the bird doing?,It is feeding.
+frog,frog,,This is a frog.
+jaguar,jaguar,,This is a jaguar.
+jellyfish,jellyfish,,This is a jellyfish.
+left,left,Which direction is this?,This is left.
+llama,llama,,This is a llama.
+mouse,mouse,,This is a mouse.
+mud,mud,,This is mud.
+nest,nest,,This is a nest.
+pelican,pelican,,This is a pelican.
+right,right,Which direction is this?,This is right.
+sheep,sheep,,This is a sheep.
+turtle,turtle,,This is a turtle.

@@ -1,26 +1,26 @@
-id,term
-bread,bread
-broccoli,broccoli
-carrot,carrot
-cheese,cheese
-clam,clam
-corn,corn
-egg,egg
-forest,forest
-fork,fork
-garden,garden
-grape,grape
-lake,lake
-mountain,mountain
-olive,olive
-onion,onion
-pea,pea
-radish,radish
-rain,rain
-rice,rice
-shell,shell
-smell,smell
-soup,soup
-spoon,spoon
-tomato,tomato
-water,water
+id,term,preg_alt,resp_alt
+bread,bread,,This is bread.
+broccoli,broccoli,,This is a broccoli.
+carrot,carrot,,This is a carrot.
+cheese,cheese,,This is cheese.
+clam,clam,,This is a clam.
+corn,corn,,This is corn.
+egg,egg,,This is an egg.
+forest,forest,,This is a forest.
+fork,fork,,This is a fork.
+garden,garden,,This is a garden.
+grapes,grapes,,These are grapes.
+lake,lake,,This is a lake.
+mountain,mountain,,This is a mountain.
+olives,olives,,These are olives.
+onions,onions,,These are onions.
+peas,peas,,These are peas.
+radish,radish,,This is a radish.
+rain,rain,,This is rain.
+rice,rice,,This is rice.
+shell,shell,,This is a shell.
+smell,smell,What is she doing?,She is smelling.
+soup,soup,,This is soup.
+spoon,spoon,,This is a spoon.
+tomato,tomato,,This is a tomato.
+water,water,,This is water.
