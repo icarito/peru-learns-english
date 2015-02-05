@@ -1,4 +1,5 @@
 id,term,preg_alt,resp_alt
+apple,apple,,It's an apple.
 bread,bread,,It's bread.
 broccoli,broccoli,,It's a broccoli.
 carrot,carrot,,It's a carrot.
@@ -10,10 +11,14 @@ eat,to eat,What is she doing?,She is eating.
 egg,egg,,It's an egg.
 feed,to feed,What is the bird doing?,It is feeding.
 fork,fork,,It's a fork.
+glass,glass,,It's a glass.
 grapes,grapes,What are these?,These are grapes.
-meal,meal,,This is a meal.
+lemon,lemon,,It's a lemon.
+meal,meal,,It's a meal.
 olives,olives,What are these?,These are olives.
 onions,onions,What are these?,These are onions.
+orange,orange,,It's an orange.
+pear,pear,,It's a pear.
 peas,peas,What are these?,These are peas.
 people,people,What are these?,These are people.
 radish,radish,,It's a radish.

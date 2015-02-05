@@ -1,13 +1,14 @@
 id,term,preg_alt,resp_alt
-bucket,bucket,,This is a bucket.
-coat,coat,,This is a coat.
-coins,coins,,These are coins.
-jacket,jacket,,This is a jacket.
-nail,nail,,This is a nail.
-pants,pants,,These are pants.
-raincoat,raincoat,,This is a raincoat.
-shed,shed,,This is a shed.
-shirt,shirt,,This is a shirt.
-boot,boot,,This is a boot.
-sneaker,sneaker,,This is a sneaker.
-sock,sock,,This is a sock.
+bucket,bucket,,It's a bucket.
+cap,cap,,It's a cap.
+coat,coat,,It's a coat.
+coins,coins,What are these?,These are coins.
+jacket,jacket,,It's a jacket.
+nail,nail,,It's a nail.
+pants,pants,What are these?,These are pants.
+raincoat,raincoat,What is he wearing?,It's a raincoat.
+shed,shed,,It's a shed.
+shirt,shirt,,It's a shirt.
+boot,boot,,It's a boot.
+sneaker,sneaker,,It's a sneaker.
+sock,sock,,It's a sock.

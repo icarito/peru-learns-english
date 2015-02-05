@@ -65,7 +65,7 @@ class FlashCardView(gtk.EventBox):
         self.cabecera = Cabecera()
         self.flashcard = FlashCard()
 
-        tabla.attach(self.cabecera, 0, 3, 0, 2)
+        tabla.attach(self.cabecera, 0, 4, 0, 2)
         tabla.attach(self.flashcard, 0, 3, 2, 11)
 
         self.derecha = Derecha()
@@ -205,7 +205,7 @@ class Cabecera(gtk.EventBox):
 
         self.modify_bg(gtk.STATE_NORMAL, COLORES["contenido"])
 
-        tabla = gtk.Table(rows=2, columns=2, homogeneous=True)
+        tabla = gtk.Table(rows=2, columns=3, homogeneous=True)
         tabla.set_property("column-spacing", 2)
         tabla.set_property("row-spacing", 2)
         tabla.set_border_width(4)
@@ -224,7 +224,7 @@ class Cabecera(gtk.EventBox):
         self.question_label.modify_font(pango.FontDescription("DejaVu Sans 16"))
         self.question_label.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
 
-        tabla.attach(self.titulo, 1, 2, 0, 1)
+        tabla.attach(self.titulo, 1, 3, 0, 1)
         tabla.attach(self.subtitulo, 0, 1, 0, 1)
         tabla.attach(self.question_label, 0, 2, 1, 2)
 

@@ -7,6 +7,8 @@ import os
 import glob
 import datetime
 
+from ConfigParser import SafeConfigParser
+
 from jinja2 import Template
 
 from pprint import pprint
@@ -28,7 +30,7 @@ table {
 </style>
 </head>
 <body>
-<table id="vocab_tabla">
+<table id="vocab_tabla"> <!-- style="background-color: grey"-->
 <h1>PLE Flashcards Inventory: {{fecha}}</h1>
 {% for topic in vocabulario.keys()|sort %}
     <tr>
@@ -40,12 +42,12 @@ table {
     <div>
     <div class="container">
     {% for item in vocabulario[topic] %}
-        <div> <!-- style="border: 1px solid black; margin: 0px; padding: 0px"--> 
+        <div style="border: 1px solid black; margin: 10px; padding: 10px"> 
         <img src="{{item.url}}" height="150px" width="150px"/><br />
         <b>{{ item.term }}</b></br>
-        <!-- <br />
+        <br />
         {{ item.preg_alt }}<br />
-        {{ item.resp_alt }}<br /> -->
+        {{ item.resp_alt }}<br />
         </div>
     {% endfor %}
     </div>
@@ -63,6 +65,13 @@ def obtener_vocabularios():
     for folder in os.listdir(basedir):
         orig_folder = folder
         folder = os.path.join(basedir, folder)
+
+        parser = SafeConfigParser()
+        metadata = os.path.join(folder, "topic.ini")
+        parser.read(metadata)
+
+        title = parser.get('topic', 'title')
+
         if os.path.isdir(folder):
             vocabulario_file = os.path.join(folder, "vocabulario.csv")
             if os.path.exists(vocabulario_file):
@@ -74,9 +83,9 @@ def obtener_vocabularios():
                     if not linea.get("preg_alt"):
                         linea["preg_alt"] = "What is this?"
                     try:
-                        result[orig_folder].append(linea)
+                        result[title].append(linea)
                     except KeyError:
-                        result[orig_folder] = [linea]
+                        result[title] = [linea]
     
     return result
 
@@ -94,7 +103,15 @@ def validar_vocabularios(vocabulario):
                 faltantes.append( {"url": url, "term": item['filename']} )
 
     huerfanas = []
-    for imagen in existentes:
+    dirname = ""
+    for imagen in sorted(existentes):
+        # USE PARA CREAR REGISTROS CSV
+        #if os.path.dirname(imagen) != dirname:
+        #    print " ====", os.path.dirname(imagen)
+        #    dirname = os.path.dirname(imagen)
+        #print os.path.basename(imagen)[:-4] + "," + \
+        #      os.path.basename(imagen)[:-4] + ",,"
+              
         url = "file://" + os.path.abspath(imagen)
         huerfanas.append( {"url":url, "term": imagen} )
     return faltantes, huerfanas
