@@ -198,8 +198,7 @@ class FlashCardsPreview(gtk.EventBox):
 
         self.drawing = gtk.DrawingArea()
         self.label = gtk.Label("Text")
-        self.label.set_line_wrap(True)
-        self.label.set_line_wrap_mode(2)
+        self.label.set_property("justify", gtk.JUSTIFY_CENTER)
         self.drawing.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
         self.label.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
         self.label.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
@@ -218,7 +217,8 @@ class FlashCardsPreview(gtk.EventBox):
             "%s.png" % self.vocabulario[self.index_select][0])
         self.imagenplayer = ImagePlayer(self.drawing)
         self.imagenplayer.load(self.path)
-        self.label.set_text(self.vocabulario[self.index_select][1])
+        self.label.set_text(
+            self.vocabulario[self.index_select][1].replace(" ", "\n"))
         if self.index_select < len(self.vocabulario) - 1:
             self.index_select += 1
         else:

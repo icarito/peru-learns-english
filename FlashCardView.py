@@ -83,7 +83,8 @@ class FlashCardView(gtk.EventBox):
         index = self.index_select
         respuesta = self.vocabulario[index][3] if len(self.vocabulario[index]) > 3 else \
                     self.vocabulario[index][1]
-        self.derecha.label.set_text(self.vocabulario[index][1])
+        self.derecha.label.set_text(
+            self.vocabulario[index][1].replace(" ", "\n"))
         decir(50, 57, 0, "en-gb", respuesta)
 
     def __siguiente(self, widget, respuesta):
@@ -252,8 +253,6 @@ class Derecha(gtk.EventBox):
         tabla.set_border_width(4)
 
         self.label = gtk.Label("")
-        self.label.set_line_wrap(True)
-        self.label.set_line_wrap_mode(2)
         self.label.set_property("justify", gtk.JUSTIFY_CENTER)
         self.label.modify_font(pango.FontDescription("DejaVu Sans Bold 28"))
         self.label.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
