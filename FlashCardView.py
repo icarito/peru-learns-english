@@ -252,6 +252,8 @@ class Derecha(gtk.EventBox):
         tabla.set_border_width(4)
 
         self.label = gtk.Label("")
+        self.label.set_line_wrap(True)
+        self.label.set_line_wrap_mode(2)
         self.label.set_property("justify", gtk.JUSTIFY_CENTER)
         self.label.modify_font(pango.FontDescription("DejaVu Sans Bold 28"))
         self.label.modify_fg(gtk.STATE_NORMAL, COLORES["text"])

@@ -198,6 +198,8 @@ class FlashCardsPreview(gtk.EventBox):
 
         self.drawing = gtk.DrawingArea()
         self.label = gtk.Label("Text")
+        self.label.set_line_wrap(True)
+        self.label.set_line_wrap_mode(2)
         self.drawing.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
         self.label.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
         self.label.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
