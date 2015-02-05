@@ -522,6 +522,7 @@ class Bloque (spyral.Sprite):
 
         self.COLOR = COLOR
         self.BGCOLOR = 4
+        self.RENDERED = None
 
         self.ROW = row
         self.COL = col
