@@ -1,26 +1,25 @@
 id,term,preg_alt,resp_alt
-bread,bread,,This is bread.
-broccoli,broccoli,,This is a broccoli.
-carrot,carrot,,This is a carrot.
-cheese,cheese,,This is cheese.
-clam,clam,,This is a clam.
-corn,corn,,This is corn.
-egg,egg,,This is an egg.
-forest,forest,,This is a forest.
-fork,fork,,This is a fork.
-garden,garden,,This is a garden.
-grapes,grapes,,These are grapes.
-lake,lake,,This is a lake.
-mountain,mountain,,This is a mountain.
-olives,olives,,These are olives.
-onions,onions,,These are onions.
-peas,peas,,These are peas.
-radish,radish,,This is a radish.
-rain,rain,,This is rain.
-rice,rice,,This is rice.
-shell,shell,,This is a shell.
+bread,bread,,It's bread.
+broccoli,broccoli,,It's a broccoli.
+carrot,carrot,,It's a carrot.
+cheese,cheese,,It's cheese.
+clam,clam,,It's a clam.
+corn,corn,,It's corn.
+drink,to drink,What is he doing?,He is drinking.
+eat,to eat,What is she doing?,She is eating.
+egg,egg,,It's an egg.
+feed,to feed,What is the bird doing?,It is feeding.
+fork,fork,,It's a fork.
+grapes,grapes,What are these?,These are grapes.
+meal,meal,,This is a meal.
+olives,olives,What are these?,These are olives.
+onions,onions,What are these?,These are onions.
+peas,peas,What are these?,These are peas.
+people,people,What are these?,These are people.
+radish,radish,,It's a radish.
+rice,rice,,It's rice.
 smell,smell,What is she doing?,She is smelling.
-soup,soup,,This is soup.
-spoon,spoon,,This is a spoon.
-tomato,tomato,,This is a tomato.
-water,water,,This is water.
+soup,soup,,It's soup.
+spoon,spoon,,It's a spoon.
+tomato,tomato,,It's a tomato.
+water,tap water,,It's tap water.

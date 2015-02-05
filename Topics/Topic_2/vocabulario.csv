@@ -1,27 +1,37 @@
 id,term,preg_alt,resp_alt
+artisan,artisan,What does he do?,He is an artisan.
+artist,artist,What does he do?,He is an artist.
 blue,blue,What color is this?,This is blue.
 brown,brown,What color is this?,This is brown.
 call,to call,What is he doing?,He is calling.
-wash,to wash,What is he doing?,He is washing.
-drawing,drawing,,This is a drawing.
+chin,chin,,It's a chin.
 dream,to dream,What is he doing?,He is dreaming.
-drink,to drink,What is he doing?,He is drinking.
 ear,ear,,This is an ear.
-eat,eat,What is she doing?,She is eating
+electrician,electrician,What does he do?,He is an electrician.
+elbow,elbow,,It's an elbow.
+engineer,engineer,What does he do?,He is an engineer.
+eyebrow,eyebrow,,It's an eyebrow.
+farmer,farmer,What does he do?,He is a farmer.
+family,family,,This is a family.
 feet,feet,,This are feet.
 finger,finger,,This is a finger.
-foot,foot,,This are feet.
+foot,foot,,These are feet.
 hair,hair,,This is hair.
 knee,knee,,This is a knee.
 leg,leg,,This is a leg.
+mechanic,mechanic,What does he do?,He is a mechanic.
 mother,mother,What is she?,She is a mother.
 mouth,mouth,,This is a mouth.
 navel,navel,,This is a navel.
 nose,nose,,This is a nose.
+nurse,nurse,What does she do?,She is a nurse.
 orange,orange,What color is this?,This is orange.
+pilot,pilot,What does he do?,He is a pilot.
 pink,pink,What color is this?,This is pink.
-read,to read,What is she doing?,She is reading.
+plumber,plumber,What does he do?,He is a plumber.
 red,red,What color is this?,This is red.
+scream,to scream,What is she doing?,She is screaming.
+teacher,teacher,What does she do?,She is a teacher.
 toe,toe,,This is a toe.
 white,white,What color is this?,This is white.
 yellow,yellow,What color is this?,This is yellow.

@@ -11,7 +11,7 @@ data_files.append(("/usr/share/applications/", ["Peru_Learns_English.desktop"]))
 
 setup(
 	name = "Peru_Learns_English",
-	version = "0.3",
+	version = "0.3.1",
 	author = "SomosAzucar",
 	author_email = "laura@somosazucar.org",
 	url = "http://pe.sugarlabs.org/ir/Peru%20Learns%20English",

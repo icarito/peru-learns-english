@@ -80,9 +80,34 @@ def obtener_vocabularios():
     
     return result
 
+def validar_vocabularios(vocabulario):
+    
+    faltantes = []
+    existentes = glob.glob("Topics/*/Imagenes/*.png")
+    for topic in vocabulario.keys():
+        for item in vocabulario[topic]:
+            if item['filename'] in existentes:
+                #print item['term'], "OK"
+                existentes.pop(existentes.index(item['filename']))
+            else:
+                url = "file://" + os.path.abspath(item["filename"])
+                faltantes.append( {"url": url, "term": item['filename']} )
+
+    huerfanas = []
+    for imagen in existentes:
+        url = "file://" + os.path.abspath(imagen)
+        huerfanas.append( {"url":url, "term": imagen} )
+    return faltantes, huerfanas
+
 plantilla = Template(template)
 
 vocabulario = obtener_vocabularios()
+faltantes, huerfanas = validar_vocabularios(vocabulario)
+
+if faltantes:
+    vocabulario["FILES REFERENCED BUT NO IMAGE FOUND"] = faltantes
+if huerfanas:
+    vocabulario["IMAGES FOUND WITHOUT REFERENCE"] = huerfanas
 #pprint (vocabulario)
 
 now = datetime.datetime.now()

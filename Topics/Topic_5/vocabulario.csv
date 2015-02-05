@@ -1,22 +1,38 @@
 id,term,preg_alt,resp_alt
+bike,bike,,This is a bike.
+boat,boat,,This is a boat.
+bus,bus,,This is a bus.
+car,car,,This is a car.
 cat,cat,,This is a cat.
 cow,cow,,This is a cow.
 crab,crab,,This is a crab.
 crocodile,crocodile,,This is a crocodile.
+canoe,canoe,,This is a canoe.
+climb,to climb,What is he doing?,He is climbing.
+dive,to dive,What is she doing?,She is diving.
 dog,dog,,This is a dog.
 dolphin,dolphin,,This is a dolphin.
 dove,dove,,This is a dove.
+drive,to drive,What is she doing?,She is driving.
 explore,to explore,What are they doing?,They are exploring.
-feed,to feed,What is the bird doing?,It is feeding.
+farm,farm,,This is a farm.
+forest,forest,,This is a forest.
 frog,frog,,This is a frog.
+garden,garden,,This is a garden.
 jaguar,jaguar,,This is a jaguar.
 jellyfish,jellyfish,,This is a jellyfish.
+lake,lake,,This is a lake.
 left,left,Which direction is this?,This is left.
 llama,llama,,This is a llama.
+mountain,mountain,,This is a mountain.
 mouse,mouse,,This is a mouse.
 mud,mud,,This is mud.
 nest,nest,,This is a nest.
+path,path,,This is a path.
 pelican,pelican,,This is a pelican.
+rain,rain,,This is rain.
 right,right,Which direction is this?,This is right.
 sheep,sheep,,This is a sheep.
+truck,truck,,This is a truck.
 turtle,turtle,,This is a turtle.
+walk,to walk,What is she doing?,She is walking.

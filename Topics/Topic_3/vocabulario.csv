@@ -1,17 +1,12 @@
 id,term,preg_alt,resp_alt
+3oclock,three o'clock,What time is it?,It's three o'clock.
+7oclock,seven o'clock,What time is it?,It's seven o'clock.
 athlete,athlete,What does he do?,He is an athete.
-ball,ball,,This is a ball.
-canoe,canoe,,This is a canoe.
-climb,to climb,What is he doing?,He is climbing.
-dive,to dive,What is she doing?,She is diving.
-family,family,,This is a family.
-walk,to walk,What is she doing?,She is waking.
-jog,to jog,What is he doing?,He is joging.
+candle,candle,,This is a candle.
 jump,to jump,What is he doing?,He is jumping.
-meal,meal,,This is a meal.
 medal,medal,,This is a medal.
+music,music,What is this?,It's music.
+noon,noon,What time is it?,It's noon.
 net,net,,This is a net.
-path,path,,This is a path.
 race,to race,What are they doing?,They are racing.
-skate,to skate,What is he doing?,He is skating.
-stretch,to stretch,What is she doing?,She is stretching.
+wash,to wash,What is he doing?,He is washing.
