@@ -85,7 +85,14 @@ class FlashCardView(gtk.EventBox):
                     self.vocabulario[index][1]
         self.derecha.label.set_text(
             self.vocabulario[index][1].replace(" ", "\n"))
-        decir(50, 57, 0, "en-gb", respuesta)
+        self.cabecera.question_label.set_markup("<b>"+respuesta+"</b>")
+        self.cabecera.question_label.modify_fg(gtk.STATE_NORMAL, COLORES["rojo"])
+        gobject.idle_add(self.__show_phrase, respuesta)
+
+    def __show_phrase(self, respuesta):
+        decir_demorado(170, 50, 0, "en-gb", respuesta)
+        self.cabecera.question_label.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
+        self.cabecera.question_label.set_markup(respuesta)
 
     def __siguiente(self, widget, respuesta):
         """
@@ -127,7 +134,7 @@ class FlashCardView(gtk.EventBox):
         pregunta = self.vocabulario[index][2] if len(self.vocabulario[index]) > 2 else ""
         if pregunta == "":
             pregunta = "What is this?"
-        self.cabecera.question_label.set_text(pregunta)
+        self.cabecera.question_label.set_markup("<b>"+pregunta+"</b>")
         gobject.idle_add(self.__activar, pregunta)
         return False
 
@@ -135,6 +142,7 @@ class FlashCardView(gtk.EventBox):
         decir_demorado(170, 50, 0, "en", pregunta)
         self.derecha.activar()
         self.cabecera.question_label.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
+        self.cabecera.question_label.set_markup(pregunta)
         self.statuslabel.set_text("Flashcard %i of %i" % (
             self.index_select + 1, len(self.vocabulario)))
         return False
@@ -213,7 +221,7 @@ class Cabecera(gtk.EventBox):
 
         self.titulo = gtk.Label("Título")
         self.titulo.set_property("justify", gtk.JUSTIFY_CENTER)
-        self.titulo.modify_font(pango.FontDescription("DejaVu Sans Bold 16"))
+        self.titulo.modify_font(pango.FontDescription("DejaVu Sans Bold 14"))
         self.titulo.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
 
         self.subtitulo = gtk.Image()
@@ -254,32 +262,33 @@ class Derecha(gtk.EventBox):
 
         self.label = gtk.Label("")
         self.label.set_property("justify", gtk.JUSTIFY_CENTER)
-        self.label.modify_font(pango.FontDescription("DejaVu Sans Bold 28"))
+        self.label.modify_font(pango.FontDescription("DejaVu Sans Bold 20"))
         self.label.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
-        tabla.attach(self.label, 0, 3, 0, 1)
+        tabla.attach(self.label, 0, 3, 0, 2)
+        self.label.set_line_wrap(True)
 
         button0 = MyButton("Show me\nthe answer",
             pango.FontDescription("DejaVu Sans 16"))
         button0.connect("clicked", self.__show_answer)
-        tabla.attach(button0, 0, 3, 1, 2)
+        tabla.attach(button0, 0, 3, 0, 2)
 
         button1 = MyButton("I\nknew\nit !",
             pango.FontDescription("DejaVu Sans 10"))
         button1.modify_bg(gtk.STATE_NORMAL, COLORES["verde"])
         button1.connect("clicked", self.__seguir)
-        tabla.attach(button1, 0, 1, 2, 3)
+        tabla.attach(button1, 0, 1, 2, 4)
 
         button2 = MyButton("I\nwasn't\nsure.",
             pango.FontDescription("DejaVu Sans 10"))
         button2.modify_bg(gtk.STATE_NORMAL, COLORES["amarillo"])
         button2.connect("clicked", self.__seguir)
-        tabla.attach(button2, 1, 2, 2, 3)
+        tabla.attach(button2, 1, 2, 2, 4)
 
         button3 = MyButton("I\nhad\nno idea !",
             pango.FontDescription("DejaVu Sans 10"))
         button3.modify_bg(gtk.STATE_NORMAL, COLORES["rojo"])
         button3.connect("clicked", self.__seguir)
-        tabla.attach(button3, 2, 3, 2, 3)
+        tabla.attach(button3, 2, 3, 2, 4)
 
         self.buttons = [button0, button1, button2, button3]
 

@@ -202,7 +202,7 @@ class FlashCardsPreview(gtk.EventBox):
         self.drawing.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
         self.label.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
         self.label.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
-        self.label.modify_font(pango.FontDescription("DejaVu Sans 18"))
+        self.label.modify_font(pango.FontDescription("DejaVu Sans 16"))
 
         tabla = gtk.Table(rows=1, columns=2, homogeneous=True)
         tabla.attach(self.drawing, 0, 1, 0, 1)
