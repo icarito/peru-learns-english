@@ -89,11 +89,19 @@ class VideoView(gtk.EventBox):
         self.imagen_juego.connect("button-press-event", self.__emit_game)
         self.videoplayer.connect("full", self.set_full)
         self.videoplayer.connect("endfile", self.__force_unfull)
+        self.videoplayer.control.connect("accion-controls", self.__toggle_flashcards)
+
+    def __toggle_flashcards(self, widget, accion):
+        if accion == "pausa-play":
+            self.flashcards_preview.toggle()
 
     def __force_unfull(self, widget):
         if self.full:
             self.set_full(False)
+        self.videoplayer.stop()
+        self.videoplayer.load(os.path.join(self.topic, "video.ogv"))
         self.videoplayer.pause()
+        self.flashcards_preview.play()
 
     def __emit_game(self, widget, event):
         self.emit("game", self.topic)
@@ -225,11 +233,23 @@ class FlashCardsPreview(gtk.EventBox):
             self.index_select = 0
         return True
 
+    def toggle(self):
+        if self.control:
+            gobject.source_remove(self.control)
+            self.control = False
+        else:
+            self.play()
+
     def stop(self):
         if self.imagenplayer:
             self.imagenplayer.stop()
             del(self.imagenplayer)
             self.imagenplayer = False
+
+    def play(self):
+        self.__run_secuencia()
+        if not self.control:
+            self.control = gobject.timeout_add(3000, self.__run_secuencia)
 
     def load(self, topic):
         self.stop()
@@ -237,8 +257,7 @@ class FlashCardsPreview(gtk.EventBox):
         self.vocabulario = get_flashcards_previews(self.topic)
         self.index_select = 0
         self.__run_secuencia()
-        if not self.control:
-            self.control = gobject.timeout_add(3000, self.__run_secuencia)
+        self.play()
         return False
 
 
