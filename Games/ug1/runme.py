@@ -215,8 +215,8 @@ class Tablero(spyral.Sprite):
         spyral.event.register("input.keyboard.down.*", self.procesar_tecla, scene=self.scene)
         spyral.event.register("Tablero.reset.animation.end", self.reset, scene=self.scene)
 
-        self.blup_snd = pygame.mixer.Sound(gamedir("sonidos/Randomize3.wav"))
-        self.hit_snd = pygame.mixer.Sound(gamedir("sonidos/Pickup_Coin.wav"))
+        self.blup_snd = pygame.mixer.Sound(gamedir("sonidos/Randomize3.ogg"))
+        self.hit_snd = pygame.mixer.Sound(gamedir("sonidos/Pickup_Coin.ogg"))
 
     def reset(self):
         spyral.event.queue("Tablero.score")
@@ -341,7 +341,7 @@ class Lluvia(spyral.Sprite):
         spyral.event.register("Lluvia.demora.animation.end", self.sonar_explosion)
         self.scale = 2
 
-        self.explotar_snd = pygame.mixer.Sound(gamedir("sonidos/Explosion.wav"))
+        self.explotar_snd = pygame.mixer.Sound(gamedir("sonidos/Explosion.ogg"))
         self.alarm_snd = pygame.mixer.Sound(gamedir("sonidos/missile_alarm.ogg"))
 
     def reset(self):
@@ -610,7 +610,15 @@ class Jugador(spyral.Sprite):
                 spyral.easing.Iterate(self.fire, 1), 1)
             c = c + z
         c.property = "traslado"
-        self.animate(c)
+        try:
+            self.animate(c)
+        except ZeroDivisionError:
+            print "ZERODIVISIONERROR!!!!"
+            print "self.x",self.x
+            print "x",x
+            print "tiempo", tiempo
+            print "duracion", duracion
+
         self.estado = "caminando"
         return tiempo
 

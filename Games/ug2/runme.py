@@ -186,7 +186,7 @@ class Tablero(spyral.View):
 
         self.activar_snd = pygame.mixer.Sound(gamedir("sonidos/Retro_Game_Sounds_SFX_162.ogg"))
         self.match_snd = pygame.mixer.Sound(gamedir("sonidos/Powerup.ogg"))
-        self.desactivar_snd = pygame.mixer.Sound(gamedir("sonidos/Randomize2.wav"))
+        self.desactivar_snd = pygame.mixer.Sound(gamedir("sonidos/Randomize2.ogg"))
         self.win_snd = pygame.mixer.Sound(gamedir("sonidos/Retro_Game_Sounds_SFX_161.ogg"))
 
     def reset(self, mapa):
