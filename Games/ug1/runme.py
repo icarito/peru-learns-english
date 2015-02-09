@@ -106,7 +106,7 @@ class DelayAnimation(spyral.Animation):
 class Escena(spyral.Scene):
     def __init__(self, topic=topic_dir):
         spyral.Scene.__init__(self, SIZE)
-
+        
         self.topic = topic
         self.layers = ["abajo", "abajo2", "arriba", "primer"]
 
@@ -132,8 +132,14 @@ class Escena(spyral.Scene):
 
         spyral.event.register("system.quit", spyral.director.pop, scene=self)
         spyral.event.register("director.scene.enter", self.l.llover, scene=self)
+        spyral.event.register("director.scene.enter", self.start_music)
         spyral.event.register("input.keyboard.down.esc", self.endgame, scene=self)
         spyral.event.register("Tablero.score", self.score)
+
+    def start_music(self):
+        if not Intro.MUTE:
+            pygame.mixer.music.play()
+
 
     def score(self):
         self.puntaje = self.tablero.ganadas * 100 - self.tablero.perdidas
@@ -682,6 +688,7 @@ class Dialogo(spyral.Sprite):
         spyral.event.register("input.keyboard.down.y", self.goplay)
 
     def goplay(self):
+        pygame.mixer.music.fadeout(1)
         spyral.director.replace(Escena(self.scene.topic))
         spyral.director.run(sugar=True)
 
@@ -807,6 +814,7 @@ class Intro(spyral.Scene):
         Intro.MUTE = value
 
     def goplay(self):
+        pygame.mixer.music.fadeout(1)
         spyral.director.replace(Escena(self.topic))
         spyral.director.run(sugar=True)
 
