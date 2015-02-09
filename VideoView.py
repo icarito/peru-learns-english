@@ -63,10 +63,7 @@ class VideoView(gtk.EventBox):
         self.titulo = gtk.Label("Título")
         self.titulo.modify_font(pango.FontDescription("DejaVu Sans Bold 20"))
         self.titulo.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
-        self.videoplayer = VideoPlayer()
-
-        tabla.attach(self.titulo, 0, 5, 0, 1)
-        tabla.attach(self.videoplayer, 0, 3, 1, 10)
+        #self.videoplayer = VideoPlayer()
 
         flashcards = gtk.Button()
         flashcards.set_relief(gtk.RELIEF_NONE)
@@ -75,21 +72,30 @@ class VideoView(gtk.EventBox):
         flashcards.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
         flashcards.add(imagen)
 
-        self.imagen_juego = GameImage()
-        self.flashcards_preview = FlashCardsPreview()
+        tabla.attach(flashcards, 0, 5, 0, 1)
+        tabla.attach(self.titulo, 0, 5, 1, 2)
+        #tabla.attach(self.videoplayer, 0, 3, 1, 10)
 
-        tabla.attach(self.imagen_juego, 3, 5, 1, 4)
-        tabla.attach(flashcards, 3, 5, 4, 6)
-        tabla.attach(self.flashcards_preview, 3, 5, 6, 10)
+        self.imagen_juego = GameImage()
+        
+        #align = gtk.Alignment(0.5, 0.5, 0.6, 0.9)
+        self.flashcards_preview = FlashCardsPreview()
+        #align.add(self.flashcards_preview)
+
+        tabla.attach(self.imagen_juego, 3, 5, 2, 5)
+        #tabla.attach(flashcards, 3, 5, 4, 6)
+        tabla.attach(self.flashcards_preview, 0, 3, 2, 10)
+        #tabla.attach(self.flashcards_preview, 3, 5, 6, 10)
+        #tabla.attach(self.videoplayer, 0, 3, 1, 10)
 
         self.add(tabla)
         self.show_all()
 
         flashcards.connect("clicked", self.__emit_flashcards)
         self.imagen_juego.connect("button-press-event", self.__emit_game)
-        self.videoplayer.connect("full", self.set_full)
-        self.videoplayer.connect("endfile", self.__force_unfull)
-        self.videoplayer.control.connect("accion-controls", self.__toggle_flashcards)
+        #self.videoplayer.connect("full", self.set_full)
+        #self.videoplayer.connect("endfile", self.__force_unfull)
+        #self.videoplayer.control.connect("accion-controls", self.__toggle_flashcards)
 
     def __toggle_flashcards(self, widget, accion):
         if accion == "pausa-play":
@@ -98,9 +104,9 @@ class VideoView(gtk.EventBox):
     def __force_unfull(self, widget):
         if self.full:
             self.set_full(False)
-        self.videoplayer.stop()
-        self.videoplayer.load(os.path.join(self.topic, "video.ogv"))
-        self.videoplayer.pause()
+        #self.videoplayer.stop()
+        #self.videoplayer.load(os.path.join(self.topic, "video.ogv"))
+        #self.videoplayer.pause()
         self.flashcards_preview.play()
 
     def __emit_game(self, widget, event):
@@ -120,7 +126,7 @@ class VideoView(gtk.EventBox):
             child.hide()
 
         if self.full:
-            self.videoplayer.hide()
+            #self.videoplayer.hide()
             tabla.set_homogeneous(True)
             tabla.set_property("column-spacing", 8)
             tabla.set_property("row-spacing", 8)
@@ -130,14 +136,14 @@ class VideoView(gtk.EventBox):
             tabla.set_homogeneous(False)
             tabla.set_property("column-spacing", 0)
             tabla.set_property("row-spacing", 0)
-            self.videoplayer.show()
+            #self.videoplayer.show()
             self.full = True
 
-        self.videoplayer.stop()
-        self.videoplayer.load(os.path.join(self.topic, "video.ogv"))
+        #self.videoplayer.stop()
+        #self.videoplayer.load(os.path.join(self.topic, "video.ogv"))
 
     def stop(self):
-        self.videoplayer.stop()
+        #self.videoplayer.stop()
         self.imagen_juego.stop()
         self.flashcards_preview.stop()
         if self.flashcards_preview.control:
@@ -148,7 +154,7 @@ class VideoView(gtk.EventBox):
     def run(self, topic):
         self.show()
         self.topic = topic
-        self.videoplayer.load(os.path.join(self.topic, "video.ogv"))
+        #self.videoplayer.load(os.path.join(self.topic, "video.ogv"))
         self.imagen_juego.load(topic)
         self.flashcards_preview.load(topic)
 
@@ -196,6 +202,7 @@ class FlashCardsPreview(gtk.EventBox):
         gtk.EventBox.__init__(self)
 
         self.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
+        self.set_border_width(20)
 
         self.vocabulario = []
         self.index_select = 0
@@ -210,11 +217,14 @@ class FlashCardsPreview(gtk.EventBox):
         self.drawing.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
         self.label.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
         self.label.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
-        self.label.modify_font(pango.FontDescription("DejaVu Sans 16"))
+        self.label.modify_font(pango.FontDescription("DejaVu Sans Bold 24"))
 
-        tabla = gtk.Table(rows=1, columns=2, homogeneous=True)
-        tabla.attach(self.drawing, 0, 1, 0, 1)
-        tabla.attach(self.label, 1, 2, 0, 1)
+        tabla = gtk.Table(rows=7, columns=1, homogeneous=False)
+        tabla.attach(self.drawing, 0, 1, 0, 6)
+        tabla.attach(self.label, 0, 1, 6, 7)
+
+        #align = gtk.Alignment(0.5, 0.5, 1, 1)
+        #align.add(tabla)
 
         self.add(tabla)
         self.show_all()
@@ -226,7 +236,7 @@ class FlashCardsPreview(gtk.EventBox):
         self.imagenplayer = ImagePlayer(self.drawing)
         self.imagenplayer.load(self.path)
         self.label.set_text(
-            self.vocabulario[self.index_select][1].replace(" ", "\n"))
+            self.vocabulario[self.index_select][1])
         if self.index_select < len(self.vocabulario) - 1:
             self.index_select += 1
         else:

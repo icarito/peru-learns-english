@@ -118,7 +118,7 @@ class Main(gtk.Window):
 
     def __game_return_to_video(self, widget, topic):
         self.__play_video(widget, topic)
-        self.videoview.videoplayer.stop()
+        #self.videoview.videoplayer.stop()
 
     def __play_game(self, widget, topic):
         self.__switch(False, "game", topic)
@@ -129,7 +129,7 @@ class Main(gtk.Window):
     def __play_video(self, widget, topic):
         self.__switch(False, "Topics", topic)
         self.videoview.set_full(False)
-        self.videoview.videoplayer.pause()
+        #self.videoview.videoplayer.pause()
 
     def __play_credits(self, widget):
         self.__switch(False, "Credits")
