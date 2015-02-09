@@ -54,7 +54,7 @@ Ministerio de Educación Nacional República de Colombia
 
 © Nina Paley
 
-### Obras visuales de / Visual Works
+### Obras Visuales / Visual Works
 
 Tomadas de [OpenGameArt.Org](http://opengameart.org).
 
