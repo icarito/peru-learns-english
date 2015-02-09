@@ -1,38 +1,53 @@
 id,term,preg_alt,resp_alt
-bike,bike,,It's a bike.
-boat,boat,,It's a boat.
-bus,bus,,It's a bus.
-car,car,,It's a car.
-cat,cat,,It's a cat.
-cow,cow,,It's a cow.
-crab,crab,,It's a crab.
-crocodile,crocodile,,It's a crocodile.
-canoe,canoe,,It's a canoe.
-climb,to climb,What is he doing?,He is climbing.
-dive,to dive,What is she doing?,She is diving.
-dog,dog,,It's a dog.
-dolphin,dolphin,,It's a dolphin.
-dove,dove,,It's a dove.
-drive,to drive,What is she doing?,She is driving.
-explore,to explore,What are they doing?,They are exploring.
+right,right,Which direction is this?,It's right.
+left,left,Which direction is this?,It's left.
 farm,farm,,It's a farm.
 forest,forest,,It's a forest.
 frog,frog,,It's a frog.
 garden,garden,,It's a garden.
-jaguar,jaguar,,It's a jaguar.
-jellyfish,jellyfish,,It's a jellyfish.
 lake,lake,,It's a lake.
-left,left,Which direction is this?,It's left.
-llama,llama,,It's a llama.
 mountain,mountain,,It's a mountain.
-mouse,mouse,,It's a mouse.
 mud,mud,,It's mud.
 nest,nest,,It's a nest.
+walk,walking,What is she doing?,She is walking.
+drive,driving,What is she doing?,She is driving.
+explore,exploring,What are they doing?,They are exploring.
+climb,climbing,What is he doing?,He is climbing.
+dive,diving,What is she doing?,She is diving.
+bike,bike,,It's a bike.
+boat,boat,,It's a boat.
+bus,bus,,It's a bus.
+canoe,canoe,,It's a canoe.
+truck,truck,,It's a truck.
+cat,cat,,It's a cat.
+cow,cow,,It's a cow.
+crab,crab,,It's a crab.
+crocodile,crocodile,,It's a crocodile.
+jaguar,jaguar,,It's a jaguar.
+jellyfish,jellyfish,,It's a jellyfish.
+llama,llama,,It's a llama.
+dog,dog,,It's a dog.
+dolphin,dolphin,,It's a dolphin.
+dove,dove,,It's a dove.
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+mouse,mouse,,It's a mouse.
+,,,
+,,,
 path,path,,It's a path.
 pelican,pelican,,It's a pelican.
 rain,rain,,It's rain.
-right,right,Which direction is this?,It's right.
+,,,
 sheep,sheep,,It's a sheep.
-truck,truck,,It's a truck.
+,,,
 turtle,turtle,,It's a turtle.
-walk,to walk,What is she doing?,She is walking.

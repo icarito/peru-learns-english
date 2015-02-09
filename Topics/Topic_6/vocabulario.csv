@@ -1,14 +1,29 @@
 id,term,preg_alt,resp_alt
-bucket,bucket,,It's a bucket.
 cap,cap,,It's a cap.
 coat,coat,,It's a coat.
-coins,coins,What are these?,These are coins.
+boot,boot,,It's a boot.
 jacket,jacket,,It's a jacket.
 nail,nail,,It's a nail.
 pants,pants,What are these?,These are pants.
+pullover,pullover,,It's a pullover.
 raincoat,raincoat,What is he wearing?,It's a raincoat.
-shed,shed,,It's a shed.
 shirt,shirt,,It's a shirt.
-boot,boot,,It's a boot.
 sneaker,sneaker,,It's a sneaker.
 sock,sock,,It's a sock.
+shoppingcart,shopping cart,,It's a shopping cart.
+axe,axe,,It's an axe.
+bucket,bucket,,It's a bucket.
+paintbrush,paintbrush,,It's a paintbrush.
+camera,camera,,It's a camera.
+coins,coins,What are these?,These are coins.
+compass,compass,,It's a compass.
+drill,drill,,It's a drill.
+handtruck,handtruck,,It's a handtruck.
+helmet,helmet,,It's a helmet.
+house,house,,It's a house.
+ladder,ladder,,It's a ladder.
+lightbulb,lightbulb,,It's a lightbulb.
+lighthouse,lighthouse,,It's a lighthouse.
+lighter,lighter,,It's a lighter.
+robot,robot,,It's a robot.
+radiator,radiator,,It's a radiator.
