@@ -55,10 +55,12 @@ class VideoView(gtk.EventBox):
         self.full = False
         self.topic = False
 
-        tabla = gtk.Table(rows=10, columns=5, homogeneous=True)
+        tabla = gtk.Table(rows=4, columns=5, homogeneous=False)
         tabla.set_property("column-spacing", 8)
         tabla.set_property("row-spacing", 8)
         tabla.set_border_width(8)
+
+        vbox = gtk.VBox()
 
         self.titulo = gtk.Label("Título")
         self.titulo.modify_font(pango.FontDescription("DejaVu Sans Bold 20"))
@@ -72,8 +74,12 @@ class VideoView(gtk.EventBox):
         flashcards.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
         flashcards.add(imagen)
 
-        tabla.attach(flashcards, 0, 5, 0, 1)
-        tabla.attach(self.titulo, 0, 5, 1, 2)
+        vbox.pack_start(self.titulo)
+        vbox.pack_end(flashcards)
+
+        tabla.attach(vbox, 0,5, 0, 1)
+        #tabla.attach(flashcards, 0, 5, 0, 1)
+        #tabla.attach(self.titulo, 0, 5, 1, 2)
         #tabla.attach(self.videoplayer, 0, 3, 1, 10)
 
         self.imagen_juego = GameImage()
@@ -82,9 +88,9 @@ class VideoView(gtk.EventBox):
         self.flashcards_preview = FlashCardsPreview()
         #align.add(self.flashcards_preview)
 
-        tabla.attach(self.imagen_juego, 3, 5, 2, 5)
+        tabla.attach(self.imagen_juego, 3, 5, 1, 4)
         #tabla.attach(flashcards, 3, 5, 4, 6)
-        tabla.attach(self.flashcards_preview, 0, 3, 2, 10)
+        tabla.attach(self.flashcards_preview, 0, 3, 1, 4)
         #tabla.attach(self.flashcards_preview, 3, 5, 6, 10)
         #tabla.attach(self.videoplayer, 0, 3, 1, 10)
 
