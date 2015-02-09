@@ -26,83 +26,6 @@ import gobject
 
 from Globales import COLORES
 
-TEXT = [
-    "Peru Learns English / Perú Aprende Inglés",
-    "=========================================",
-    "HHH",
-    "PLE está siendo desarrollado por el equipo de I&D SomosAzúcar en colaboración con especialistas del Ministerio de Educación de Perú.",
-    "HHH",
-    "*Sólo podemos lograr software educativo de calidad y sustentable, irguiéndonos",
-    "sobre hombros de gigantes y contribuyendo a la biblioteca mundial común de Software Libre.*",
-    "HHH",
-    "Credits / Créditos",
-    "------------------",
-    "HHH",
-    "### Code / Código ###",
-    "* Interfase © 2014-2015 Flavio Danesse <fdanesse@gmail.com> Uruguay - GPLv2+",
-    "* Videojuego 1 © 2014-2015 Sebastian Silva <sebastian@fuentelibre.org> - GPLv2+",
-    "* Videojuego 2 © 2014-2015 Sebastian Silva <sebastian@fuentelibre.org> - GPLv2+",
-    "* popupmenubutton.py - Copyright 2008-2011 Zuza Software Foundation - GPLv2+",
-    "HHH",
-    "### User Experience Design / Diseño de Experiencia de Usuario ###",
-    "HHH",
-    "PLE V1.0 Beta © 2014-2015 Laura Vargas - Colombia - CC BY-SA 3.0",
-    "HHH",
-    "Con aportes de Koke Contreras, Sebastian Silva, Flavio Danesse,",
-    "Aliosh Neira, Cecilia Bustamante y Maria Elisa de la Vega, así",
-    "como los demás funcionarios del Plan de Inglés del Ministerio",
-    "de Educación del Perú.",
-    "Plan Nacional Perú Bilingüe en Inglés 2021."
-    "HHH",
-    "Attribution  of Works / Reconocimiento de Obras",
-    "-----------------------------------------------",
-    "HHH",
-    "### Videos and Images / Videos e Imágenes ###",
-    "HHH",
-    "#### Bunny Bonita “Feelings” - CC BY-NC",
-    "#### Bunny Bonita “Family” - CC BY-NC",
-    " Ministerio de Educación Nacional República de Colombia",
-    "HHH",
-    " © 2008-2013 T&T Teaching and Tutoring y Faldita Films Bunny Bonita",
-    "HHH",
-    "#### Art4Apps “Pete the Athlete” - CC BY-SA",
-    "#### Art4Apps “Trish the Fish” CC BY-SA",
-    "#### Art4Apps “A Shell at the Shore” CC BY-SA",
-    "HHH",
-    " © 2012—2014 Smart4kids LLC",
-    "HHH",
-    "#### QuestionCopyright “Copying is not Theft” - Public Domain",
-    "Nina Paley",
-    "HHH",
-    "### Videojuego 1: Asteroide ###",
-    "HHH",
-    "Obras visuales tomadas con licencia de [OpenGameArt.Org](http://opengameart.org/).",
-    "HHH",
-    "* golden-border.png - nicubunu - Public Domain",
-    "* LPC Space Base Tube Passage - © 2013 Xenodora - CC BY SA 3.0 - GPLv3",
-    "* Universal LPC Sprite Sheet Character Generator - © 2010-2014 Varios Autores - GPLv3 - CC BY-SA 3.0",
-    "* Simple Explosion -  © 2014  Bleed - http://remusprites.carbonmade.com/ - CC BY 3.0",
-    "* Golden Menu - © 2013 - Janna - Public Domain",
-    "* Asteroid - © 2014 - GGo - CC BY 3.0",
-    "* Small Objects & Generic Background - Lanea Zimmerman (AKA Sharm) - CC BY-SA 3.0",
-    "HHH",
-    "Fotografía tomada con licencia de [Wikipedia](http://wikipedia.org/).",
-    "HHH",
-    "* Peru_Machu_Picchu_Sunrise.jpg - © 2007 Flamurai - CC BY 2.0",
-    "HHH",
-    "#### Biblioteca para Videojuegos: [\"Spyral\"](http://platipy.org/) GPLv2.1",
-    " © 2014 Robert Deaton, Austin Bart.",
-    "HHH",
-    "#### Tipografías",
-    "Logotipos y títulos elaborados en *Decade*, de \"Anthem Type\" (Joey Nelson)",
-    ]
-
-FONT = "Monospace"
-TAM = 40
-RED = 255
-GREEN = 255
-BLUE = 255
-
 BASE_PATH = os.path.dirname(__file__)
 
 
@@ -162,7 +85,7 @@ class Visor(gtk.DrawingArea):
         x = w / 2 - ww / 2
         cr.set_source_surface(self.imagen, x, self.posy)
         cr.fill ()
-        self.posy -= 1
+        self.posy -= 2
         if self.posy < -hh:
             self.posy = h
         return True

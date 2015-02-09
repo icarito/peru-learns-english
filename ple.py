@@ -109,7 +109,7 @@ class Main(gtk.Window):
         self.__switch(False, "Instructions", None)
 
     def __stop_credits(self, widget):
-        if self.creditsview.get_visible():
+        if self.creditsview.props.visible:
             run = not bool(self.creditsview.visor.update)
             if run:
                 self.creditsview.visor.modify_bg(
