@@ -11,6 +11,7 @@ mud,mud,,It's mud.
 nest,nest,,It's a nest.
 walk,walking,What is she doing?,She is walking.
 drive,driving,What is she doing?,She is driving.
+car,car,,It's a car.
 explore,exploring,What are they doing?,They are exploring.
 climb,climbing,What is he doing?,He is climbing.
 dive,diving,What is she doing?,She is diving.
@@ -29,25 +30,9 @@ llama,llama,,It's a llama.
 dog,dog,,It's a dog.
 dolphin,dolphin,,It's a dolphin.
 dove,dove,,It's a dove.
-,,,
-,,,
-,,,
-,,,
-,,,
-,,,
-,,,
-,,,
-,,,
-,,,
-,,,
-,,,
 mouse,mouse,,It's a mouse.
-,,,
-,,,
 path,path,,It's a path.
 pelican,pelican,,It's a pelican.
 rain,rain,,It's rain.
-,,,
 sheep,sheep,,It's a sheep.
-,,,
 turtle,turtle,,It's a turtle.
