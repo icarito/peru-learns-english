@@ -1,23 +1,31 @@
 id,term,preg_alt,resp_alt
-3oclock,three o'clock,What time is it?,It's three o'clock.
-7oclock,seven o'clock,What time is it?,It's seven o'clock.
-athlete,athlete,What does he do?,He is an athlete.
-beach,beach,,It's a beach.
+calendar,calendar,,It's a calendar.
 bell,bell,,It's a bell.
 balloons,balloons,What are these?,These are balloons.
 candle,candle,,It's a candle.
 cake,cake,,It's a cake.
-christmas,christmas decorations,What are these?,These are christmas decorations.
-dance,dancing,What is she doing?,She is dancing.
+july28th,independence day,Which holiday is this? ,It's independence day.
+christmas,christmas,Which holiday is this? ,It's christmas.
+earth,earth day,Which holiday is this? ,It's earth day.
 easter,easter eggs,What are these?,These are easter eggs.
+fire,fire,,It's fire.
 flag,peruvian flag,,It's the peruvian flag.
 flowers,flowers,What are these?,These are flowers.
-jump,jumping,What is he doing?,He is jumping.
 medal,medal,,It's a medal.
 music,music,What is this?,It's music.
 nativity,nativity,,It's a nativity scene.
-noon,noon,What time is it?,It's noon.
 net,net,,It's a net.
 present,present,,It's a present.
+noon,noon,What time is it?,It's noon.
+1oclock,one o'clock,What time is it?,It's one o'clock.
+twothirty,two thirty,What time is it?,It's two thirty.
+3oclock,three o'clock,What time is it?,It's three o'clock.
+4oclock,four o'clock,What time is it?,It's four o'clock.
+fivethirty,five thirty,What time is it?,It's five thirty.
+sixthirty,six thirty,What time is it?,It's six thirty.
+7oclock,seven o'clock,What time is it?,It's seven o'clock.
+eightthirty,eight thirty,What time is it?,It's eight thirty.
+dance,dancing,What is she doing?,She is dancing.
+jump,jumping,What is he doing?,He is jumping.
 race,racing,What are they doing?,They are racing.
 wash,washing,What is he doing?,He is washing.
