@@ -74,10 +74,17 @@ class VideoView(gtk.EventBox):
         #self.tabla.attach(flashcards, 0, 5, 0, 1)
         #self.tabla.attach(self.videoplayer, 0, 3, 1, 10)
 
-        self.imagen_juego = GameImage()
+        #self.imagen_juego = GameImage()
+        self.imagen_juego = gtk.Button()
+        #self.imagen_juego.set_relief(gtk.RELIEF_NONE)
+        imagen = gtk.Image()
+        imagen.set_from_file("Imagenes/juego1.png")
+        self.imagen_juego.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
+        self.imagen_juego.add(imagen)
         
         #align = gtk.Alignment(0.5, 0.5, 0.6, 0.9)
         self.flashcards_preview = FlashCardsPreview()
+        self.flashcards_preview.connect("button-press-event", self.__toggle_flashcards)
         #align.add(self.flashcards_preview)
 
         self.tabla.attach(self.flashcards_preview, 0, 3, 1, 5, xpadding=10, ypadding=10)
@@ -97,8 +104,8 @@ class VideoView(gtk.EventBox):
         #self.videoplayer.control.connect("accion-controls", self.__toggle_flashcards)
 
     def __toggle_flashcards(self, widget, accion):
-        if accion == "pausa-play":
-            self.flashcards_preview.toggle()
+        # if accion=="pausa-play":
+        gobject.idle_add(self.flashcards_preview.toggle)
 
     def __force_unfull(self, widget):
         if self.full:
@@ -142,7 +149,7 @@ class VideoView(gtk.EventBox):
 
     def stop(self):
         #self.videoplayer.stop()
-        self.imagen_juego.stop()
+        #self.imagen_juego.stop()
         self.flashcards_preview.stop()
         if self.flashcards_preview.control:
             gobject.source_remove(self.flashcards_preview.control)
@@ -153,7 +160,7 @@ class VideoView(gtk.EventBox):
         self.show()
         self.topic = topic
         #self.videoplayer.load(os.path.join(self.topic, "video.ogv"))
-        self.imagen_juego.load(topic)
+        #self.imagen_juego.load(topic)
         self.flashcards_preview.load(topic)
 
         parser = SafeConfigParser()
@@ -217,17 +224,47 @@ class FlashCardsPreview(gtk.EventBox):
         self.label.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
         self.label.modify_font(pango.FontDescription("DejaVu Sans Bold 20"))
 
+        hbox = gtk.HBox()
+        self.left = gtk.Button()
+        self.left.set_relief(gtk.RELIEF_NONE)
+        imagen = gtk.Image()
+        imagen.set_from_file("Imagenes/flecha_izquierda.png")
+        self.left.modify_bg(gtk.STATE_NORMAL, COLORES["rojo"])
+        self.left.add(imagen)
+        self.left.connect("clicked", self.go_left)
+        hbox.pack_start(self.left)
+
+        hbox.add(self.label)
+
+        self.right = gtk.Button()
+        self.right.set_relief(gtk.RELIEF_NONE)
+        imagen = gtk.Image()
+        imagen.set_from_file("Imagenes/flecha_derecha.png")
+        self.right.modify_bg(gtk.STATE_NORMAL, COLORES["rojo"])
+        self.right.add(imagen)
+        self.right.connect("clicked", self.go_right)
+        hbox.pack_end(self.right)
+
         tabla = gtk.Table(rows=8, columns=1, homogeneous=True)
         tabla.attach(self.drawing, 0, 1, 0, 7, ypadding=5)
-        tabla.attach(self.label, 0, 1, 7, 8)
+        tabla.attach(hbox, 0, 1, 7, 8)
 
         align = gtk.Alignment(0.5, 0.5, 0.7, 0.95)
         align.add(tabla)
 
         self.add(align)
-        self.show_all()
 
-    def __run_secuencia(self):
+    def go_right(self, widget):
+        self.__run_secuencia()
+        self.left.show()
+        self.right.show()
+
+    def go_left(self, widget):
+        self.__run_secuencia(-1)
+        self.left.show()
+        self.right.show()
+
+    def __run_secuencia(self, widget=None, offset=1):
         self.stop()
         self.path = os.path.join(self.topic, "Imagenes",
             "%s.png" % self.vocabulario[self.index_select][0])
@@ -236,17 +273,26 @@ class FlashCardsPreview(gtk.EventBox):
         self.label.set_text(
             self.vocabulario[self.index_select][1])
         if self.index_select < len(self.vocabulario) - 1:
-            self.index_select += 1
+            self.index_select += offset
         else:
             self.index_select = 0
+
+        self.left.hide()
+        self.right.hide()
         return True
 
     def toggle(self):
         if self.control:
             gobject.source_remove(self.control)
             self.control = False
+            self.modify_bg(gtk.STATE_NORMAL, COLORES['rojo'])
+            self.left.show()
+            self.right.show()
         else:
+            self.modify_bg(gtk.STATE_NORMAL, COLORES['window'])
             self.play()
+            self.left.hide()
+            self.right.hide()
 
     def stop(self):
         if self.imagenplayer:
@@ -255,9 +301,8 @@ class FlashCardsPreview(gtk.EventBox):
             self.imagenplayer = False
 
     def play(self):
-        self.__run_secuencia()
         if not self.control:
-            self.control = gobject.timeout_add(3000, self.__run_secuencia)
+            self.control = gobject.timeout_add(4000, self.__run_secuencia)
 
     def load(self, topic):
         self.stop()

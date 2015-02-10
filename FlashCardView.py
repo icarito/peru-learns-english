@@ -263,7 +263,7 @@ class Derecha(gtk.EventBox):
         button0 = MyButton("Show me\nthe answer",
             pango.FontDescription("DejaVu Sans 16"))
         button0.connect("clicked", self.__show_answer)
-        tabla.attach(button0, 0, 3, 0, 2, ypadding=10)
+        tabla.attach(button0, 0, 3, 0, 2, ypadding=5)
 
         button1 = MyButton("I\nknew\nit !",
             pango.FontDescription("DejaVu Sans 10"))
