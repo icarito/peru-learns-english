@@ -55,32 +55,24 @@ class VideoView(gtk.EventBox):
         self.full = False
         self.topic = False
 
-        tabla = gtk.Table(rows=4, columns=5, homogeneous=False)
-        tabla.set_property("column-spacing", 8)
-        tabla.set_property("row-spacing", 8)
-        tabla.set_border_width(8)
-
-        vbox = gtk.VBox()
-
         self.titulo = gtk.Label("Título")
         self.titulo.modify_font(pango.FontDescription("DejaVu Sans Bold 20"))
         self.titulo.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
         #self.videoplayer = VideoPlayer()
 
         flashcards = gtk.Button()
-        flashcards.set_relief(gtk.RELIEF_NONE)
+        #flashcards.set_relief(gtk.RELIEF_NONE)
         imagen = gtk.Image()
         imagen.set_from_file("Imagenes/flashcards.png")
         flashcards.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
         flashcards.add(imagen)
 
-        vbox.pack_start(self.titulo)
-        vbox.pack_end(flashcards)
-
-        tabla.attach(vbox, 0,5, 0, 1)
-        #tabla.attach(flashcards, 0, 5, 0, 1)
-        #tabla.attach(self.titulo, 0, 5, 1, 2)
-        #tabla.attach(self.videoplayer, 0, 3, 1, 10)
+        align = gtk.Alignment(0.5, 0.2, 1, 0.9)
+        self.tabla = gtk.Table(rows=5, columns=5, homogeneous=True)
+        self.tabla.attach(self.titulo, 0, 5, 0, 1)
+        self.tabla.set_border_width(10)
+        #self.tabla.attach(flashcards, 0, 5, 0, 1)
+        #self.tabla.attach(self.videoplayer, 0, 3, 1, 10)
 
         self.imagen_juego = GameImage()
         
@@ -88,13 +80,14 @@ class VideoView(gtk.EventBox):
         self.flashcards_preview = FlashCardsPreview()
         #align.add(self.flashcards_preview)
 
-        tabla.attach(self.imagen_juego, 3, 5, 1, 4)
-        #tabla.attach(flashcards, 3, 5, 4, 6)
-        tabla.attach(self.flashcards_preview, 0, 3, 1, 4)
-        #tabla.attach(self.flashcards_preview, 3, 5, 6, 10)
-        #tabla.attach(self.videoplayer, 0, 3, 1, 10)
+        self.tabla.attach(self.flashcards_preview, 0, 3, 1, 5, xpadding=10, ypadding=10)
+        self.tabla.attach(self.imagen_juego, 3, 5, 3, 5, xpadding=10, ypadding=10)
+        self.tabla.attach(flashcards, 3, 5, 1, 3, xpadding=10, ypadding=10)
+        #self.tabla.attach(self.flashcards_preview, 3, 5, 6, 10)
+        #self.tabla.attach(self.videoplayer, 0, 3, 1, 10)
 
-        self.add(tabla)
+        align.add(self.tabla)
+        self.add(align)
         self.show_all()
 
         flashcards.connect("clicked", self.__emit_flashcards)
@@ -127,21 +120,20 @@ class VideoView(gtk.EventBox):
             self.emit("flashcards", (self.topic, datos))
 
     def set_full(self, widget):
-        tabla = self.get_child()
-        for child in tabla.children():
+        for child in self.tabla.children():
             child.hide()
 
         if self.full:
             #self.videoplayer.hide()
-            tabla.set_homogeneous(True)
-            tabla.set_property("column-spacing", 8)
-            tabla.set_property("row-spacing", 8)
+            self.tabla.set_homogeneous(True)
+            self.tabla.set_property("column-spacing", 8)
+            self.tabla.set_property("row-spacing", 8)
             self.show_all()
             self.full = False
         else:
-            tabla.set_homogeneous(False)
-            tabla.set_property("column-spacing", 0)
-            tabla.set_property("row-spacing", 0)
+            self.tabla.set_homogeneous(False)
+            self.tabla.set_property("column-spacing", 0)
+            self.tabla.set_property("row-spacing", 0)
             #self.videoplayer.show()
             self.full = True
 
@@ -208,7 +200,7 @@ class FlashCardsPreview(gtk.EventBox):
         gtk.EventBox.__init__(self)
 
         self.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
-        self.set_border_width(20)
+        #self.set_border_width(20)
 
         self.vocabulario = []
         self.index_select = 0
@@ -223,16 +215,16 @@ class FlashCardsPreview(gtk.EventBox):
         self.drawing.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
         self.label.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
         self.label.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
-        self.label.modify_font(pango.FontDescription("DejaVu Sans Bold 24"))
+        self.label.modify_font(pango.FontDescription("DejaVu Sans Bold 20"))
 
-        tabla = gtk.Table(rows=7, columns=1, homogeneous=False)
-        tabla.attach(self.drawing, 0, 1, 0, 6)
-        tabla.attach(self.label, 0, 1, 6, 7)
+        tabla = gtk.Table(rows=8, columns=1, homogeneous=True)
+        tabla.attach(self.drawing, 0, 1, 0, 7, ypadding=5)
+        tabla.attach(self.label, 0, 1, 7, 8)
 
-        #align = gtk.Alignment(0.5, 0.5, 1, 1)
-        #align.add(tabla)
+        align = gtk.Alignment(0.5, 0.5, 0.7, 0.95)
+        align.add(tabla)
 
-        self.add(tabla)
+        self.add(align)
         self.show_all()
 
     def __run_secuencia(self):

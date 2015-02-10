@@ -65,7 +65,7 @@ class FlashCardView(gtk.EventBox):
         self.cabecera = Cabecera()
         self.flashcard = FlashCard()
 
-        tabla.attach(self.cabecera, 0, 4, 0, 2)
+        tabla.attach(self.cabecera, 0, 5, 0, 2)
         tabla.attach(self.flashcard, 0, 3, 2, 11)
 
         self.derecha = Derecha()
@@ -86,7 +86,7 @@ class FlashCardView(gtk.EventBox):
         self.derecha.label.set_text(
             self.vocabulario[index][1].replace(" ", "\n"))
         self.cabecera.question_label.set_markup("<b>"+respuesta+"</b>")
-        self.cabecera.question_label.modify_fg(gtk.STATE_NORMAL, COLORES["rojo"])
+        #self.cabecera.question_label.modify_fg(gtk.STATE_NORMAL, COLORES["rojo"])
         gobject.idle_add(self.__show_phrase, respuesta)
 
     def __show_phrase(self, respuesta):
@@ -130,7 +130,7 @@ class FlashCardView(gtk.EventBox):
             self.imagenplayer = False
         self.imagenplayer = ImagePlayer(self.flashcard.drawing)
         self.imagenplayer.load(path)
-        self.cabecera.question_label.modify_fg(gtk.STATE_NORMAL, COLORES["rojo"])
+        #self.cabecera.question_label.modify_fg(gtk.STATE_NORMAL, COLORES["rojo"])
         pregunta = self.vocabulario[index][2] if len(self.vocabulario[index]) > 2 else ""
         if pregunta == "":
             pregunta = "What is this?"
@@ -214,28 +214,21 @@ class Cabecera(gtk.EventBox):
 
         self.modify_bg(gtk.STATE_NORMAL, COLORES["contenido"])
 
-        tabla = gtk.Table(rows=2, columns=3, homogeneous=True)
+        tabla = gtk.Table(rows=2, columns=5, homogeneous=True)
         tabla.set_property("column-spacing", 2)
         tabla.set_property("row-spacing", 2)
         tabla.set_border_width(4)
 
         self.titulo = gtk.Label("Título")
-        self.titulo.set_property("justify", gtk.JUSTIFY_CENTER)
         self.titulo.modify_font(pango.FontDescription("DejaVu Sans Bold 14"))
         self.titulo.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
 
-        self.subtitulo = gtk.Image()
-        self.subtitulo.set_from_file("Imagenes/flashcards_disabled.png")
-        self.subtitulo.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
-
         self.question_label = gtk.Label("What is This?")
-        self.question_label.set_property("justify", gtk.JUSTIFY_CENTER)
         self.question_label.modify_font(pango.FontDescription("DejaVu Sans 16"))
         self.question_label.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
 
-        tabla.attach(self.titulo, 1, 3, 0, 1)
-        tabla.attach(self.subtitulo, 0, 1, 0, 1)
-        tabla.attach(self.question_label, 0, 2, 1, 2)
+        tabla.attach(self.titulo, 0, 3, 0, 1)
+        tabla.attach(self.question_label, 0, 3, 1, 2)
 
         self.add(tabla)
         self.show_all()
@@ -270,7 +263,7 @@ class Derecha(gtk.EventBox):
         button0 = MyButton("Show me\nthe answer",
             pango.FontDescription("DejaVu Sans 16"))
         button0.connect("clicked", self.__show_answer)
-        tabla.attach(button0, 0, 3, 0, 2)
+        tabla.attach(button0, 0, 3, 0, 2, ypadding=10)
 
         button1 = MyButton("I\nknew\nit !",
             pango.FontDescription("DejaVu Sans 10"))
