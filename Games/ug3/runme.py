@@ -462,6 +462,7 @@ class Nave (spyral.View):
             Escena.gameview.update_score(self.scene.puntos)
 
     def gana(self):
+        global CANT_PALABRAS
         self.set_answer(True)
         play(self.win_snd)
         self.result = True
@@ -476,7 +477,7 @@ class Nave (spyral.View):
         recompensa = 200
         self.scene.puntos += recompensa
 
-        if self.scene.puntos > 100: #CANT_PALABRAS * 200:
+        if self.scene.puntos > CANT_PALABRAS * 200:
             self.scene.campo.gone = True
             self.scene.finalfinal()
 
