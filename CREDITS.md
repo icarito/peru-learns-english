@@ -36,24 +36,6 @@ Plan Nacional Perú Bilingüe en Inglés 2021.
 Attribution  of Works / Reconocimiento de Obras
 -----------------------------------------------
 
-### Videos and Images / Videos e Imágenes ###
-
-#### Bunny Bonita "Feelings" - CC BY-NC
-#### Bunny Bonita "Family" - CC BY-NC
-
-Ministerio de Educación Nacional República de Colombia
-© 2008-2013 T&T Teaching and Tutoring y Faldita Films
-
-#### Art4Apps "Pete the Athlete"
-#### Art4Apps “Trish the Fish” CC BY-SA"
-#### Art4Apps “A Shell at the Shore” CC BY-SA"
-
-© 2013-2015 - Art4Apps (files database) created by ET4D - CC BY-SA
-
-#### "Copying is not Theft" - Public Domain
-
-© Nina Paley
-
 ### Obras Visuales / Visual Works
 
 Tomadas de [OpenGameArt.Org](http://opengameart.org).
@@ -67,6 +49,7 @@ Tomadas de [OpenGameArt.Org](http://opengameart.org).
 * Small Objects & Generic Background - Lanea Zimmerman (AKA Sharm) - CC BY-SA 3.0
 
 #### Peru_Machu_Picchu_Sunrise.jpg - © 2007 Flamurai - CC BY 2.0 tomada de [Wikipedia](http://wikipedia.org/).
+#### Forest_Los_Tilos.jpg - © 2004 Luc Viatour - CC BY 3.0 tomada de [Wikipedia](http://wikipedia.org/).
 
 ### Tipografías
 
