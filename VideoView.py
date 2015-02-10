@@ -162,6 +162,7 @@ class VideoView(gtk.EventBox):
         #self.videoplayer.load(os.path.join(self.topic, "video.ogv"))
         #self.imagen_juego.load(topic)
         self.flashcards_preview.load(topic)
+        self.flashcards_preview.reset()
 
         parser = SafeConfigParser()
         metadata = os.path.join(topic, "topic.ini")
@@ -293,6 +294,10 @@ class FlashCardsPreview(gtk.EventBox):
             self.play()
             self.left.hide()
             self.right.hide()
+
+    def reset(self):
+        self.modify_bg(gtk.STATE_NORMAL, COLORES['window'])
+        self.play()
 
     def stop(self):
         if self.imagenplayer:
