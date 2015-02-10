@@ -106,7 +106,7 @@ class DelayAnimation(spyral.Animation):
 class Escena(spyral.Scene):
     def __init__(self, topic=topic_dir):
         spyral.Scene.__init__(self, SIZE)
-        
+
         self.topic = topic
         self.layers = ["abajo", "abajo2", "arriba", "primer"]
 
@@ -132,14 +132,8 @@ class Escena(spyral.Scene):
 
         spyral.event.register("system.quit", spyral.director.pop, scene=self)
         spyral.event.register("director.scene.enter", self.l.llover, scene=self)
-        spyral.event.register("director.scene.enter", self.start_music)
-        spyral.event.register("input.keyboard.down.esc", self.endgame, scene=self)
+        spyral.event.register("input.keyboard.down.esc", self.escape, scene=self)
         spyral.event.register("Tablero.score", self.score)
-
-    def start_music(self):
-        if not Intro.MUTE:
-            pygame.mixer.music.play()
-
 
     def score(self):
         self.puntaje = self.tablero.ganadas * 100 - self.tablero.perdidas
@@ -151,19 +145,27 @@ class Escena(spyral.Scene):
         except AttributeError:
             pass
 
-    def endgame(self):
-        #self.scene.background = self.scene.img_orig
-        spyral.event.unregister("Tablero.reset.animation.end", self.scene.tablero.reset)
-        self.scene.tablero.visible = False
+    def escape(self):
         spyral.event.unregister("Lluvia.y.animation.end", self.scene.l.finalizar)
         spyral.event.unregister("Lluvia.demora.animation.end", self.scene.l.sonar_explosion)
         self.scene.l.stop_all_animations()
         self.scene.l.stop_all_animations()
         self.scene.l.visible = False
+        self.endgame()
+
+    def endgame(self):
+        #self.scene.background = self.scene.img_orig
+        #spyral.event.unregister("Tablero.reset.animation.end", self.scene.tablero.reset)
+        self.scene.tablero.visible = False
+        #spyral.event.unregister("Lluvia.y.animation.end", self.scene.l.finalizar)
+        #spyral.event.unregister("Lluvia.demora.animation.end", self.scene.l.sonar_explosion)
+        #self.scene.l.stop_all_animations()
+        #self.scene.l.stop_all_animations()
+        #self.scene.l.visible = False
         self.scene.v.set_text("GAME OVER")
         self.scene.v.stop_all_animations()
         self.scene.j.set_mirame()
-        spyral.event.unregister("input.keyboard.down.esc", self.endgame)
+        spyral.event.unregister("input.keyboard.down.esc", self.escape)
         self.the_question = Dialogo(self, "Play again?", self.the_question_click)
         spyral.event.unregister("input.keyboard.down.*", self.tablero.procesar_tecla)
         #self.scene.j.set_deambular()
@@ -385,11 +387,11 @@ class Lluvia(spyral.Sprite):
                 self.scene.endgame()
             else:
                 self.scene.background = self.scene.img_orig
-                self.visible = False
                 spyral.event.unregister("Lluvia.y.animation.end", self.finalizar)
                 spyral.event.unregister("Lluvia.demora.animation.end", self.sonar_explosion)
                 self.stop_all_animations()
                 self.stop_all_animations()
+                self.visible = False
                 self.scene.v.set_text("YOU WIN!")
                 self.scene.j.set_mirame()
 
@@ -688,7 +690,6 @@ class Dialogo(spyral.Sprite):
         spyral.event.register("input.keyboard.down.y", self.goplay)
 
     def goplay(self):
-        pygame.mixer.music.fadeout(1)
         spyral.director.replace(Escena(self.scene.topic))
         spyral.director.run(sugar=True)
 
@@ -791,6 +792,7 @@ class Intro(spyral.Scene):
             "images/Peru_Machu_Picchu_Sunrise.jpg")).scale(self.scene.size)
         self.background = img
 
+        self.titulo = Title(self)
         self.camino = Camino(self)
         self.camino.y = 0
         self.terraza = Terraza(self)
@@ -814,7 +816,6 @@ class Intro(spyral.Scene):
         Intro.MUTE = value
 
     def goplay(self):
-        pygame.mixer.music.fadeout(1)
         spyral.director.replace(Escena(self.topic))
         spyral.director.run(sugar=True)
 
@@ -841,6 +842,7 @@ class Intro(spyral.Scene):
     def intro2(self):
         spyral.event.unregister("Jugador.traslado.animation.end", self.intro2)
         self.mensaje.kill()
+        self.scene.titulo.kill()
         self.mensaje = Texto(self, "There is no time to explain")
         self.mensaje.y = self.height / 2 - 70
 
@@ -886,6 +888,17 @@ class Intro(spyral.Scene):
         self.scene.background = img
 
         self.j.set_deambular()
+
+
+class Title(spyral.Sprite):
+
+    def __init__(self, scene):
+        spyral.Sprite.__init__(self, scene)
+
+        self.image = spyral.Image(gamedir("images/juego1_titulo.png"))
+        self.layer = "primer"
+        self.pos = (scene.width / 2, scene.height / 2)
+        self.anchor = "center"
 
 def main():
     spyral.director.push(Intro())

@@ -63,7 +63,7 @@ class VideoView(gtk.EventBox):
         flashcards = gtk.Button()
         #flashcards.set_relief(gtk.RELIEF_NONE)
         imagen = gtk.Image()
-        imagen.set_from_file("Imagenes/flashcards.png")
+        imagen.set_from_file("Imagenes/flashcard_banner.png")
         flashcards.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
         flashcards.add(imagen)
 

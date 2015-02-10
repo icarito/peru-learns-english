@@ -53,9 +53,23 @@ class GameMenu(gtk.EventBox):
 
         self.inside_vb = gtk.VBox()
 
-        self.ug1 = gtk.Button("Hello Asteroids")
-        self.ug2 = gtk.Button("Reforestation Circuit")
-        self.ug3 = gtk.Button("Southern Cross")
+        self.ug1 = gtk.Button()
+        imagen = gtk.Image()
+        imagen.set_from_file("Imagenes/juego1_banner.png")
+        self.ug1.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
+        self.ug1.add(imagen)
+
+        self.ug2 = gtk.Button()
+        imagen = gtk.Image()
+        imagen.set_from_file("Imagenes/juego2_banner.png")
+        self.ug2.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
+        self.ug2.add(imagen)
+
+        self.ug3 = gtk.Button()
+        imagen = gtk.Image()
+        imagen.set_from_file("Imagenes/juego3_banner.png")
+        self.ug3.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
+        self.ug3.add(imagen)
 
         butt = gtk.Button()
         img = gtk.Image()

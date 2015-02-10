@@ -267,7 +267,8 @@ class Tablero(spyral.View):
                         nexos_rest += 1
         if bloques_rest==0 and nexos_rest>0:
             # Avisar al usuario que debe llenar la pantalla
-            self.win()
+            #self.win()
+            dialogo = Dialogo(self, "You must reforestate the entire board.")
         elif bloques_rest==0 and nexos_rest==0:
             self.win()
 
@@ -771,6 +772,9 @@ class Escena(spyral.Scene):
         spyral.Scene.__init__(self, SIZE)
 
         reset_vocabulario()
+        self.topic = topic
+
+        self.make_mapas()
 
         img = spyral.Image(filename=gamedir(
             "imagenes/Fazenda_Colorada.jpg")).scale(self.scene.size)
@@ -782,6 +786,21 @@ class Escena(spyral.Scene):
         self.background = img
         self.puntos = 0
 
+        #self.tablero = Tablero(self, topic, mapa=self.mapas[Escena.n])
+        self.titulo = Title(self)
+        self.intro = Dialogo(self, "Devastated by ignorance, ancient forests have turned into deserts...", self.intro2)
+
+        spyral.event.register("system.quit", spyral.director.pop, scene=self)
+        spyral.event.register("Tablero.score", self.score)
+
+        self.puntos = 0
+        if gameview:
+            Escena.gameview = gameview
+
+        pygame.mixer.music.load(gamedir('musica/alien_ruins2.ogg'))
+        pygame.mixer.music.play(-1)
+
+    def make_mapas(self):
         self.mapas = []
         self.mapas.append(
             [[1, 0, 0, 0, 2],
@@ -853,17 +872,14 @@ class Escena(spyral.Scene):
             [0, 0, 0, 2, 4],
             [5, 0, 0, 0, 5]]
             )
-        self.tablero = Tablero(self, topic, mapa=self.mapas[Escena.n])
+            
 
-        spyral.event.register("system.quit", spyral.director.pop, scene=self)
-        spyral.event.register("Tablero.score", self.score)
+    def intro2(self):
+        self.intro = Dialogo(self, "Your mission is to match each pair of eyes in order to regenerate the water cycle.", self.start_now)
+        self.titulo.kill()
 
-        self.puntos = 0
-        if gameview:
-            Escena.gameview = gameview
-
-        pygame.mixer.music.load(gamedir('musica/alien_ruins2.ogg'))
-        pygame.mixer.music.play(-1)
+    def start_now(self):
+        self.tablero = Tablero(self, self.topic, mapa=self.mapas[Escena.n])
 
     def mute(self, value):
         if value==True:
@@ -872,6 +888,12 @@ class Escena(spyral.Scene):
             pygame.mixer.music.play()
 
         Escena.MUTE = value
+
+    def win(self):
+        self.background = spyral.Image(filename=gamedir(
+            "imagenes/Forest_Los_Tilos.jpg")).scale(self.scene.size)
+
+        win = Dialogo(self, "Congratulations! You've saved the forests!", self.win)
 
     def score(self):
         if self.tablero.intentos==5:
@@ -883,12 +905,82 @@ class Escena(spyral.Scene):
         self.puntos += puntos
 
         Escena.n += 1
-        if Escena.n > (len(self.mapas)-1):
+        print Escena.n, len(self.mapas)
+        if Escena.n == len(self.mapas):
             Escena.n = 0
+            self.make_mapas()
+            self.tablero.kill()
+            self.win()
         self.tablero.reset(self.mapas[Escena.n])
 
         if Escena.gameview:
             Escena.gameview.update_score(self.puntos)
+
+
+class Dialogo(spyral.Sprite):
+
+    def __init__(self, scene, texto, callback=None):
+        spyral.Sprite.__init__(self, scene)
+
+        self.callback = callback
+        self.anchor = 'center'
+        self.pos = spyral.Vec2D(scene.size) / 2
+        self.margen = 5
+        self.layer = "primer"
+
+        self.image = spyral.Image(filename=gamedir("imagenes/Menu_2.png"))
+        #self.image.draw_rect(color=(128,128,128),
+        #        position=(0,0), size=(self.height,self.width))
+
+        font_path = gamedir("../fonts/DejaVuSans.ttf")
+        self.font = spyral.Font(font_path, 14, (0, 0, 0))
+        self.line_height = self.font.linesize
+
+        nueva = self.set_text(texto)
+        self.image.draw_image(nueva,
+            position=(self.margen / 2, 0), anchor="midleft")
+
+        spyral.event.register("input.mouse.down.left", self.go_callback)
+        spyral.event.register("input.keyboard.down.return", self.go_callback)
+        spyral.event.register("input.keyboard.down.space", self.go_callback)
+
+    def go_callback(self):
+        spyral.event.unregister("input.mouse.down.left", self.go_callback)
+        spyral.event.unregister("input.keyboard.down.return", self.go_callback)
+        spyral.event.unregister("input.keyboard.down.space", self.go_callback)
+        if self.callback:
+            self.callback()
+        self.kill()
+
+    def set_text(self, text):
+        self._text = text
+        ancho_promedio = self.font.get_size("X")[0]
+        caracteres = (self.width - 2 * self.margen) / ancho_promedio
+        lineas = wrap(text, caracteres).splitlines()
+
+        altura = len(lineas) * self.line_height
+        bloque = spyral.Image(size=(self.width, altura))
+
+        ln = 0
+        for linea in lineas:
+            bloque.draw_image(image=self.font.render(linea),
+                position=(0, ln * self.line_height), anchor="midtop")
+            ln = ln + 1
+
+        self.scale = 2
+
+        return bloque
+
+
+class Title(spyral.Sprite):
+
+    def __init__(self, scene):
+        spyral.Sprite.__init__(self, scene)
+
+        self.image = spyral.Image(gamedir("imagenes/juego2_titulo.png"))
+        self.layer = "primer"
+        self.pos = (scene.width / 2, 100)
+        self.anchor = "center"
 
 
 def QuadraticOutTuple(start=(0, 0), finish=(0, 0)):

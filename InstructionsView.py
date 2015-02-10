@@ -45,18 +45,18 @@ class InstructionsView(gtk.EventBox):
         es_tit.modify_font(pango.FontDescription("DejaVu Sans Bold 22"))
         es_tit.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
 
-        es_body = gtk.Label("Peru Learns English (PLE) es un sistema para involucrar a jóvenes en la adquisición de vocabulario y expresiones útiles, apelando a estímulos con escenas audiovisuales cinemáticas así como a videojuegos divertidos.")
+        es_body = gtk.Label("Peru Learns English (PLE) es un sistema para involucrar a jóvenes en la adquisición de vocabulario y expresiones útiles, apelando a estímulos diversos mediante videojuegos divertidos.")
         es_body.set_line_wrap(True)
-        es_body2 = gtk.Label("Se proporciona una herramienta de repaso espaciado, el cual es capaz de medir el progreso y eventualmente proporcionar retroalimentación al aprendiz. El repaso espaciado es demostradamente eficaz para ayudar a estudiantes comprometidos para memorizar vocabulario.")
+        es_body2 = gtk.Label("Se proporciona una herramienta de repaso espaciado, el cual es capaz de medir el progreso y eventualmente proporcionar retroalimentación al estudiante. El repaso espaciado es demostradamente eficaz para ayudar a estudiantes comprometidos para memorizar vocabulario.")
         es_body2.set_line_wrap(True)
 
         en_tit = gtk.Label(u"Welcome!")
         en_tit.modify_font(pango.FontDescription("DejaVu Sans Bold 22"))
         en_tit.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
 
-        en_body = gtk.Label("Peru Learns English (PLE) is a system for engaging young people in the acquisition of vocabulary and useful expressions, by means of appealing to multi-sensory stimuli in audiovisual cinematic scenes as well as fun videogames.")
+        en_body = gtk.Label("Peru Learns English (PLE) is a system for engaging young people in the acquisition of vocabulary and useful expressions, by means of appealing to multi-sensory stimuli by using fun videogames.")
         en_body.set_line_wrap(True)
-        en_body2 = gtk.Label("A simplified spaced repetition tool is provided, that is able to measure progress and eventually provide feedback to the learner. Spaced repetition is demonstrably effective at helping engaged students to memorize vocabulary.")
+        en_body2 = gtk.Label("A simplified spaced repetition tool is provided, that is able to measure progress and eventually provide feedback to the student. Spaced repetition is demonstrably effective at helping engaged students to memorize vocabulary.")
         en_body2.set_line_wrap(True)
 
         for label in es_body, es_body2, en_body, en_body2:
@@ -74,6 +74,7 @@ class InstructionsView(gtk.EventBox):
         bb = gtk.HButtonBox()
         bb.set_layout(gtk.BUTTONBOX_SPREAD)
 
+        """
         b = gtk.Button("")
         b.set_relief(gtk.RELIEF_NONE)
         b.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
@@ -85,6 +86,7 @@ class InstructionsView(gtk.EventBox):
         bb.pack_start(b, True, True, 0)
         img.show()
         bb.show_all()
+        """
 
         b = gtk.Button("")
         b.set_relief(gtk.RELIEF_NONE)
