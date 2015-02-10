@@ -1,27 +1,34 @@
 id,term,preg_alt,resp_alt
-angry,angry,How is she feeling?,She is feeling angry.
-ball,ball,,It's a ball.
 backpack,backpack,,It's a backpack.
 book,book,,It's a book.
-bored,bored,How is she feeling?,She is feeling bored.
 chair,chair,,It's a chair.
 chalkboard,chalkboard,,It's a chalkboard.
+cube,cube,,It's a cube.
 desk,desk,,It's a desk.
+desktop,computer,,It's a desktop computer.
 drawing,drawing,,It's a drawing.
 eraser,eraser,,It's an eraser.
+flashdrive,flash drive,,It's a flash drive.
 glue,glue,,It's glue.
-happy,happy,How is she feeling?,She's feeling happy.
 headphones,headphones,What are these?,They are headphones.
-jog,jogging,What is he doing?,He is jogging.
+lamp,lamp,,It's a lamp.
+laptop,laptop,,It's a laptop.
 notebook,notebook,,It's a notebook.
 paper,paper,,It's paper.
 pen,pen,,It's a pen.
 pencil,pencil,,It's a pencil.
-read,reading,What is she doing?,She is reading.
-sad,sad,How is she feeling?,She's feeling sad.
+plant,plant,,It's a plant.
 scissors,scissors,What are these?,They are scissors.
 scooter,scooter,,It's a scooter.
+trashcan,trash can,,It's a trash can.
+whiteboard,whiteboard,,It's a whiteboard.
+angry,angry,How is she feeling?,She is feeling angry.
+bored,bored,How is she feeling?,She is feeling bored.
+happy,happy,How is she feeling?,She's feeling happy.
+sad,sad,How is she feeling?,She's feeling sad.
+surprised,surprised,How is she feeling?,She is feeling surprised.
+read,reading,What is she doing?,She is reading.
+jog,jogging,What is he doing?,He is jogging.
 skate,skating,What is he doing?,He is skating.
 smile,smiling,What is she doing?,She is smiling.
 stretch,stretching,What is she doing?,She is stretching.
-surprised,surprised,How is she feeling?,She is feeling surprised.

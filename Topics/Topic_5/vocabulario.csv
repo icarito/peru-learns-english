@@ -1,25 +1,24 @@
 id,term,preg_alt,resp_alt
 right,right,Which direction is this?,It's right.
 left,left,Which direction is this?,It's left.
+beach,beach,,It's a beach.
+canyon,canyon,,It's a canyon.
 farm,farm,,It's a farm.
 forest,forest,,It's a forest.
-frog,frog,,It's a frog.
 garden,garden,,It's a garden.
 lake,lake,,It's a lake.
 mountain,mountain,,It's a mountain.
 mud,mud,,It's mud.
 nest,nest,,It's a nest.
-walk,walking,What is she doing?,She is walking.
-drive,driving,What is she doing?,She is driving.
-car,car,,It's a car.
-explore,exploring,What are they doing?,They are exploring.
-climb,climbing,What is he doing?,He is climbing.
-dive,diving,What is she doing?,She is diving.
 bike,bike,,It's a bike.
 boat,boat,,It's a boat.
 bus,bus,,It's a bus.
 canoe,canoe,,It's a canoe.
+car,car,,It's a car.
+train,train,,It's a train.
 truck,truck,,It's a truck.
+sailboat,sailboat,,It's a sailboat.
+van,van,,It's a van.
 cat,cat,,It's a cat.
 cow,cow,,It's a cow.
 crab,crab,,It's a crab.
@@ -30,6 +29,7 @@ llama,llama,,It's a llama.
 dog,dog,,It's a dog.
 dolphin,dolphin,,It's a dolphin.
 dove,dove,,It's a dove.
+frog,frog,,It's a frog.
 mouse,mouse,,It's a mouse.
 path,path,,It's a path.
 pelican,pelican,,It's a pelican.
