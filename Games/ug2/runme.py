@@ -61,7 +61,7 @@ def wrap(text, length):
 
 
 font_path = gamedir("../fonts/DejaVuSans.ttf")
-topic_dir = gamedir("../../Topics/Topic_4/")
+topic_dir = gamedir("../../Topics/Topic_6/")
 
 
 VOCABULARIO = []
@@ -529,7 +529,7 @@ class Bloque (spyral.Sprite):
         self.COL = col
         self.PALABRA = PALABRA
         self.ARCHIVO = ARCHIVO
-        self.font = spyral.Font(font_path, 28, (0, 0, 0))
+        self.font = spyral.Font(font_path, 22, (0, 0, 0))
         self.line_height = self.font.linesize
 
         self.mode = "PALABRA"

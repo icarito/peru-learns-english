@@ -66,7 +66,7 @@ def wrap(text, length):
 
 
 font_path = gamedir("../fonts/DejaVuSans.ttf")
-topic_dir = gamedir("../../Topics/Topic_5/")
+topic_dir = gamedir("../../Topics/Topic_3/")
 
 VOCABULARIO = []
 CANT_PALABRAS = 0
@@ -376,9 +376,10 @@ class Nave (spyral.View):
         self.visible = False
         self.elegida = None
 
+        spyral.event.register("TimeMaster.wait.animation.end", self.clear_and_loose)
+
         self.init_animations()
 
-        spyral.event.register("TimeMaster.wait.animation.end", self.clear_and_loose)
         spyral.event.register("TimeMaster.wait2.animation.end", self.repetir)
         spyral.event.register("TimeMaster.wait3.animation.end", self.repetir2)
 
@@ -436,8 +437,21 @@ class Nave (spyral.View):
         self.clear()
         spyral.event.register("TimeMaster.wait.animation.end", self.clear_and_loose)
 
-    def set_answer(self, ganamos):
+    def key_index(self, keycode):
+        teclas = ("up", "down", "right", "left")
+        teclas2 = ("keypad_8", "keypad_2", "keypad_6", "keypad_4")
+        teclas3 = ("keypad_9", "keypad_3", "keypad_1", "keypad_7")
+
+        for keyset in [teclas, teclas2, teclas3]:
+            try:
+                return keyset.index(pygame.key.name(keycode))
+            except ValueError:
+                pass
+
+    def set_answer(self, ganamos, keycode=None):
         PALABRA, ARCHIVO = self.palabras[self.elegida]
+        if keycode:
+            PALABRA, ARCHIVO = self.palabras[self.key_index(keycode)]
         if ganamos:
             frase = '"' + PALABRA + "\" is correct"
         else:
@@ -446,13 +460,11 @@ class Nave (spyral.View):
         self.scene.label.image = nueva
         self.scene.label.blink()
 
-    def pierde(self):
-        self.set_answer(False)
+    def pierde(self, event):
+        self.set_answer(False, event.key)
         play(self.loose_snd)
         self.result = False
-        spyral.event.unregister("TimeMaster.wait.animation.end", self.clear)
         self.next_level()
-        spyral.event.register("TimeMaster.wait.animation.end", self.clear)
         self.scene.T.stop_animation(self.delay2_anim)
         self.scene.T.stop_animation(self.delay3_anim)
 
@@ -466,9 +478,7 @@ class Nave (spyral.View):
         self.set_answer(True)
         play(self.win_snd)
         self.result = True
-        spyral.event.unregister("TimeMaster.wait.animation.end", self.clear)
         self.next_level()
-        spyral.event.register("TimeMaster.wait.animation.end", self.clear)
         self.scene.T.stop_animation(self.delay2_anim)
         self.scene.T.stop_animation(self.delay3_anim)
 
@@ -525,7 +535,7 @@ class Nave (spyral.View):
     def clear_and_loose(self):
         play(self.drown_snd)
         dialog = Dialogo(self.scene, "GAME OVER", self.question)
-        self.kill()
+        self.visible = False
         spyral.event.unregister("TimeMaster.wait.animation.end", self.clear)
         spyral.event.unregister("TimeMaster.wait.animation.end", self.clear_and_loose)
         spyral.event.unregister("TimeMaster.wait2.animation.end", self.repetir)
@@ -542,13 +552,21 @@ class Nave (spyral.View):
         spyral.event.unregister("TimeMaster.wait3.animation.end", self.repetir2)
 
     def question(self):
-        dialog = Dialogo(self.scene, "Play again?", self.clear)
+        dialog = Dialogo(self.scene, "Play again?", self.reset_and_clear)
+        spyral.event.register_multiple("input.keyboard.down.y", [dialog.die, self.reset_and_clear])
+
+    def reset_and_clear(self):
+        spyral.event.register("TimeMaster.wait.animation.end", self.clear_and_loose)
+        spyral.event.unregister("input.keyboard.down.y", self.reset_and_clear)
+        self.scene.puntos = 0
+        if Escena.gameview:
+            Escena.gameview.update_score(self.scene.puntos)
+        self.visible = True
+        self.clear()
 
     def clear(self, acertada=None):
         self.scene.T.stop_round()
         for bloque in self.n,self.s,self.e,self.o:
-            if bloque==acertada:
-                print bloque
             bloque.stop_animation(self.invasion_anim)
         self.scene.T.stop_animation(self.delay_anim)
         self.visible = False
@@ -632,6 +650,10 @@ class Dialogo(spyral.Sprite):
             spyral.event.register("input.mouse.down.left", self.go_callback)
             spyral.event.register("input.keyboard.down.return", self.go_callback)
             spyral.event.register("input.keyboard.down.space", self.go_callback)
+
+    def die(self):
+        self.callback = None
+        self.go_callback()
 
     def go_callback(self):
         spyral.event.unregister("input.mouse.down.left", self.go_callback)
