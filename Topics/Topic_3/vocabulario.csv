@@ -4,8 +4,7 @@ bell,bell,,It's a bell.
 balloons,balloons,What are these?,These are balloons.
 candle,candle,,It's a candle.
 cake,cake,,It's a cake.
-july28th,independence day,Which holiday is this? ,It's independence day.
-christmas,christmas,Which holiday is this? ,It's christmas.
+july28th,july 28th,Which holiday is this? ,It's independence day.
 earth,earth day,Which holiday is this? ,It's earth day.
 easter,easter eggs,What are these?,These are easter eggs.
 fire,fire,,It's fire.
@@ -25,6 +24,9 @@ fivethirty,five thirty,What time is it?,It's five thirty.
 sixthirty,six thirty,What time is it?,It's six thirty.
 7oclock,seven o'clock,What time is it?,It's seven o'clock.
 eightthirty,eight thirty,What time is it?,It's eight thirty.
+10oclock,ten o'clock,What time is it?,It's ten o'clock.
+tenthirty,ten thirty,What time is it?,It's ten thirty.
+11oclock,eleven o'clock,What time is it?,It's eleven o'clock.
 dance,dancing,What is she doing?,She is dancing.
 jump,jumping,What is he doing?,He is jumping.
 race,racing,What are they doing?,They are racing.
