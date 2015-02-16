@@ -102,14 +102,23 @@ class Main(gtk.Window):
         self.instructionsview.connect("credits", self.__play_credits)
         self.instructionsview.connect("start", self.__show_menu)
         self.connect("delete-event", self.__salir)
+        self.toolbar.menubutton.connect("toggled", self.__stop_credits)
 
         self.toolbar.buttons[0].set_active(True)
 
         self.__switch(False, "Instructions", None)
 
+    def __stop_credits(self, widget):
+        if self.creditsview.props.visible:
+            run = not bool(self.creditsview.visor.update)
+            if run:
+                self.creditsview.visor.modify_bg(
+                    gtk.STATE_NORMAL, COLORES["text"])
+            self.creditsview.visor.new_handle(run)
+
     def __game_return_to_video(self, widget, topic):
         self.__play_video(widget, topic)
-        self.videoview.videoplayer.stop()
+        #self.videoview.videoplayer.stop()
 
     def __play_game(self, widget, topic):
         self.__switch(False, "game", topic)
@@ -120,7 +129,7 @@ class Main(gtk.Window):
     def __play_video(self, widget, topic):
         self.__switch(False, "Topics", topic)
         self.videoview.set_full(False)
-        self.videoview.videoplayer.pause()
+        #self.videoview.videoplayer.pause()
 
     def __play_credits(self, widget):
         self.__switch(False, "Credits")

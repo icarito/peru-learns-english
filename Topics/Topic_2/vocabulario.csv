@@ -1,37 +1,40 @@
 id,term,preg_alt,resp_alt
-artisan,artisan,What does he do?,He is an artisan.
-artist,artist,What does he do?,He is an artist.
 blue,blue,What color is this?,It's blue.
 brown,brown,What color is this?,It's brown.
-call,to call,What is he doing?,He is calling.
-chin,chin,,It's a chin.
-dream,to dream,What is he doing?,He is dreaming.
-ear,ear,,It's an ear.
+green,green,What color is this?,It's green.
+orange,orange,What color is this?,It's orange.
+gray,gray,What color is this?,It's gray.
+pink,pink,What color is this?,It's pink.
+red,red,What color is this?,It's red.
+white,white,What color is this?,It's white.
+yellow,yellow,What color is this?,It's yellow.
+artisan,artisan,What does he do?,He is an artisan.
+artist,artist,What does he do?,He is an artist.
+athlete,athlete,What does he do?,He is an athlete.
 electrician,electrician,What does he do?,He is an electrician.
-elbow,elbow,,It's an elbow.
 engineer,engineer,What does he do?,He is an engineer.
-eyebrow,eyebrow,,It's an eyebrow.
 farmer,farmer,What does he do?,He is a farmer.
+mechanic,mechanic,What does he do?,He is a mechanic.
+nurse,nurse,What does she do?,She is a nurse.
+pilot,pilot,What does he do?,He is a pilot.
+plumber,plumber,What does he do?,He is a plumber.
+teacher,teacher,What does she do?,She is a teacher.
 family,family,,It's a family.
+baby,baby,What is she?,She is a baby.
+father,father,What is he?,He is a father.
+mother,mother,What is she?,She is a mother.
+chin,chin,,It's a chin.
+ear,ear,,It's an ear.
+elbow,elbow,,It's an elbow.
+eyebrow,eyebrow,,It's an eyebrow.
 feet,feet,What are these?,These are feet.
 finger,finger,,It's a finger.
 foot,foot,,It's a foot.
 hair,hair,,It's hair.
 knee,knee,,It's a knee.
 leg,leg,,It's a leg.
-mechanic,mechanic,What does he do?,He is a mechanic.
-mother,mother,What is she?,She is a mother.
 mouth,mouth,,It's a mouth.
 navel,navel,,It's a navel.
 nose,nose,,It's a nose.
-nurse,nurse,What does she do?,She is a nurse.
-orange,orange,What color is this?,It's orange.
-pilot,pilot,What does he do?,He is a pilot.
-pink,pink,What color is this?,It's pink.
-plumber,plumber,What does he do?,He is a plumber.
-red,red,What color is this?,It's red.
-scream,to scream,What is she doing?,She is screaming.
-teacher,teacher,What does she do?,She is a teacher.
+thumb,thumb,,It's a thumb.
 toe,toe,,It's a toe.
-white,white,What color is this?,It's white.
-yellow,yellow,What color is this?,It's yellow.

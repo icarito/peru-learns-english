@@ -38,7 +38,7 @@ COLORES = {
     "menu": gdk.color_parse("#ff6600"),
     "title": gdk.color_parse("#FE8200"),
     "text": gdk.color_parse("#000000"),
-    "rojo": gdk.color_parse("#ff0000"),
+    "rojo": gdk.color_parse("#fe6e00"),
     "verde": gdk.color_parse("#00ff00"),
     "amarillo": gdk.color_parse("#ffff00"),
     }

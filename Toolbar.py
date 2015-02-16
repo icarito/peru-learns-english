@@ -151,7 +151,7 @@ class Menu(gtk.Menu):
             boton = gtk.Label(title)
             boton.modify_font(pango.FontDescription("DejaVu Sans Bold 16"))
             boton.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
-            boton.set_padding(xpad=20, ypad=20)
+            boton.set_padding(xpad=5, ypad=20)
             item.add(boton)
             item.connect("activate", self.__emit_accion_menu, arch)
             item.show()
