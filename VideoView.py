@@ -32,6 +32,7 @@ from JAMediaImagenes.ImagePlayer import ImagePlayer
 from Globales import COLORES
 from Globales import get_flashcards_previews
 from Globales import get_user_dict
+from Globales import decir_demorado
 
 GRADOS = ["1°", "2°", "3°", "4°", "5°", "6°"]
 EDADES = range(5, 21, 1)
@@ -218,12 +219,16 @@ class FlashCardsPreview(gtk.EventBox):
         self.topic = False
 
         self.drawing = gtk.DrawingArea()
+        eventcontainer = gtk.EventBox()
+        eventcontainer.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
         self.label = gtk.Label("Text")
         self.label.set_property("justify", gtk.JUSTIFY_CENTER)
         self.drawing.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
         self.label.modify_bg(gtk.STATE_NORMAL, COLORES["window"])
         self.label.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
-        self.label.modify_font(pango.FontDescription("DejaVu Sans Bold 20"))
+        self.label.modify_font(pango.FontDescription("DejaVu Sans 20"))
+        eventcontainer.add(self.label)
+        eventcontainer.connect("button-press-event", self.utter)
 
         hbox = gtk.HBox()
         self.left = gtk.Button()
@@ -235,7 +240,7 @@ class FlashCardsPreview(gtk.EventBox):
         self.left.connect("clicked", self.go_left)
         hbox.pack_start(self.left)
 
-        hbox.add(self.label)
+        hbox.add(eventcontainer)
 
         self.right = gtk.Button()
         self.right.set_relief(gtk.RELIEF_NONE)
@@ -254,6 +259,18 @@ class FlashCardsPreview(gtk.EventBox):
         align.add(tabla)
 
         self.add(align)
+
+    def utter(self, widget, event):
+        palabra = self.label.get_text()
+        #self.label.modify_fg(gtk.STATE_NORMAL, COLORES["rojo"])
+        self.label.set_markup("<b>"+palabra+"</b>")
+        gobject.idle_add(self.utter2, palabra)
+        return True
+
+    def utter2(self, palabra):
+        decir_demorado(170, 50, 0, "en-gb", palabra)
+        self.label.set_markup(palabra)
+        #self.label.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
 
     def go_right(self, widget):
         self.__run_secuencia()
