@@ -7,7 +7,8 @@ def get_data_files():
     # hacemos una lista de archivo
     for root, directorio, archivos in os.walk("."):
         if not root.startswith("./.git") and \
-            not root.startswith("./Bocetos"):
+            not root.startswith("./Bocetos") and \
+            not root.startswith("./Docs"):
             for archivo in archivos:
                 if not archivo.endswith("pyc") and \
                         not archivo.startswith(".") and \
