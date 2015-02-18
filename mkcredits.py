@@ -27,4 +27,4 @@ plantilla = Template(template)
 creditos = md.markdown(open("CREDITS.md").read())
 #creditos.decode("utf-8")
 
-open("CREDITS.html", "w").write(plantilla.render(credits=creditos))
+open("Docs/CREDITS.html", "w").write(plantilla.render(credits=creditos))

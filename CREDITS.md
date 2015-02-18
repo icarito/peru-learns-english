@@ -1,7 +1,7 @@
-Peru Learns English / Peru Aprende Inglés
+![Peru Learns English](Imagenes/ple_disabled.png) <br> Peru Aprende Inglés
 =========================================
 
-PLE está siendo desarrollado por el equipo de I&D SomosAzúcar en colaboración con especialistas del Ministerio de Educación de Perú.
+PLE es desarrollado por el equipo de I&D SomosAzúcar en colaboración con especialistas del Ministerio de Educación de Perú.
 
 *Sólo podemos lograr software educativo de calidad y sustentable, irguiéndonos sobre hombros de gigantes y contribuyendo a la biblioteca mundial común de Software Libre.*
 
@@ -18,12 +18,12 @@ Credits / Créditos
   Southern Cross © 2014-2015<br>
   Sebastian Silva <sebastian@fuentelibre.org> Peru - GPLv2+
 
-* popupmenubutton.py<br>
+* popupmenubutton.py (componente adicional utilizado)<br>
   © 2008-2011 Zuza Software Foundation South Africa - GPLv2+
 
 ### User Experience Design / Diseño de Experiencia de Usuario ###
 
-* PLE V1.0 Beta 2014-2015 Laura Vargas - Colombia - CC BY-SA 3.0
+* PLE V1.0 2014-2015 Laura Vargas - Colombia - CC BY-SA 3.0
 
 Con aportes de Koke Contreras, Sebastian Silva, Flavio Danesse, Aliosh Neira, Cecilia Bustamante, Maria Elisa de la Vega, Jackeline Salazar, así como los demás funcionarios del Plan de Inglés del Ministerio de Educación del Perú.
 
@@ -48,8 +48,14 @@ Tomadas de [OpenGameArt.Org](http://opengameart.org).
 * Asteroid - © 2014 - GGo - CC BY 3.0
 * Small Objects & Generic Background - Lanea Zimmerman (AKA Sharm) - CC BY-SA 3.0
 
-#### Peru_Machu_Picchu_Sunrise.jpg - © 2007 Flamurai - CC BY 2.0 tomada de [Wikipedia](http://wikipedia.org/).
-#### Forest_Los_Tilos.jpg - © 2004 Luc Viatour - CC BY 3.0 tomada de [Wikipedia](http://wikipedia.org/).
+Tomada de [The Noun Project](http://thenounproject.com/).
+
+* "Memory" Created by Andrew J. Young - CC BY 3.0
+
+Tomadas de [Wikipedia](http://wikipedia.org/).
+
+* Peru_Machu_Picchu_Sunrise.jpg - © 2007 Flamurai - CC BY 2.0
+* Forest_Los_Tilos.jpg - © 2004 Luc Viatour - CC BY 3.0
 
 ### Tipografías
 
@@ -77,12 +83,9 @@ Tomadas de [OpenGameArt.Org](http://opengameart.org).
 
 <br><br><br>
 <br><br><br>
-<br><br><br>
-<br><br><br>
-![Ministerio de Educación](Imagenes/med.png)
-<br><br><br>
-<br><br><br>
-<br><br><br>
-<br><br><br>
-<br><br><br>
-![Laboratorios Azúcar](Imagenes/logo_labs.png)
+
+Peru Learns English
+
+© 2015 - Algunos Derechos Reservados
+
+SomosAzucar.Org
