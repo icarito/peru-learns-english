@@ -177,7 +177,6 @@ def decir(pitch, speed, word_gap, voice, text):
         _audio = espeak.AudioGrab()
         _audio.speak(text, pitch, speed, voice)
 
-
 class Dialog(gtk.Dialog):
 
     def __init__(self, title, parent, buttons, text):
@@ -193,3 +192,7 @@ class Dialog(gtk.Dialog):
 
     def __realize(self, widget):
         decir(50, 57, 0, "en-gb", self.get_title())
+
+def is_xo():
+    return os.path.exists('/etc/olpc-release')
+

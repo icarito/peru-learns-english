@@ -58,33 +58,29 @@ class Toolbar(gtk.EventBox):
         imagen = gtk.Image()
         imagen.set_from_file("Imagenes/ple.png")
 
-        boton = gtk.ToolButton()
-        boton.set_label_widget(imagen)
-        boton.connect("clicked", self.__go_home)
-        item.add(boton)
+        self.homebutton = gtk.ToggleToolButton()
+        self.homebutton.set_label_widget(imagen)
+        self.homebutton.connect("toggled", self.__go_home)
+        item.add(self.homebutton)
         toolbar.insert(item, -1)
 
         separador = gtk.SeparatorToolItem()
         separador.props.draw = True
         toolbar.insert(separador, -1)
 
-        self.buttons = []
-
-        for text in ["Instructions"]:
-            item = gtk.ToolItem()
-            item.set_expand(True)
-            label = gtk.Label(text)
-            label.modify_font(pango.FontDescription("DejaVu Sans Bold 16"))
-            label.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
-            boton = gtk.ToggleToolButton()
-            boton.set_label_widget(label)
-            boton.connect("toggled", self.__do_toggled)
-            self.buttons.append(boton)
-            item.add(boton)
-            toolbar.insert(item, -1)
-            separador = gtk.SeparatorToolItem()
-            separador.props.draw = True
-            toolbar.insert(separador, -1)
+        item = gtk.ToolItem()
+        item.set_expand(True)
+        label = gtk.Label("Instructions")
+        label.modify_font(pango.FontDescription("DejaVu Sans Bold 16"))
+        label.modify_fg(gtk.STATE_NORMAL, COLORES["text"])
+        self.instructionsbutton = gtk.ToggleToolButton()
+        self.instructionsbutton.set_label_widget(label)
+        self.instructionsbutton.connect("toggled", self.__go_instructions)
+        item.add(self.instructionsbutton)
+        toolbar.insert(item, -1)
+        separador = gtk.SeparatorToolItem()
+        separador.props.draw = True
+        toolbar.insert(separador, -1)
 
         self.menu = Menu()
 
@@ -105,26 +101,27 @@ class Toolbar(gtk.EventBox):
         self.menu.connect("activar", self.__emit_accion_menu)
 
     def __emit_accion_menu(self, widget, topic):
-        for button in self.buttons:
-            button.set_active(False)
+        self.instructionsbutton.set_active(False)
+        self.homebutton.set_active(False)
         self.emit("video", topic)
 
     def __go_home(self, widget):
-        self.emit("activar", "Instructions")
-
-    def __do_toggled(self, widget):
-        label = widget.get_label_widget().get_text()
         activo = widget.get_active()
         if activo:
-            for button in self.buttons:
-                if label != button.get_label_widget().get_text():
-                    button.set_active(False)
-            self.emit("activar", label)
+            self.instructionsbutton.set_active(False)
             self.menubutton.set_active(False)
+            self.emit("activar", "Home")
         else:
-            for button in self.buttons:
-                if button.get_active():
-                    return
+            self.homebutton.set_active(False)
+
+    def __go_instructions(self, widget):
+        activo = widget.get_active()
+        if activo:
+            self.emit("activar", "Instructions")
+            self.menubutton.set_active(False)
+            self.homebutton.set_active(False)
+        else:
+            self.instructionsbutton.set_active(False)
 
 
 class Menu(gtk.Menu):

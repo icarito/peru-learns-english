@@ -19,11 +19,130 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import os
 import gtk
 import gobject
 import pango
+from glob import glob
 
 from Globales import COLORES
+from JAMediaImagenes.ImagePlayer import ImagePlayer
+
+
+class HelpSlideShow(gtk.EventBox):
+
+    def __init__(self):
+
+        gtk.EventBox.__init__(self)
+
+        self.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
+        #self.set_border_width(20)
+
+        self.slides = []
+        self.index_select = 0
+        self.imagenplayer = False
+        self.control = False
+
+        self.drawing = gtk.DrawingArea()
+        eventcontainer = gtk.EventBox()
+        eventcontainer.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
+        self.label = gtk.Label("Text")
+        self.label.set_property("justify", gtk.JUSTIFY_CENTER)
+        self.drawing.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
+        self.label.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
+        self.label.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
+        #self.label.modify_font(pango.FontDescription("DejaVu Sans 16"))
+        eventcontainer.add(self.label)
+
+        hbox = gtk.HBox()
+        self.left = gtk.Button()
+        self.left.unset_flags(gtk.CAN_FOCUS)
+        self.left.set_relief(gtk.RELIEF_NONE)
+        imagen = gtk.Image()
+        imagen.set_from_file("Imagenes/flecha_izquierda.png")
+        self.left.set_border_width(0)
+        self.left.add(imagen)
+        self.left.connect("clicked", self.go_left)
+        hbox.pack_start(self.left)
+
+        hbox.add(eventcontainer)
+
+        self.right = gtk.Button()
+        self.right.set_relief(gtk.RELIEF_NONE)
+        self.right.unset_flags(gtk.CAN_FOCUS)
+        imagen = gtk.Image()
+        imagen.set_from_file("Imagenes/flecha_derecha.png")
+        self.right.set_border_width(0)
+        self.right.add(imagen)
+        self.right.connect("clicked", self.go_right)
+        hbox.pack_end(self.right)
+
+        tabla = gtk.Table(rows=8, columns=1, homogeneous=True)
+        tabla.attach(self.drawing, 0, 1, 0, 7, ypadding=5)
+        tabla.attach(hbox, 0, 1, 7, 8)
+
+        align = gtk.Alignment(0.5, 0.5, 0.7, 0.95)
+        align.add(tabla)
+
+        self.add(align)
+
+    def go_right(self, widget):
+        self.__run_secuencia()
+        self.left.show()
+        self.right.show()
+
+    def go_left(self, widget):
+        self.__run_secuencia(offset=-1)
+        self.left.show()
+        self.right.show()
+
+    def __run_secuencia(self, widget=None, offset=1):
+        self.stop()
+        self.index_select += offset
+        self.path = self.slides[self.index_select % len(self.slides)]
+        self.imagenplayer = ImagePlayer(self.drawing)
+        self.imagenplayer.load(self.path)
+        self.label.set_text("Slide %i of %i" % (
+            self.index_select % len(self.slides) + 1, len(self.slides)))
+
+        #self.left.hide()
+        #self.right.hide()
+        return True
+
+    def toggle(self):
+        if self.control:
+            gobject.source_remove(self.control)
+            self.control = False
+            self.modify_bg(gtk.STATE_NORMAL, COLORES['rojo'])
+            self.left.show()
+            self.right.show()
+        else:
+            self.modify_bg(gtk.STATE_NORMAL, COLORES['window'])
+            self.play()
+            self.left.hide()
+            self.right.hide()
+
+    def reset(self):
+        self.modify_bg(gtk.STATE_NORMAL, COLORES['window'])
+        self.play()
+
+    def stop(self):
+        if self.imagenplayer:
+            self.imagenplayer.stop()
+            del(self.imagenplayer)
+            self.imagenplayer = False
+
+    def play(self):
+        if not self.control:
+            self.control = gobject.timeout_add(10000, self.__run_secuencia)
+
+    def load(self):
+        self.stop()
+        self.slides = sorted(glob("Imagenes/slides/slide*.png"))
+        self.index_select = -1
+        self.__run_secuencia()
+        #self.play()
+        return False
 
 
 class InstructionsView(gtk.EventBox):
@@ -41,82 +160,9 @@ class InstructionsView(gtk.EventBox):
         self.modify_bg(gtk.STATE_NORMAL, COLORES["contenido"])
         self.set_border_width(4)
 
-        es_tit = gtk.Label(u"¡Bienvenidos!")
-        es_tit.modify_font(pango.FontDescription("DejaVu Sans Bold 22"))
-        es_tit.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
+        self.helpslideshow = HelpSlideShow()
 
-        es_body = gtk.Label("Peru Learns English (PLE) es un sistema para involucrar a jóvenes en la adquisición de vocabulario y expresiones útiles, apelando a estímulos diversos mediante videojuegos divertidos.")
-        es_body.set_line_wrap(True)
-        es_body2 = gtk.Label("Se proporciona una herramienta de repaso espaciado, el cual es capaz de medir el progreso y eventualmente proporcionar retroalimentación al estudiante. El repaso espaciado es demostradamente eficaz para ayudar a estudiantes comprometidos para memorizar vocabulario.")
-        es_body2.set_line_wrap(True)
-
-        en_tit = gtk.Label(u"Welcome!")
-        en_tit.modify_font(pango.FontDescription("DejaVu Sans Bold 22"))
-        en_tit.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
-
-        en_body = gtk.Label("Peru Learns English (PLE) is a system for engaging young people in the acquisition of vocabulary and useful expressions, by means of appealing to multi-sensory stimuli by using fun videogames.")
-        en_body.set_line_wrap(True)
-        en_body2 = gtk.Label("A simplified spaced repetition tool is provided, that is able to measure progress and eventually provide feedback to the student. Spaced repetition is demonstrably effective at helping engaged students to memorize vocabulary.")
-        en_body2.set_line_wrap(True)
-
-        for label in es_body, es_body2, en_body, en_body2:
-            label.modify_font(pango.FontDescription("DejaVu Sans 8"))
-
-        tabla = gtk.Table(rows=4, columns=2, homogeneous=True)
-        tabla.attach(es_tit, 0, 1, 0, 1)
-        tabla.attach(es_body, 0, 1, 1, 2)
-        tabla.attach(es_body2, 0, 1, 2, 3)
-
-        tabla.attach(en_tit, 1, 2, 0, 1)
-        tabla.attach(en_body, 1, 2, 1, 2)
-        tabla.attach(en_body2, 1, 2, 2, 3)
-
-        bb = gtk.HButtonBox()
-        bb.set_layout(gtk.BUTTONBOX_SPREAD)
-
-        """
-        b = gtk.Button("")
-        b.set_relief(gtk.RELIEF_NONE)
-        b.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
-        b.connect("enter-notify-event", self.__color, "manual")
-        b.connect("leave-notify-event", self.__decolor, "manual")
-        img = gtk.Image()
-        img.set_from_file("Imagenes/manual_disabled.png")
-        b.set_image(img)
-        bb.pack_start(b, True, True, 0)
-        img.show()
-        bb.show_all()
-        """
-
-        b = gtk.Button("")
-        b.set_relief(gtk.RELIEF_NONE)
-        b.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
-        b.connect("enter-notify-event", self.__color, "contributors")
-        b.connect("leave-notify-event", self.__decolor, "contributors")
-        b.connect("clicked", self.__credits)
-        img = gtk.Image()
-        img.set_from_file("Imagenes/contributors_disabled.png")
-        b.set_image(img)
-        bb.pack_start(b, True, True, 0)
-        img.show()
-        bb.show_all()
-
-        b = gtk.Button("")
-        b.set_relief(gtk.RELIEF_NONE)
-        b.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
-        b.connect("clicked", self.__start)
-        #b.connect("enter-notify-event", self.__color, "start")
-        #b.connect("leave-notify-event", self.__decolor, "start")
-        img = gtk.Image()
-        img.set_from_file("Imagenes/start.png")
-        b.set_image(img)
-        bb.pack_start(b, True, True, 0)
-        img.show()
-        bb.show_all()
-
-        tabla.attach(bb, 0, 2, 3, 4)
-
-        self.add(tabla)
+        self.add(self.helpslideshow)
         self.show_all()
 
     def __decolor(self, widget, event, filestub):
@@ -129,10 +175,21 @@ class InstructionsView(gtk.EventBox):
         self.emit("credits")
 
     def __start(self, widget):
+        self.fix_scale()
         self.emit("start")
 
     def stop(self):
+        self.helpslideshow.stop()
         self.hide()
 
+    def fix_scale(self):
+        pixbuf = gtk.gdk.pixbuf_new_from_file("Imagenes/welcome_slide.png")
+        screen = self.window.get_screen()
+        desired_height = screen.get_height() - 180
+        desired_width = pixbuf.get_height() / desired_height * pixbuf.get_width()
+        pixbuf = pixbuf.scale_simple(desired_width , desired_height, gtk.gdk.INTERP_BILINEAR)
+        self.image.set_from_pixbuf(pixbuf)
+
     def run(self):
+        self.helpslideshow.load()
         self.show()

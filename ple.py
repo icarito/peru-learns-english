@@ -34,6 +34,7 @@ from FlashCardView import FlashCardView
 from GameView import GameMenu
 from GameView import GameView
 from InstructionsView import InstructionsView
+from WelcomeView import WelcomeView
 from CreditsView import CreditsView
 
 BASE_PATH = os.path.dirname(__file__)
@@ -52,7 +53,7 @@ class Main(gtk.Window):
 
         gtk.Window.__init__(self)
 
-        self.set_title("English for Peru")
+        self.set_title("Peru Learns English")
         self.set_icon_from_file(os.path.join(
             BASE_PATH , "Iconos", "icono.svg"))
 
@@ -86,6 +87,9 @@ class Main(gtk.Window):
         self.instructionsview = InstructionsView()
         self.vbox.pack_start(self.instructionsview, True, True, 0)
 
+        self.welcomeview = WelcomeView()
+        self.vbox.pack_start(self.welcomeview, True, True, 0)
+
         self.creditsview = CreditsView()
         self.vbox.pack_start(self.creditsview, True, True, 0)
 
@@ -99,14 +103,15 @@ class Main(gtk.Window):
         self.videoview.connect("flashcards", self.__play_flashcards)
         self.videoview.connect("game", self.__play_game)
         self.flashcards.connect("video", self.__game_return_to_video)
-        self.instructionsview.connect("credits", self.__play_credits)
-        self.instructionsview.connect("start", self.__show_menu)
+        self.welcomeview.connect("instructions", self.__play_instructions)
+        self.welcomeview.connect("credits", self.__play_credits)
+        self.welcomeview.connect("start", self.__show_menu)
         self.connect("delete-event", self.__salir)
         self.toolbar.menubutton.connect("toggled", self.__stop_credits)
 
-        self.toolbar.buttons[0].set_active(True)
+        self.toolbar.homebutton.set_active(True)
 
-        self.__switch(False, "Instructions", None)
+        self.__switch(False, "Home", None)
 
     def __stop_credits(self, widget):
         if self.creditsview.props.visible:
@@ -127,22 +132,29 @@ class Main(gtk.Window):
         self.__switch(False, "flashcards", data)
 
     def __play_video(self, widget, topic):
+        self.toolbar.homebutton.set_active(False)
         self.__switch(False, "Topics", topic)
         self.videoview.set_full(False)
         #self.videoview.videoplayer.pause()
 
+    def __play_instructions(self, widget):
+        self.__switch(False, "Instructions")
+        self.toolbar.homebutton.set_active(False)
+
     def __play_credits(self, widget):
         self.__switch(False, "Credits")
-        self.toolbar.buttons[0].set_active(False)
+        self.toolbar.homebutton.set_active(False)
 
     def __show_menu(self, widget):
         self.toolbar.menubutton.popup()
         self.toolbar.menubutton.set_active(True)
-        self.toolbar.buttons[0].set_active(False)
+        self.toolbar.instructionsbutton.set_active(False)
 
     def __switch(self, widget, label, data=False):
         map(ocultar, self.vbox.get_children()[1:])
-        if label == "Instructions":
+        if label == "Home":
+            self.welcomeview.run()
+        elif label == "Instructions":
             self.instructionsview.run()
         elif label == "Credits":
             self.creditsview.run()
