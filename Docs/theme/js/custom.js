@@ -1,3 +1,4 @@
+/*
 $( document ).ready(
     function() {
     $('.slide').click(function(event){
@@ -49,3 +50,4 @@ function generate() {
             });
         });
     };
+*/

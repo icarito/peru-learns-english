@@ -13,7 +13,7 @@ from jinja2 import Template
 
 from pprint import pprint
 
-basedir = "Topics"
+basedir = "../Topics"
 
 template = """
 <html>
@@ -79,7 +79,7 @@ def obtener_vocabularios():
                 for linea in tabla:
                     img_folder = os.path.join(folder, "Imagenes")
                     linea["filename"] = os.path.join(img_folder, linea["id"]+".png")
-                    linea["url"] = "file://" + os.path.abspath(linea["filename"])
+                    linea["url"] = linea["filename"]
                     if not linea.get("preg_alt"):
                         linea["preg_alt"] = "What is this?"
                     try:
@@ -92,11 +92,10 @@ def obtener_vocabularios():
 def validar_vocabularios(vocabulario):
     
     faltantes = []
-    existentes = glob.glob("Topics/*/Imagenes/*.png")
+    existentes = glob.glob("../Topics/*/Imagenes/*.png")
     for topic in vocabulario.keys():
         for item in vocabulario[topic]:
             if item['filename'] in existentes:
-                #print item['term'], "OK"
                 existentes.pop(existentes.index(item['filename']))
             else:
                 url = "file://" + os.path.abspath(item["filename"])
