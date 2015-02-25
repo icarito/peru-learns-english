@@ -199,7 +199,7 @@ class Tablero(spyral.Sprite):
         spyral.Sprite.__init__(self, scene)
 
         self.completo = False
-        self.acertadas = ""
+        self.acertadas = " "
         self.layer = "abajo"
         self.ganadas = 0
         self.perdidas = 0
