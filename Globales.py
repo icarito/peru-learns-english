@@ -92,7 +92,8 @@ def get_user_dict(user):
     return __get_dict(userpath)
 
 
-def guardar(_dict, topic, palabra, respuesta):
+def guardar(_dict, topic, palabra, respuesta, override_date=None):
+    print topic, palabra, respuesta
     dirpath = os.path.join(os.environ["HOME"], ".Ple")
     if not os.path.exists(dirpath):
         os.mkdir(dirpath)
@@ -104,7 +105,7 @@ def guardar(_dict, topic, palabra, respuesta):
         __set_dict(upath, _dict)
     filepath = os.path.join(userpath, os.path.basename(topic))
 
-    fecha = str(datetime.date.today())
+    fecha = str(override_date or datetime.date.today())
     _dict = __get_dict(filepath)
     if not _dict.get(palabra, False):
         _dict[palabra] = {}
@@ -126,7 +127,7 @@ def get_flashcards_previews(topic):
     return __read_cvs(topic)
 
 
-def get_vocabulario(topic, _dict):
+def get_vocabulario(topic, _dict, override_date=None):
     vocabulario = __read_cvs(topic)
 
     # Cargar Persistencia
@@ -143,7 +144,7 @@ def get_vocabulario(topic, _dict):
     _dict = __get_dict(filepath)
 
     # Verificar Fechas
-    hoy = datetime.date.today()
+    hoy = override_date or datetime.date.today()
     hoy = datetime.datetime.strptime(str(hoy), "%Y-%m-%d")
 
     ret = []
