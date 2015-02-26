@@ -82,7 +82,7 @@ class VideoView(gtk.EventBox):
         imagen.set_from_file("Imagenes/juego1.png")
         self.imagen_juego.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
         self.imagen_juego.add(imagen)
-        
+
         #align = gtk.Alignment(0.5, 0.5, 0.6, 0.9)
         self.flashcards_preview = FlashCardsPreview()
         self.flashcards_preview.connect("button-press-event", self.__toggle_flashcards)
@@ -122,10 +122,10 @@ class VideoView(gtk.EventBox):
     def __emit_flashcards(self, widget):
         dialog = DialogLogin(self.get_toplevel())
         ret = dialog.run()
-        dialog.destroy()
         if ret == gtk.RESPONSE_ACCEPT:
             datos = dialog.get_user_dict()
             self.emit("flashcards", (self.topic, datos))
+        dialog.destroy()
 
     def set_full(self, widget):
         for child in self.tabla.children():
