@@ -110,15 +110,32 @@ def guardar(_dict, topic, palabra, respuesta):
         _dict[palabra] = {}
     _dict[palabra][fecha] = respuesta
 
-    new = _dict[palabra].get("new", False)
-    if new:
-        new = float(new[1])
-    else:
-        new = 2.5
-    new = new + (0.1 - (5 - respuesta) * (0.08 + (5 - respuesta) * 0.02))
+    # n es el numero de repeticion
+    n = len(_dict[palabra])
 
-    newdate = datetime.date.today() + datetime.timedelta(days=new)
-    _dict[palabra]["new"] = [str(newdate.isoformat()), new]
+    EF = _dict[palabra].get("EF", False)
+    if EF:
+        EF = float(EF[1])
+    else:
+        EF = 2.5
+    #EF = EF + (0.1 - (5 - respuesta) * (0.08 + (5 - respuesta) * 0.02))
+    if not respuesta < 3:
+        EF = EF - 0.8 + 0.28 * respuesta - 0.02 * respuesta * respuesta
+    if EF < 1.3:
+        EF = 1.3
+
+    def calc_I(n):
+        if n==1:
+            return 1
+        elif n==2:
+            return 6
+        elif n>2:
+            return calc_I(n-1) * EF
+
+    I = calc_I(n)
+
+    newdate = datetime.date.today() + datetime.timedelta(days=I)
+    _dict[palabra]["EF"] = [str(newdate.isoformat()), EF]
     __set_dict(filepath, _dict)
 
 
@@ -151,7 +168,7 @@ def get_vocabulario(topic, _dict):
         pal = _dict.get(item[0], False)
         if pal:
             # Si hay persistencia para esta palabra
-            fecha, ef = _dict[item[0]]["new"]
+            fecha, ef = _dict[item[0]]["EF"]
             fecha = datetime.datetime.strptime(fecha, "%Y-%m-%d")
             if fecha <= hoy:
                 # FIXME: Se cargan todas las salteadas + las de hoy
