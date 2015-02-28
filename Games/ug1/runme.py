@@ -392,7 +392,7 @@ class Lluvia(spyral.Sprite):
                 self.stop_all_animations()
                 self.stop_all_animations()
                 self.visible = False
-                self.scene.v.set_text("YOU WIN!")
+                self.scene.v.set_text("YOU SAVED THE CITY!")
                 self.scene.j.set_mirame()
 
 
