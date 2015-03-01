@@ -56,6 +56,7 @@ class FlashCardView(gtk.EventBox):
         self.vocabulario = []
         self.imagenplayer = False
         self.index_select = 0
+        self.click_event = True
 
         tabla = gtk.Table(rows=11, columns=5, homogeneous=True)
         tabla.set_property("column-spacing", 5)
@@ -86,6 +87,10 @@ class FlashCardView(gtk.EventBox):
         self.derecha.label.set_text(
             self.vocabulario[index][1].replace(" ", "\n"))
         self.cabecera.question_label.set_markup("<b>"+respuesta+"</b>")
+        if self.click_event:
+            self.flashcard.disconnect(self.click_event)
+            self.click_event = None
+        self.click_event = self.flashcard.connect("button-press-event", self.repetir_respuesta, respuesta)
         #self.cabecera.question_label.modify_fg(gtk.STATE_NORMAL, COLORES["rojo"])
         gobject.idle_add(self.__show_phrase, respuesta)
 
@@ -93,6 +98,8 @@ class FlashCardView(gtk.EventBox):
         decir_demorado(170, 50, 0, "en-gb", respuesta)
         self.cabecera.question_label.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
         self.cabecera.question_label.set_markup(respuesta)
+        if not self.click_event:
+            self.click_event = self.flashcard.connect("button-press-event", self.repetir_respuesta, respuesta)
 
     def __siguiente(self, widget, respuesta):
         """
@@ -135,11 +142,34 @@ class FlashCardView(gtk.EventBox):
         if pregunta == "":
             pregunta = "What is this?"
         self.cabecera.question_label.set_markup("<b>"+pregunta+"</b>")
+
+        if self.click_event:
+            self.flashcard.disconnect(self.click_event)
+            self.click_event = None
+        self.click_event = self.flashcard.connect("button-press-event", self.repetir_pregunta, pregunta)
         gobject.idle_add(self.__activar, pregunta)
         return False
 
+    def repetir_pregunta(self, widget, event, pregunta):
+        if self.click_event:
+            self.flashcard.disconnect(self.click_event)
+            self.click_event = None
+        self.click_event = None
+        self.cabecera.question_label.set_markup("<b>"+pregunta+"</b>")
+        gobject.idle_add(self.__activar, pregunta)
+
+    def repetir_respuesta(self, widget, event, respuesta):
+        if self.click_event:
+            self.flashcard.disconnect(self.click_event)
+            self.click_event = None
+        self.click_event = None
+        self.cabecera.question_label.set_markup("<b>"+respuesta+"</b>")
+        gobject.idle_add(self.__show_phrase, respuesta)
+
     def __activar(self, pregunta):
         decir_demorado(170, 50, 0, "en", pregunta)
+        if not self.click_event:
+            self.click_event = self.flashcard.connect("button-press-event", self.repetir_pregunta, pregunta)
         self.derecha.activar()
         self.cabecera.question_label.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
         self.cabecera.question_label.set_markup(pregunta)
