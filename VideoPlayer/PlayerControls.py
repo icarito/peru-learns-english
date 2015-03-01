@@ -61,12 +61,15 @@ class PlayerControls(gtk.EventBox):
         self.stop.connect("clicked", self.__emit_accion, "stop_and_unfull")
         vbox.pack_start(self.stop, False, True, 0)
 
+        # Cambiado por LV 20150226
+        """
         self.full = JAMediaToolButton(pixels=24)
         archivo = os.path.join(BASE_PATH, "Iconos", "full.svg")
         self.full.set_imagen(archivo=archivo, flip=False, rotacion=False)
         self.full.set_tooltip_text("Full Screen")
         self.full.connect("clicked", self.__emit_accion, "full")
         vbox.pack_end(self.full, False, True, 0)
+        """
 
         self.add(vbox)
         self.show_all()
