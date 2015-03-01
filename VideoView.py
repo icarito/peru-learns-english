@@ -26,7 +26,6 @@ import pango
 
 from ConfigParser import SafeConfigParser
 
-from VideoPlayer.VideoPlayer import VideoPlayer
 from JAMediaImagenes.ImagePlayer import ImagePlayer
 
 from Globales import COLORES
@@ -59,7 +58,6 @@ class VideoView(gtk.EventBox):
         self.titulo = gtk.Label("Título")
         self.titulo.modify_font(pango.FontDescription("DejaVu Sans Bold 20"))
         self.titulo.modify_fg(gtk.STATE_NORMAL, COLORES["window"])
-        #self.videoplayer = VideoPlayer()
 
         flashcards = gtk.Button()
         #flashcards.set_relief(gtk.RELIEF_NONE)
@@ -72,27 +70,20 @@ class VideoView(gtk.EventBox):
         self.tabla = gtk.Table(rows=5, columns=5, homogeneous=True)
         self.tabla.attach(self.titulo, 0, 5, 0, 1)
         self.tabla.set_border_width(10)
-        #self.tabla.attach(flashcards, 0, 5, 0, 1)
-        #self.tabla.attach(self.videoplayer, 0, 3, 1, 10)
 
-        #self.imagen_juego = GameImage()
         self.imagen_juego = gtk.Button()
         #self.imagen_juego.set_relief(gtk.RELIEF_NONE)
         imagen = gtk.Image()
         imagen.set_from_file("Imagenes/juego1.png")
         self.imagen_juego.modify_bg(gtk.STATE_NORMAL, COLORES["toolbar"])
         self.imagen_juego.add(imagen)
-
-        #align = gtk.Alignment(0.5, 0.5, 0.6, 0.9)
+        
         self.flashcards_preview = FlashCardsPreview()
         self.flashcards_preview.connect("button-press-event", self.__toggle_flashcards)
-        #align.add(self.flashcards_preview)
 
         self.tabla.attach(self.flashcards_preview, 0, 3, 1, 5, xpadding=10, ypadding=10)
         self.tabla.attach(self.imagen_juego, 3, 5, 3, 5, xpadding=10, ypadding=10)
         self.tabla.attach(flashcards, 3, 5, 1, 3, xpadding=10, ypadding=10)
-        #self.tabla.attach(self.flashcards_preview, 3, 5, 6, 10)
-        #self.tabla.attach(self.videoplayer, 0, 3, 1, 10)
 
         align.add(self.tabla)
         self.add(align)
@@ -100,20 +91,13 @@ class VideoView(gtk.EventBox):
 
         flashcards.connect("clicked", self.__emit_flashcards)
         self.imagen_juego.connect("button-press-event", self.__emit_game)
-        #self.videoplayer.connect("full", self.set_full)
-        #self.videoplayer.connect("endfile", self.__force_unfull)
-        #self.videoplayer.control.connect("accion-controls", self.__toggle_flashcards)
 
     def __toggle_flashcards(self, widget, accion):
-        # if accion=="pausa-play":
         gobject.idle_add(self.flashcards_preview.toggle)
 
     def __force_unfull(self, widget):
         if self.full:
             self.set_full(False)
-        #self.videoplayer.stop()
-        #self.videoplayer.load(os.path.join(self.topic, "video.ogv"))
-        #self.videoplayer.pause()
         self.flashcards_preview.play()
 
     def __emit_game(self, widget, event):
@@ -145,12 +129,8 @@ class VideoView(gtk.EventBox):
             #self.videoplayer.show()
             self.full = True
 
-        #self.videoplayer.stop()
-        #self.videoplayer.load(os.path.join(self.topic, "video.ogv"))
 
     def stop(self):
-        #self.videoplayer.stop()
-        #self.imagen_juego.stop()
         self.flashcards_preview.stop()
         if self.flashcards_preview.control:
             gobject.source_remove(self.flashcards_preview.control)
@@ -160,8 +140,6 @@ class VideoView(gtk.EventBox):
     def run(self, topic):
         self.show()
         self.topic = topic
-        #self.videoplayer.load(os.path.join(self.topic, "video.ogv"))
-        #self.imagen_juego.load(topic)
         self.flashcards_preview.load(topic)
         self.flashcards_preview.reset()
 
