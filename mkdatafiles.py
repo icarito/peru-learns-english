@@ -19,8 +19,6 @@ def get_data_files():
                     fullpath = fullpath[2:]
                     reales.append(fullpath)
 
-    #
-
     carpetas = {}
     for archivo in sorted(reales):
         directorio = os.path.dirname(archivo)
