@@ -117,7 +117,7 @@ Basado en las respuestas de cada estudiante, el algoritmo de repaso espaciado ca
 
 Para iniciar la sesión de repaso, es necesario que cada estudiante seleccione su usuario desde la lista desplegable.
 
-De no existir un usuario para ese estudiante será necesario que cree un usuario nuevo, presionando el botón **new user** (nuevo usuario).
+De no existir un usuario para ese estudiante será necesario que cree un usuario nuevo, presionando el botón **new user** (usuario nuevo).
 
 
 ---
@@ -132,7 +132,7 @@ De no existir un usuario para ese estudiante será necesario que cree un usuario
 <br>
 Durante la presentación de cada tarjeta, la aplicación hace una pregunta, como por ejemplo "What is this?". Los estudiantes deben apelar a su memoria y pensar sobre la posible respuesta.
 
-Para conocer la respuesta correcta, los estudiantes deben apretar el botón <br> **"Show me the answer"**.
+Para conocer la respuesta correcta, los estudiantes deben apretar el botón <br> **"Show me the answer"**<br>(mostrarme la respuesta).
 
 ---
 
@@ -198,7 +198,7 @@ Ayuda a encontrar la nave perdida. Debes reconocer el vocablo pronunciado por la
 
 ---
 
-# ¿Qué debo tener en cuenta antes de usar la aplicación?
+# ¿Qué debo tener en cuenta al usar la aplicación?
 
 - Es importante tener en cuenta que éste es un sistema personalizado, por lo que será necesario que cada aprendiz cree y trabaje desde su usuario durante las sesiones de repaso espaciado.
 
@@ -220,3 +220,56 @@ Happy learning!
 
 
 <img src="extra/banderas.png" style="display: block; margin-left: auto; margin-right: auto">
+
+---
+
+# Peru Learns English TV
+
+<p style="font-size: 24pt; margin-left: 42px; margin-right: 42px">
+PLE TV es un complemento incluido para repasar en forma individual o grupal, diferentes temas en inglés, apelando a estímulos audiovisuales combinados con actividades de aula.
+</p>
+
+<div style="text-align: center; width: 100%">
+<img src="Iconos/minitube.svg" height="450px">
+</div>
+
+---
+# Objetivo
+ 
+<p style="font-size: 24pt; margin-left: 42px; margin-right: 42px">
+Ponemos a tu disposición un repositorio de videos apropiados para el aprendizaje de expresiones básicas, intermedias y avanzadas del idioma inglés, así como temas variados y entretenidos.
+</p>
+ 
+<p style="font-size: 24pt; margin-left: 42px; margin-right: 42px">
+La aplicación contiene una selección básica de videos con licencias apropiadas para su re-utilización.
+</p>
+
+---
+# Programación disponible
+ 
+<p style="font-size: 24pt; margin-left: 42px; margin-right: 42px">
+La aplicación trae preseleccionados un conjunto de videos que se pueden repoducir de forma individual desde el inicio o de forma agrupada en el botón "Level" según su nivel de dificultad, en nivel básico, intermedio y avanzado.
+</p>
+ 
+<p style="font-size: 24pt; margin-left: 42px; margin-right: 42px">
+Para seleccionar el nivel a reproducir, debe hacer "click" en la opción "Level" del menú principal y "click" en la opción correspondiente.
+</p>
+___
+ 
+# Obras incluídas
+ 
+<p style="font-size: 24pt; margin-left: 42px; margin-right: 42px">
+De la serie original <b>"Bunny Bonita"</b> del Ministerio de Educación de Colombia, se realizó una selección especial con 11 de sus mejores videos. La historia narra las aventuras de una conejita que aprende inglés con su familia y sus compañeros de clase. Nivel Básico.
+</p>
+ 
+<p style="font-size: 24pt; margin-left: 42px; margin-right: 42px">
+De los cortometrajes producidos por Smart4kids LLC publicados 
+en <b>www.art4apps.org</b>, se seleccionó: "Pete the Athlete" y "Trish the fish". Nivel intermedio.
+</p>
+ 
+<p style="font-size: 24pt; margin-left: 42px; margin-right: 42px">
+De la NASA, la animación correspondiente al Ciclo del Agua:."A Tour of the Water Cycle", y de la FSF un video educativo sobre Software Libre.  Nivel avanzado.
+</p>
+ 
+---
+ 

@@ -33,6 +33,7 @@ sys.path.insert(1, gamedir("../../"))
 
 from Globales import decir
 import gtk
+gtk.threads_init()
 
 import pygame
 pygame.mixer.init()
@@ -784,7 +785,6 @@ class Escena(spyral.Scene):
             Escena.gameview = gameview
 
         if fake_gtk:
-            gtk.threads_init()
             spyral.event.register("director.update", self.gtk_main_iteration)
 
     def intro0(self):

@@ -1,4 +1,4 @@
-![Peru Learns English](Imagenes/ple_disabled.png) <br> Peru Aprende Inglés
+![Peru Learns English](Imagenes/ple_disabled.png) <br> Perú Aprende Inglés
 =========================================
 
 PLE es desarrollado por el equipo de I&D SomosAzúcar en colaboración con especialistas del Ministerio de Educación de Perú.
@@ -76,6 +76,10 @@ Tomadas de [Wikipedia](http://wikipedia.org/).
 * Colección Art4Apps - © 2013-2015 - Art4Apps (files database) created by ET4D - CC BY-SA
 * Bunny Bonita - Ministerio de Educación Nacional República de Colombia - © 2008-2013 T&T Teaching and Tutoring y Faldita Films
 * Algunas imágenes se tomaron de OpenClipArt.Org - Dominio Público
+
+### Síntesis de Voz
+
+* eSpeak - © 1995 Jonathan Duddington - (GPLv3)
 
 #### Biblioteca para Videojuegos ###
 

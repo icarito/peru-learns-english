@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Peru Learns English TV
+Comment=
+Exec=/usr/bin/peru_learns_english_tv
+Terminal=false
+Type=Application
+Icon=/usr/local/share/peru-learns-english/Iconos/minitube.svg
+Categories=Education
+StartupNotify=true
+MimeType=
