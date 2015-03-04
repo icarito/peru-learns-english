@@ -2,6 +2,7 @@ import os
 import datetime
 import pprint
 import difflib
+import random
 
 _dict = {
     "Nombre": "Dummy",
@@ -14,18 +15,22 @@ topic = "Topics/Topic_4"
 
 from Globales import get_vocabulario, guardar
 
-def grabar():
-    vocabulario = get_vocabulario(topic, _dict)
+def grabar(n=0):
 
-    for item in vocabulario[:5]:
-        guardar(_dict, os.path.abspath(topic), item[0], 0)
-    for item in vocabulario[5:10]:
-        guardar(_dict, os.path.abspath(topic), item[0], 3)
-    for item in vocabulario[10:]:
-        guardar(_dict, os.path.abspath(topic), item[0], 5)
+    today = datetime.date.today()
+    target = today + datetime.timedelta(n)
 
-def probar(n=15):
-    for dias in range(0,15):
+    vocabulario = get_vocabulario(topic, _dict, force_date=target)
+    vocabulario = map(lambda x: x[1], vocabulario)
+
+    for item in vocabulario:
+        #if random.choice([True, False]):
+        n = random.choice([3,5])
+        guardar(_dict, os.path.abspath(topic), item, n, force_date=target)
+
+def probar(n):
+
+    for dias in range(0,n):
 
         today = datetime.date.today()
         target = today + datetime.timedelta(dias)
@@ -35,7 +40,7 @@ def probar(n=15):
         except NameError:
             old_vocab = []
 
-        vocabulario = get_vocabulario("Topics/Topic_4", _dict, override_date=target)
+        vocabulario = get_vocabulario("Topics/Topic_4", _dict, force_date=target)
         vocabulario = map(lambda x: x[1], vocabulario)
 
         print "= Fecha", target
@@ -45,7 +50,9 @@ def probar(n=15):
         #print list(difflib.unified_diff(old_vocab, vocabulario))
         print len(vocabulario)
         #pprint.pprint (vocabulario)
+        grabar(n)
+
 
 if __name__ == '__main__':
-    grabar()
-    probar()
+    #grabar()
+    probar(45)
