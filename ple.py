@@ -46,8 +46,7 @@ if gtk.pygtk_version[0]==2 and gtk.pygtk_version[1]<15:
 def ocultar(widget):
     widget.stop()
 
-
-class Main(gtk.Window):
+class App(gtk.Window):
 
     def __init__(self):
 
@@ -70,6 +69,17 @@ class Main(gtk.Window):
             self.set_geometry_hints(self, width, height, width, height)
         else:
             gobject.idle_add(self.maximize)
+
+        main = Main()
+        self.add(main)
+
+        gobject.idle_add(self.show)
+
+class Main(gtk.EventBox):
+
+    def __init__(self):
+
+        gtk.EventBox.__init__(self)
 
         self.vbox = gtk.VBox()
         self.toolbar = Toolbar()
@@ -173,5 +183,5 @@ class Main(gtk.Window):
 
 
 if __name__ == '__main__':
-    Main()
+    App()
     gtk.main()

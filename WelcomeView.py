@@ -117,7 +117,7 @@ class WelcomeView(gtk.EventBox):
 
     def fix_scale(self):
         pixbuf = gtk.gdk.pixbuf_new_from_file("Imagenes/welcome_slide.png")
-        screen = self.window.get_screen()
+        screen = self.parent.get_screen()
         offset = 220 if not is_xo() else 340
         desired_height = screen.get_height() - offset
         desired_width = pixbuf.get_height() / desired_height * pixbuf.get_width()

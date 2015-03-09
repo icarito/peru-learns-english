@@ -11,19 +11,19 @@ data_files.append(("/usr/share/applications/", ["Peru_Learns_English.desktop"]))
 data_files.append(("/usr/share/applications/", ["Peru_Learns_English_TV.desktop"]))
 
 setup(
-	name = "Peru_Learns_English",
-	version = "1.1",
-	author = "SomosAzucar",
-	author_email = "laura@somosazucar.org",
-	url = "http://pe.sugarlabs.org/ir/Peru%20Learns%20English",
-	license = "GPL3",
+            name = "Peru_Learns_English",
+            version = "1.1",
+            author = "SomosAzucar",
+            author_email = "laura@somosazucar.org",
+            url = "http://pe.sugarlabs.org/ir/Peru%20Learns%20English",
+            license = "GPL3",
 
-	scripts = ["peru_learns_english", "peru_learns_english_uninstall", "peru_learns_english_tv"],
+            scripts = ["peru_learns_english", "peru_learns_english_uninstall", "peru_learns_english_tv"],
 
-        data_files = data_files
-	#py_modules = ["enfoli"],
+            data_files = data_files
+            #py_modules = ["enfoli"],
 
-                        )
+        )
 
 #import subprocess 
 #subprocess.check_output("chmod -R 755 /usr/local/share/Peru_Learns_English", shell=True)

@@ -1,0 +1,7 @@
+[Activity]
+name = Learn English
+activity_version = 1
+bundle_id = org.somosazucar.ple
+exec = sugar-activity activity.HelloWorldActivity
+icon = ple-activity 
+license = GPLv2+
